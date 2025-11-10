@@ -19,11 +19,11 @@ WORKDIR /var/www/html
 
 COPY . .
 
-RUN composer install
-RUN npm install
+RUN composer install --no-interaction --no-scripts --optimize-autoloader
+RUN npm install && npm run build || true
 
 RUN chmod -R 777 storage bootstrap/cache
 
 EXPOSE 8000
 
-CMD php artisan serve --host=0.0.0.0 --port=8000
+CMD php artisan optimize && php artisan serve --host=0.0.0.0 --port=8000
