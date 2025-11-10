@@ -25,7 +25,7 @@ export default function Home() {
          <div className="p-4">
            <h1 className="text-2xl font-bold">Quotiva Frontend</h1>
            {loading ? (
-             <p>Loading...</p>
+             <p>Betöltés...</p>
            ) : (
              <p className="text-lg">API üzenet: {message}</p>
            )}
