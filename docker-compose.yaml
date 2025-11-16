@@ -1,7 +1,6 @@
 version: '3.8'
 services:
   frontend:
-    name: frontend
     build: ./frontend
     ports:
       - "3000:80"
@@ -9,9 +8,8 @@ services:
       - backend
 
   backend:
-    name: backend
     build: ./backend
     ports:
       - "8000:8000"
     environment:
-      - APP_ENV=production
+      - APP_ENV=development
