@@ -13,7 +13,7 @@ class DataSeeder extends Seeder
      */
     public function run(): void
     {
-        DB::table("datas")->insert([
+        DB::table("dev_datas")->insert([
             [
                 "name" => "Test 1",
                 "price" => 100
