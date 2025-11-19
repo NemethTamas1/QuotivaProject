@@ -8,7 +8,7 @@ class Data extends Model
 {
     public $timestamps = true;
 
-    public $table = "prod_datas";
+    public $table = "datas";
 
     protected $fillable = [
         "name",
