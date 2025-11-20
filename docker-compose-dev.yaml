@@ -11,6 +11,6 @@ services:
     ports:
       - "8000:8000"
     environment:
-      - APP_ENV=production
-      - DB_CONNECTION=sqlite
-      - DB_DATABASE=database-prod.sqlite
+      - APP_ENV=development
+    env_file:
+      - ./backend/.env.dev
