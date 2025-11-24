@@ -1,13 +1,11 @@
 .git
 .gitignore
-node_modules
-vendor
-bootstrap/cache/*.php
+/node_modules
+/vendor
 npm-debug.log
 composer.lock
 .env
-.env.dev
-*.sqlite
+.env.*
 .idea
 .vscode
 .fly

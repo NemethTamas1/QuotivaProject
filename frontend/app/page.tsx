@@ -7,7 +7,9 @@ export default function Home() {
   const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
-    fetch("http://localhost:8000/api/test")
+    const apiUrl = process.env.NEXT_PUBLIC_API_URL;
+
+    fetch(`${apiUrl}/api/datas`)
     .then(res => res.json())
     .then(data => {
       setMessage(data.message);
