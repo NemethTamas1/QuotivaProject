@@ -2,9 +2,6 @@
 .gitignore
 node_modules
 vendor
-storage
-storage/logs
-storage/framework
 bootstrap/cache/*.php
 npm-debug.log
 composer.lock
