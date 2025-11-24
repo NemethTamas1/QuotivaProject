@@ -1,16 +1,17 @@
-# Builder
 FROM node:20-alpine AS builder
+
 WORKDIR /app
-COPY package*.json ./
+COPY package.json package-lock.json ./
 RUN npm ci --only=production=false
+RUN npm ci
+
 COPY . .
 RUN npm run build
 
-# Runner
-FROM node:20-alpine AS runner
-WORKDIR /app
-ENV NODE_ENV=production
-COPY --from=builder /app ./
-EXPOSE 3000
+FROM nginx:stable-alpine
 
-CMD ["npm", "start"]
+COPY --from=builder /app/dist /usr/share/nginx/html
+
+EXPOSE 80
+
+CMD ["nginx", "-g", "daemon off;"]
