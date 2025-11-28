@@ -1,0 +1,102 @@
+name: CI/CD Pipeline
+
+on:
+  pull_request:
+    branches: [ "main" ]
+  push:
+    branches: ["main"]
+
+jobs:
+  # ----- CI JOB -----
+  ci:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - uses: actions/setup-node@v4
+      with:
+        node-version: "20"
+
+    - uses: shivammathur/setup-php@v2
+      with:
+        php-version: "8.2"
+        extensions: sqlite, pdo_sqlite
+
+
+    # FRONTEND CI
+    - name: Install Frontend Dependencies
+      working-directory: frontend
+      run: npm ci
+
+    - name: Type Check
+      working-directory: frontend
+      run: npm run type-check
+
+    - name: Build Frontend
+      working-directory: frontend
+      run: npm run build
+
+      
+    # BACKEND CI
+    - name: Install Backend Dependencies
+      working-directory: backend
+      run: |
+        cp .env.example .env
+        echo "DB_CONNECTION=sqlite" >> .env
+        echo "DB_DATABASE=:memory:" >> .env
+
+    - name: Migrate SQLite
+      working-directory: backend
+      run: php artisan migrate --force
+
+    - name: Run Tests
+      working-directory: backend
+      run: php artisan test
+
+
+
+  # ----- BACKEND DEPLOY -----
+  deploy_backend:
+    needs: ci
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+
+    steps: 
+      - uses: actions/checkout@v4
+
+      - name: Setup Flyctl
+        uses: superfly/flyctl-actions/setup-flyctl@master
+    
+      - name: Deploy Backend To Fly.io
+        working-directory: backend
+        run: flyctl deploy --remote-only
+        env:
+          FLY_API_TOKEN: ${{secrets.FLY_API_TOKEN}}
+
+  deploy_frontend:
+    needs: ci
+    if: github.ref == 'refs/head/main'
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+      
+      - uses: actions/setup-node@v4
+        with: 
+          node-version: "20"
+
+      - name: Build Frontend
+        working-directory: frontend
+        run: |
+          npm ci
+          npm run build
+
+      - name: Setup Flyctl
+        uses: superfly/flyctl-actions/setup-flyctl@master
+
+      - name: Deploy Frontend To Fly.io
+        working-directory: frontend
+        run: flyctl deploy --remote-only
+        env:
+          FLY_API_TOKEN: ${{secrets.FLY_API_TOKEN}}
