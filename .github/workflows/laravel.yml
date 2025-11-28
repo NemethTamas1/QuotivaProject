@@ -18,6 +18,7 @@ jobs:
       with:
         node-version: "20"
 
+    - name: Setup PHP
     - uses: shivammathur/setup-php@v2
       with:
         php-version: "8.2"
@@ -41,10 +42,13 @@ jobs:
     # BACKEND CI
     - name: Install Backend Dependencies
       working-directory: backend
+      run: composer install --no-interaction --no-progress --prefer-dist --optimize-autoloader
+
+    - name: Debug Vendor
+      working-directory: backend
       run: |
-        cp .env.example .env
-        echo "DB_CONNECTION=sqlite" >> .env
-        echo "DB_DATABASE=:memory:" >> .env
+        echo "Listing backend/vendor:"
+        ls -la vendor || echo "vendor directory does not exist."
 
     - name: Migrate SQLite
       working-directory: backend
