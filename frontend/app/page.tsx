@@ -11,6 +11,7 @@ export default function Home() {
   console.log("USE EFFECT FUT");
   console.log("API_URL:", process.env.NEXT_PUBLIC_API_URL);
 
+  
   fetch(`${apiUrl}/api/datas`)
     .then(res => res.json())
     .then(data => {
