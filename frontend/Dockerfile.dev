@@ -5,8 +5,7 @@ WORKDIR /app
 COPY package*.json ./
 RUN npm install
 
-COPY . .
-
+ENV HOST=0.0.0.0
 ENV NODE_ENV=development
 
 CMD ["npm", "run", "dev"]

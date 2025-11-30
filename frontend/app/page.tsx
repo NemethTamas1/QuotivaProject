@@ -26,7 +26,7 @@ export default function Home() {
 
 return (
   <div className="p-4">
-    <h1 className="text-2xl font-bold text-center">Quotiva Frontend</h1>
+    <h1 className="text-2xl font-extrabold text-green-300 text-center">Quotiva Frontend</h1>
 
     {loading ? (
       <p>Betöltés...</p>
