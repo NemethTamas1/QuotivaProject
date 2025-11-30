@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 
 export default function Home() {
-  const [rawData, setRawData] = useState<any>(null);
+  const [rawData, setRawData] = useState<unknown>(null);
   const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
