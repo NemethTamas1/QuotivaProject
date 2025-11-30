@@ -34,10 +34,6 @@ jobs:
       working-directory: frontend
       run: npm run type-check
 
-    - name: Build Frontend
-      working-directory: frontend
-      run: npm run build
-
       
     # BACKEND CI
     - name: Install Backend Dependencies
@@ -89,12 +85,6 @@ jobs:
       - uses: actions/setup-node@v4
         with: 
           node-version: "20"
-
-      - name: Build Frontend
-        working-directory: frontend
-        run: |
-          npm ci
-          npm run build
 
       - name: Setup Flyctl
         uses: superfly/flyctl-actions/setup-flyctl@master
