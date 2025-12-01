@@ -9,6 +9,9 @@ primary_region = 'fra'
 [build]
   secrets = ["NEXT_PUBLIC_API_URL"]
 
+[env]
+  NEXT_PUBLIC_API_URL = "https://quotiva-backend.fly.dev"
+
 [http_service]
   internal_port = 3000
   force_https = true
