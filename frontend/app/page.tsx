@@ -1,5 +1,6 @@
 'use client';
 
+import Link from "next/link";
 import { useEffect } from "react";
 
 export default function Home() {
@@ -7,21 +8,21 @@ export default function Home() {
   useEffect(() => {
     const apiUrl = process.env.NEXT_PUBLIC_API_URL;
     console.log("USE EFFECT FUT");
-    console.log("API_URL:", process.env.NEXT_PUBLIC_API_URL);
+    console.log("API_URL:", apiUrl);
   });
 
   return (
     <div className="min-h-screen bg-black text-white flex flex-col">
       {/* NavBar */}
       <nav className="w-full py-4 flex justify-between px-3 items-center backdrop-blur-md bg-black">
-        <a href="/" className="text-3xl font-semibold tracking-wide">
+        <Link href="/" className="text-3xl font-semibold tracking-wide">
           Quotiva
-        </a>
+        </Link>
 
         <div className="flex gap-6 text-2xl">
-          <a href="#" className="hover:text-green-400 transition">Új árajánlat</a>
-          <a href="#" className="hover:text-green-400 transition">Árajánlataim</a>
-          <a href="#" className="hover:text-green-400 transition">Belépés</a>
+          <Link href="#" className="hover:text-green-400 transition">Új árajánlat</Link>
+          <Link href="#" className="hover:text-green-400 transition">Árajánlataim</Link>
+          <Link href="#" className="hover:text-green-400 transition">Belépés</Link>
         </div>
       </nav>
 
