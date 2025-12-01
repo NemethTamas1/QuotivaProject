@@ -6,9 +6,6 @@
 app = 'quotiva-frontend'
 primary_region = 'fra'
 
-[build]
-  secrets = ["NEXT_PUBLIC_API_URL"]
-
 [env]
   NEXT_PUBLIC_API_URL = "https://quotiva-backend.fly.dev"
 
