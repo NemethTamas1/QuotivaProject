@@ -92,7 +92,7 @@ jobs:
 
       - name: Deploy Frontend To Fly.io
         working-directory: frontend
-        run: flyctl deploy --remote-only --no-cache --env NEXT_PUBLIC_API_URL=https://quotiva-backend.fly.dev
+        run: flyctl deploy --remote-only --no-cache --env NEXT_PUBLIC_API_URL=${{ secrets.NEXT_PUBLIC_API_URL }}
         env:
           FLY_API_TOKEN: ${{secrets.FLY_API_TOKEN}}
           NEXT_PUBLIC_API_URL: ${{secrets.NEXT_PUBLIC_API_URL}}
