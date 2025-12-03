@@ -18,9 +18,9 @@ export default function Home() {
     <div className="min-h-screen bg-black text-white flex flex-col">
       {/* NavBar */}
       <nav className="w-full py-4 flex justify-between px-3 items-center backdrop-blur-md bg-black">
-        <Link href="/" className="text-3xl font-semibold tracking-wide">
+        <a href="/" className="text-3xl font-semibold tracking-wide">
           Quotiva
-        </Link>
+        </a>
 
         <div className="hidden md:flex gap-6 text-2xl">
           <a href="#" className="hover:text-green-400 transition">Új árajánlat</a>
