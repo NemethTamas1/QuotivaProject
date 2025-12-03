@@ -1,8 +1,12 @@
 'use client';
 
 import { useState, useEffect } from "react";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faBars } from "@fortawesome/free-solid-svg-icons";
 
 export default function Home() {
+
+  const [isOpen, setIsOpen] = useState(false);
 
   useEffect(() => {
     const apiUrl = process.env.NEXT_PUBLIC_API_URL;
@@ -18,12 +22,33 @@ export default function Home() {
           Quotiva
         </a>
 
-        <div className="flex gap-6 text-2xl">
+        <div className="hidden md:flex gap-6 text-2xl">
           <a href="#" className="hover:text-green-400 transition">Új árajánlat</a>
           <a href="#" className="hover:text-green-400 transition">Árajánlataim</a>
           <a href="#" className="hover:text-green-400 transition">Belépés</a>
         </div>
+
+        <div className="md:hidden">
+          <button onClick={() => setIsOpen(!isOpen)} className="md:hidden">
+            <FontAwesomeIcon icon={faBars} />
+          </button>
+        </div>
       </nav>
+      {isOpen && (
+        <div
+          className={
+            `md:hidden overflow-hidden transition-all duration-300 bg-black border-t border-white/10
+      ${isOpen ? "max-h-96 opacity-100" : "max-h-0 opacity-0"}`
+          }
+        >
+          <div className="flex flex-col gap-4 px-4 py-4 text-xl">
+            <a href="#" className="hover:text-green-400 transition">Új árajánlat</a>
+            <a href="#" className="hover:text-green-400 transition">Árajánlataim</a>
+            <a href="#" className="hover:text-green-400 transition">Belépés</a>
+          </div>
+        </div>
+      )}
+
 
       {/* Main */}
       <main className="flex-1 flex items-center justify-center text-center px-4">
