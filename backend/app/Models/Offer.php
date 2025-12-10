@@ -32,7 +32,7 @@ class Offer extends Model
         "items"
     ];
 
-    public function offerItems():HasMany
+    public function items():HasMany
     {
         return $this->hasMany(OfferItem::class);
     }

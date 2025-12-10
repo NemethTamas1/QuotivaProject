@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\DataController;
+use App\Http\Controllers\OfferController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -14,3 +15,5 @@ Route::get("/test", function(){
 });
 
 Route::apiResource("/datas", DataController::class);
+
+Route::apiResource("/offers", OfferController::class);
