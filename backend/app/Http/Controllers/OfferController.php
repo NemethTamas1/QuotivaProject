@@ -6,6 +6,7 @@ use App\Models\Offer;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreOfferRequest;
 use App\Http\Requests\UpdateOfferRequest;
+use App\Http\Resources\OfferResource;
 use App\Models\OfferItem;
 use Illuminate\Support\Facades\DB;
 use PhpParser\Node\Stmt\TryCatch;
@@ -14,7 +15,9 @@ class OfferController extends Controller
 {
     public function index()
     {
-        //
+        $offers = Offer::with("items")->get();
+
+        return OfferResource::collection($offers);
     }
 
     public function store(StoreOfferRequest $request)
