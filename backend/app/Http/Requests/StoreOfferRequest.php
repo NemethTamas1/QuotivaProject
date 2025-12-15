@@ -15,8 +15,10 @@ class StoreOfferRequest extends FormRequest
     {
         return [
             // Alap
-            "offer_number" => ["required", "string", "max:50"],
+            "offer_number" => ["required", "string", "max:50"], // Ezt lehet majd generáltatni kellene fakerrel.
+            "offer_name" => ["required", "string", "max:100"],
             "status" => ["nullable", "string", "in:pending,accepted,rejected"],
+            "dated" => ["required", "date"],
             "valid_until" => ["required", "date"],
             "currency" => ["required", "string", "max:10", "in:USD,EUR,HUF"],
             "tax_percent" => ["required", "integer", "min:0", "max:27"],
@@ -25,12 +27,13 @@ class StoreOfferRequest extends FormRequest
 
             // Ügyfél
             "client_name" => ["required", "string", "max:100"],
+            "client_email" => ["nullable", "string", "email:rfc", "max:50"],
             "client_phone" => ["nullable", "string", "max:50"],
             "client_tax_number" => ["nullable", "string", "max:50"],
-            "client_zip" => ["nullable", "string", "max:20"],
-            "client_city" => ["nullable", "string", "max:100"],
-            "client_street" => ["nullable", "string", "max:100"],
-            "client_house_number" => ["nullable", "string", "max:20"],
+            "client_zip" => ["required", "integer", "digits:4"],
+            "client_city" => ["required", "string", "max:100"],
+            "client_street" => ["required", "string", "max:100"],
+            "client_house_number" => ["required", "string", "max:20"],
 
             // Tételek tömbje
             "items" => ["required", "array", "min:1"],

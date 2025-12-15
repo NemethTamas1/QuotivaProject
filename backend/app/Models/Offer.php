@@ -14,7 +14,9 @@ class Offer extends Model
 
     protected $fillable = [
         "offer_number",
+        "offer_name",
         "status",
+        "dated",
         "valid_until",
         "currency",
         "tax_percent",
@@ -22,6 +24,7 @@ class Offer extends Model
         "gross_total",
 
         "client_name",
+        "client_email",
         "client_phone",
         "client_tax_number",
         "client_zip",

@@ -30,12 +30,15 @@ class OfferController extends Controller
             // Ajánlat létrehozás
             $offer = Offer::create([
                 "offer_number" => $data["offer_number"],
+                "offer_name" => $data["offer_name"],
                 "status" => $data["status"] ?? "pending",
+                "dated" => $data["dated"],
                 "valid_until" => $data["valid_until"],
                 "currency" => $data["currency"],
                 "tax_percent" => $data["tax_percent"],
 
                 "client_name" => $data["client_name"],
+                "client_email" => $data["client_email"] ?? null,
                 "client_phone" => $data["client_phone"] ?? null,
                 "client_tax_number" => $data["client_tax_number"] ?? null,
                 "client_zip" => $data["client_zip"] ?? null,
