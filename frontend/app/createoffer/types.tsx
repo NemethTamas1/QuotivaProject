@@ -1,4 +1,4 @@
-export type QuantityType = "ora" | "darab" | "fm" | "m2" | "m3" | "kg";
+export type QuantityType = "ora" | "db" | "fm" | "m2" | "m3" | "kg";
 export type OfferStatus = "pending" | "accepted" | "rejected";
 export type Currency = "HUF" | "EUR";
 

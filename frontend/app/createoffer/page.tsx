@@ -1,12 +1,14 @@
 'use client';
 
 import { useState, useEffect } from "react";
+import { useForm, useFieldArray, SubmitHandler } from "react-hook-form";
+import Link from "next/link";
+
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBars } from "@fortawesome/free-solid-svg-icons";
-import Link from "next/link";
+
 import type { CreateOfferForm } from "./types";
 import type { QuantityType } from "./types";
-import { useForm, useFieldArray, SubmitHandler } from "react-hook-form";
 
 export default function CreateOfferPage() {
 
@@ -21,7 +23,7 @@ export default function CreateOfferPage() {
     }>({
         name: "",
         quantity: 1,
-        quantity_type: "darab",
+        quantity_type: "db",
         labor_unit_price: 0,
         material_unit_price: 0,
     });
@@ -30,7 +32,7 @@ export default function CreateOfferPage() {
         defaultValues: {
             status: "pending",
             currency: "HUF",
-            tax_percent: 27,
+            tax_percent: 27, // Később ki kell venni, hogy állítani lehessen. (alanyi adómentes)
             items: [],
         },
     });
@@ -40,8 +42,28 @@ export default function CreateOfferPage() {
         name: "items",
     });
 
-    const onSubmit: SubmitHandler<CreateOfferForm> = (data) => {
+    const onSubmit: SubmitHandler<CreateOfferForm> = async (data) => {
         console.log("SUBMIT PAYLOAD: ", data);
+        const apiUrl = process.env.NEXT_PUBLIC_API_URL;
+
+        try{
+            const response = await fetch(`${apiUrl}/api/offers`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(data),
+            });
+
+            if(!response.ok){
+                console.log("Offer creation failed.");
+            }
+
+            console.log("Offer created successfully.");
+
+        }catch(error){
+            console.error("Error while creating offer", error);
+        }
     };
 
     useEffect(() => {
@@ -114,7 +136,7 @@ export default function CreateOfferPage() {
                         </div>
 
                         <div>
-                            <label className="block mb-1">Keltezés</label>
+                            <label className="block mb-1">Kelt</label>
                             <input
                                 type="date"
                                 {...register("dated")}
@@ -200,7 +222,7 @@ export default function CreateOfferPage() {
                         </div>
 
                         <div>
-                            <label className="block text-sm mb-1">Mennyiség</label>
+                            <label className="block text-sm mb-1">Mennyiség</label> {/* input group? */}
                             <input
                                 type="number"
                                 value={newItem.quantity}
@@ -218,12 +240,12 @@ export default function CreateOfferPage() {
                                 onChange={(e) =>
                                     setNewItem({
                                         ...newItem,
-                                        quantity_type: e.target.value as "ora" | "darab" | "fm" | "m2" | "m3" | "kg",
+                                        quantity_type: e.target.value as "ora" | "db" | "fm" | "m2" | "m3" | "kg",
                                     })
                                 }
                                 className="w-full border rounded px-3 py-2"
                             >
-                                <option value="darab">db</option>
+                                <option value="db">db</option>
                                 <option value="ora">óra</option>
                                 <option value="fm">fm</option>
                                 <option value="m2">m2</option>
@@ -270,7 +292,7 @@ export default function CreateOfferPage() {
                                     setNewItem({
                                         name: "",
                                         quantity: 1,
-                                        quantity_type: "darab",
+                                        quantity_type: "db",
                                         labor_unit_price: 0,
                                         material_unit_price: 0,
                                     });
@@ -281,6 +303,42 @@ export default function CreateOfferPage() {
                             </button>
                         </div>
                     </div>
+
+                    <div className="w-full">
+                        <table className="w-full">
+                            <thead>
+                                <tr>
+                                    <th>Tétel megnevezés</th>
+                                    <th>Mennyiség</th>
+                                    <th>Munkadíj egységár</th>
+                                    <th>Anyag egységár</th>
+                                    <th>Munkadíj</th>
+                                    <th>Anyagdíj</th>
+                                    <th>Műveletek</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {fields.map((field, index) => {
+                                    const laborTotal = field.quantity * field.labor_unit_price;
+                                    const materialTotal = field.quantity * field.material_unit_price;
+
+                                    return (
+                                        <tr key={field.id}>
+                                            <td>{field.name}</td>
+                                            <td>{field.quantity}{field.quantity_type}</td>
+                                            <td>{field.labor_unit_price} Ft</td>
+                                            <td>{field.material_unit_price} Ft</td>
+                                            <td>{laborTotal} Ft</td>
+                                            <td>{materialTotal} Ft</td>
+                                            <td>implementálásra vár</td>
+                                        </tr>
+                                    );
+                                })}
+                            </tbody>
+                        </table>
+                    </div>
+
+
 
                     <button
                         type="submit"
