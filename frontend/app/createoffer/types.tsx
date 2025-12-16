@@ -1,0 +1,32 @@
+export type QuantityType = "ora" | "darab" | "fm" | "m2" | "m3" | "kg";
+export type OfferStatus = "pending" | "accepted" | "rejected";
+export type Currency = "HUF" | "EUR";
+
+export interface OfferItem {
+    name: string;
+    quantity: number;
+    quantity_type: QuantityType;
+    labor_unit_price: number;
+    material_unit_price: number;
+};
+
+export interface CreateOfferForm {
+    offer_number: string;
+    offer_name: string;
+    status: OfferStatus;
+    dated: string;
+    valid_until: string;
+    currency: Currency;
+    tax_percent: number;
+
+    client_name: string;
+    client_email: string;
+    client_phone: string;
+    client_tax_number: string;
+    client_zip: number;
+    client_city: string;
+    client_street: string;
+    client_house_number: string;
+
+    items: OfferItem[];
+};
