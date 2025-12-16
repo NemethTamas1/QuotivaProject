@@ -17,3 +17,10 @@ Route::get("/test", function(){
 Route::apiResource("/datas", DataController::class);
 
 Route::apiResource("/offers", OfferController::class);
+
+Route::options('{any}', function (Request $request) {
+    return response()->noContent()
+        ->header('Access-Control-Allow-Origin', '*')
+        ->header('Access-Control-Allow-Methods', 'GET, POST, PUT, PATCH, DELETE, OPTIONS')
+        ->header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+})->where('any', '.*');
