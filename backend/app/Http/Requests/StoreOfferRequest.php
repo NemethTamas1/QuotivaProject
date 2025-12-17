@@ -41,7 +41,7 @@ class StoreOfferRequest extends FormRequest
             // Tételek egyedi szabályai
             "items.*.name"              => ["required", "string"],
             "items.*.quantity"          => ["required", "numeric", "min:0"],
-            "items.*.quantity_type"     => ["required", "string", "in:darab,ora,kg,fm,m2,m3"],
+            "items.*.quantity_type"     => ["required", "string", "in:db,ora,kg,fm,m2,m3"],
             "items.*.labor_unit_price"  => ["required", "numeric", "min:0"],
             "items.*.material_unit_price" => ["required", "numeric", "min:0"],
         ];

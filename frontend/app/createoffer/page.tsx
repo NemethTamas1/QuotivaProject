@@ -46,33 +46,34 @@ export default function CreateOfferPage() {
         console.log("SUBMIT PAYLOAD: ", data);
         const apiUrl = process.env.NEXT_PUBLIC_API_URL;
 
-        if(!apiUrl){
+        if (!apiUrl) {
             console.error("API URL is not defined");
             return;
         };
 
-        const url = `${apiUrl}/api/offers`;
+        //const url = `${apiUrl}/api/offers`;
 
-        console.log("FETCH TARGET:", url);
-        console.log("SUBMIT PAYLOAD:", data);
+        //console.log("FETCH TARGET:", url);
+        //console.log("SUBMIT PAYLOAD:", data);
 
-        try{
-            const response = await fetch(url, {
+        try {
+            const response = await fetch("http://localhost:8000/api/offers", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
+                    "Accept": "application/json",
                 },
                 body: JSON.stringify(data),
             });
 
 
-            if(!response.ok){
+            if (!response.ok) {
                 console.log("Offer creation failed.");
             }
 
             console.log("Offer created successfully.");
 
-        }catch(error){
+        } catch (error) {
             console.error("Error while creating offer", error);
         }
     };
