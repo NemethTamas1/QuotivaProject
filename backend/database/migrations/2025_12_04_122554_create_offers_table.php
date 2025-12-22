@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('offers', function (Blueprint $table) {
             $table->id();
-            $table->integer("offer_number");
+            $table->string("offer_number", 9)->unique();
             $table->string("offer_name", 100);
             $table->string("status", 30);
             $table->date("dated");

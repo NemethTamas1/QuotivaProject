@@ -15,7 +15,6 @@ class StoreOfferRequest extends FormRequest
     {
         return [
             // Alap
-            "offer_number" => ["required", "string", "max:50"], // Ezt lehet majd generáltatni kellene fakerrel.
             "offer_name" => ["required", "string", "max:100"],
             "status" => ["nullable", "string", "in:pending,accepted,rejected"],
             "dated" => ["required", "date"],

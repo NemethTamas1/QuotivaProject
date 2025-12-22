@@ -29,7 +29,7 @@ class OfferController extends Controller
         try {
             // Ajánlat létrehozás
             $offer = Offer::create([
-                "offer_number" => $data["offer_number"],
+                "offer_number" => $this->generateOfferNumber(),
                 "offer_name" => $data["offer_name"],
                 "status" => $data["status"] ?? "pending",
                 "dated" => $data["dated"],
@@ -104,5 +104,20 @@ class OfferController extends Controller
     public function destroy(Offer $offer)
     {
         //
+    }
+
+
+    private function generateOfferNumber(): string
+    {
+        do {
+            $number = str_pad(
+                random_int(0, 999_999_999),
+                9,
+                '0',
+                STR_PAD_LEFT
+            );
+        } while (Offer::where('offer_number', $number)->exists());
+
+        return $number;
     }
 }
