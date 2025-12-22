@@ -51,11 +51,6 @@ export default function CreateOfferPage() {
             return;
         };
 
-        //const url = `${apiUrl}/api/offers`;
-
-        //console.log("FETCH TARGET:", url);
-        //console.log("SUBMIT PAYLOAD:", data);
-
         try {
             const response = await fetch("http://localhost:8000/api/offers", {
                 method: "POST",
@@ -83,6 +78,24 @@ export default function CreateOfferPage() {
         console.log("USE EFFECT FUT");
         console.log("API_URL:", process.env.NEXT_PUBLIC_API_URL);
     }, []);
+
+    // Nettó sorösszeg
+    const netLaborTotal = newItem.quantity > 0 && newItem.labor_unit_price > 0
+        ? newItem.quantity * newItem.labor_unit_price
+        : 0;
+
+    // Bruttó sorösszeg
+    const netMaterialTotal = newItem.quantity > 0 && newItem.material_unit_price > 0
+        ? newItem.quantity * newItem.material_unit_price
+        : 0;
+
+    const hasValidLaborValue: boolean =
+        newItem.quantity > 0 &&
+        newItem.labor_unit_price > 0;
+
+    const hasValidMaterialValue: boolean =
+        newItem.quantity > 0 &&
+        newItem.material_unit_price > 0;
 
     return (
         <div className="min-h-screen bg-black text-white flex flex-col">
@@ -121,242 +134,297 @@ export default function CreateOfferPage() {
 
 
             {/* Main */}
-            <main className="flex-1 px-4 py-10 flex justify-center">
-                <form onSubmit={handleSubmit(onSubmit)} className="w-full max-w-7xl bg-white text-black rounded-lg p-6 space-y-6">
-                    {/* A J Á N L A T */}
-                    <h1 className="text-2xl font-semibold text-center">
-                        Új árajánlat
-                    </h1>
+            <main className="px-4 py-10">
 
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div>
-                            <label className="block mb-1">Ajánlat száma</label>
-                            <input
-                                {...register("offer_number")}
-                                className="w-full border rounded px-3 py-2"
-                                placeholder="OFF-2025-002"
-                            />
-                        </div>
+                <form onSubmit={handleSubmit(onSubmit)} className="w-full mx-auto max-w-7xl text-black rounded-lg p-6">
 
-                        <div>
-                            <label className="block mb-1">Ajánlat neve</label>
-                            <input
-                                {...register("offer_name")}
-                                className="w-full border rounded px-3 py-2"
-                                placeholder="Kazán szerelés"
-                            />
-                        </div>
+                    {/* M E G R E N D E L Ő  A D A T O K */}
+                    <h2 className="text-2xl font-semibold text-green-400 mb-7">Megrendelő adatai</h2>
 
-                        <div>
-                            <label className="block mb-1">Kelt</label>
-                            <input
-                                type="date"
-                                {...register("dated")}
-                                className="w-full border rounded px-3 py-2"
-                            />
-                        </div>
+                    <div className="relative">
+                        <div className="absolute -inset-1.5 bg-green-500 rounded-md blur-sm opacity-25"></div>
 
-                        <div>
-                            <label className="block mb-1">Érvényes eddig</label>
-                            <input
-                                type="date"
-                                {...register("valid_until")}
-                                className="w-full border rounded px-3 py-2"
-                            />
+                        <div className="bg-slate-900 flex flex-row flex-wrap gap-5 p-3 rounded-md relative">
+                            <div>
+                                <label className="block mb-1 text-white">Név*</label>
+                                <input
+                                    {...register("client_name")}
+                                    placeholder="Teszt Kft."
+                                    className="border rounded w-full px-3 py-2"
+                                />
+                            </div>
+
+                            <div>
+                                <label className="block mb-1 text-white">Email*</label>
+                                <input
+                                    {...register("client_email")}
+                                    placeholder="tesztcegkft@gmail.com"
+                                    type="email"
+                                    className="border rounded w-full px-3 py-2"
+                                />
+                            </div>
+
+                            <div>
+                                <label className="block mb-1 text-white">Telefonszám</label>
+                                <input
+                                    {...register("client_phone")}
+                                    placeholder="+36 20 123 4567"
+                                    className="border rounded w-full px-3 py-2"
+                                />
+                            </div>
+
+                            <div>
+                                <label className="block mb-1 text-white">Adószám <i>(cég esetén)</i></label>
+                                <input
+                                    {...register("client_tax_number")}
+                                    placeholder="12345678-1-12"
+                                    className="border rounded w-full px-3 py-2"
+                                />
+                            </div>
+
+                            <div>
+                                <label className="block mb-1 text-white">Irányítószám*</label>
+                                <input
+                                    {...register("client_zip", { valueAsNumber: true })}
+                                    placeholder="1111"
+                                    className="border rounded w-full px-3 py-2"
+                                />
+                            </div>
+
+                            <div>
+                                <label className="block mb-1 text-white">Város*</label>
+                                <input
+                                    {...register("client_city")}
+                                    placeholder="Budapest"
+                                    className="border rounded w-full px-3 py-2"
+                                />
+                            </div>
+
+                            <div>
+                                <label className="block mb-1 text-white">Utca*</label>
+                                <input
+                                    {...register("client_street")}
+                                    placeholder="Teszt utca"
+                                    className="border rounded w-full px-3 py-2"
+                                />
+                            </div>
+
+                            <div>
+                                <label className="block mb-1 text-white">Házszám*</label>
+                                <input
+                                    {...register("client_house_number")}
+                                    placeholder="11"
+                                    className="border rounded w-full px-3 py-2"
+                                />
+                            </div>
                         </div>
                     </div>
 
 
-                    {/* Ü G Y F É L  A D A T O K */}
-                    <h2 className="text-xl font-medium">Ügyfél adatok</h2>
 
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <input
-                            {...register("client_name")}
-                            placeholder="Cégnév"
-                            className="border rounded px-3 py-2"
-                        />
-                        <input
-                            {...register("client_email")}
-                            placeholder="Email"
-                            type="email"
-                            className="border rounded px-3 py-2"
-                        />
-                        <input
-                            {...register("client_phone")}
-                            placeholder="Telefon"
-                            className="border rounded px-3 py-2"
-                        />
-                        <input
-                            {...register("client_tax_number")}
-                            placeholder="Adószám"
-                            className="border rounded px-3 py-2"
-                        />
 
-                        <input
-                            {...register("client_zip", { valueAsNumber: true })}
-                            placeholder="Irányítószám"
-                            className="border rounded px-3 py-2"
-                        />
 
-                        <input
-                            {...register("client_city")}
-                            placeholder="Város"
-                            className="border rounded px-3 py-2"
-                        />
 
-                        <input
-                            {...register("client_street")}
-                            placeholder="Utca"
-                            className="border rounded px-3 py-2"
-                        />
 
-                        <input
-                            {...register("client_house_number")}
-                            placeholder="Házszám"
-                            className="border rounded px-3 py-2"
-                        />
+
+
+                    {/* A J Á N L A T  N E V E */}
+                    <div className="relative">
+
+                        <div className="absolute -inset-1.5 bg-green-500 rounded-md blur-sm opacity-25"></div>
+                        <div className="bg-slate-900 flex flex-row flex-wrap gap-5 p-3 rounded-md my-7 relative">
+                            <div>
+                                <label className="block mb-1 text-white">Ajánlat neve</label>
+                                <input
+                                    {...register("offer_name")}
+                                    className="w-full border rounded px-3 py-2"
+                                    placeholder="Kazán szerelés"
+                                />
+                            </div>
+
+                            <div>
+                                <label className="block mb-1 text-white">Kelt</label>
+                                <input
+                                    type="date"
+                                    {...register("dated")}
+                                    className="w-full border rounded px-3 py-2"
+                                />
+                            </div>
+
+                            <div>
+                                <label className="block mb-1 text-white">Érvényes eddig</label>
+                                <input
+                                    type="date"
+                                    {...register("valid_until")}
+                                    className="w-full border rounded px-3 py-2"
+                                />
+                            </div>
+                        </div>
                     </div>
+
+
 
                     {/* T É T E L E K */}
-                    <h2 className="text-xl font-medium">Tétel hozzáadása</h2>
+                    <h2 className="text-2xl font-semibold text-green-400">Tétel hozzáadása</h2>
 
-                    <div className="rounded-lg border p-4 grid grid-cols-1 md:grid-cols-6 gap-3">
-                        <div className="md:col-span-2">
-                            <label className="block text-sm mb-1">Tétel megnevezése</label>
-                            <input
-                                value={newItem.name}
-                                onChange={(e) =>
-                                    setNewItem({ ...newItem, name: e.target.value })
-                                }
-                                className="w-full border rounded px-3 py-2"
-                            />
+                    <div className="relative">
+                        <div className="absolute -inset-1.5 bg-green-500 rounded-md blur-sm opacity-25"></div>
+                        <div className="rounded-md p-3 flex flex-row bg-slate-900 my-7 relative">
+                            <div className="mx-1 flex-col">
+                                <label className="block font-semibold mb-1 text-white">Tétel megnevezése</label>
+                                <input
+                                    value={newItem.name}
+                                    onChange={(e) =>
+                                        setNewItem({ ...newItem, name: e.target.value })
+                                    }
+                                    className="w-full border rounded px-3 py-2"
+                                />
+                            </div>
+
+                            <div className="mx-1 flex flex-col w-1/6">
+                                <label className="block font-semibold text-white mb-1">Mennyiség</label> {/* input group? */}
+
+                                <div className="flex gap-2">
+                                    <input
+                                        type="number"
+                                        value={newItem.quantity}
+                                        onChange={(e) =>
+                                            setNewItem({ ...newItem, quantity: Number(e.target.value) })
+                                        }
+                                        className="w-5/12 border rounded px-3 py-2"
+                                    />
+
+                                    <select
+                                        value={newItem.quantity_type}
+                                        onChange={(e) =>
+                                            setNewItem({
+                                                ...newItem,
+                                                quantity_type: e.target.value as "ora" | "db" | "fm" | "m2" | "m3" | "kg",
+                                            })
+                                        }
+                                        className="w-5/12 border rounded px-3 py-2"
+                                    >
+                                        <option value="db">db</option>
+                                        <option value="ora">óra</option>
+                                        <option value="fm">fm</option>
+                                        <option value="m2">m2</option>
+                                        <option value="ora">óra</option>
+                                        <option value="kg">kg</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div>
+                                <label className="block font-semibold text-white mb-1">Munkadíj egységár</label>
+                                <input
+                                    type="number"
+                                    value={newItem.labor_unit_price}
+                                    onChange={(e) =>
+                                        setNewItem({
+                                            ...newItem,
+                                            labor_unit_price: Number(e.target.value),
+                                        })
+                                    }
+                                    className="w-10/12 border rounded px-3 py-2"
+                                />
+                                {hasValidLaborValue && (
+                                    <p className="opacity-50 text-white">= {netLaborTotal} Ft</p>
+                                )}
+                            </div>
+
+                            <div>
+                                <label className="block font-semibold text-white mb-1">Anyag egységár</label>
+                                <input
+                                    type="number"
+                                    value={newItem.material_unit_price}
+                                    onChange={(e) =>
+                                        setNewItem({
+                                            ...newItem,
+                                            material_unit_price: Number(e.target.value),
+                                        })
+                                    }
+                                    className="w-10/12 border rounded px-3 py-2"
+                                />
+                                {hasValidMaterialValue && (
+                                    <p className="opacity-50 text-white">= {netMaterialTotal} Ft</p>
+                                )}
+
+                            </div>
+
+                            <div className="flex align-middle items-end">
+                                <button
+                                    type="button"
+                                    onClick={() => {
+                                        append(newItem);
+                                        setNewItem({
+                                            name: "",
+                                            quantity: 1,
+                                            quantity_type: "db",
+                                            labor_unit_price: 0,
+                                            material_unit_price: 0,
+                                        });
+                                    }}
+                                    className="w-full bg-green-500 text-black p-3 rounded"
+                                >
+                                    Hozzáad
+                                </button>
+                            </div>
                         </div>
 
-                        <div>
-                            <label className="block text-sm mb-1">Mennyiség</label> {/* input group? */}
-                            <input
-                                type="number"
-                                value={newItem.quantity}
-                                onChange={(e) =>
-                                    setNewItem({ ...newItem, quantity: Number(e.target.value) })
-                                }
-                                className="w-full border rounded px-3 py-2"
-                            />
-                        </div>
-
-                        <div>
-                            <label className="block text-sm mb-1">Egység</label>
-                            <select
-                                value={newItem.quantity_type}
-                                onChange={(e) =>
-                                    setNewItem({
-                                        ...newItem,
-                                        quantity_type: e.target.value as "ora" | "db" | "fm" | "m2" | "m3" | "kg",
-                                    })
-                                }
-                                className="w-full border rounded px-3 py-2"
-                            >
-                                <option value="db">db</option>
-                                <option value="ora">óra</option>
-                                <option value="fm">fm</option>
-                                <option value="m2">m2</option>
-                                <option value="ora">óra</option>
-                                <option value="kg">kg</option>
-                            </select>
-                        </div>
-
-                        <div>
-                            <label className="block text-sm mb-1">Munkadíj egységár</label>
-                            <input
-                                type="number"
-                                value={newItem.labor_unit_price}
-                                onChange={(e) =>
-                                    setNewItem({
-                                        ...newItem,
-                                        labor_unit_price: Number(e.target.value),
-                                    })
-                                }
-                                className="w-full border rounded px-3 py-2"
-                            />
-                        </div>
-
-                        <div>
-                            <label className="block text-sm mb-1">Anyag egységár</label>
-                            <input
-                                type="number"
-                                value={newItem.material_unit_price}
-                                onChange={(e) =>
-                                    setNewItem({
-                                        ...newItem,
-                                        material_unit_price: Number(e.target.value),
-                                    })
-                                }
-                                className="w-full border rounded px-3 py-2"
-                            />
-                        </div>
-
-                        <div className="flex items-end">
-                            <button
-                                type="button"
-                                onClick={() => {
-                                    append(newItem);
-                                    setNewItem({
-                                        name: "",
-                                        quantity: 1,
-                                        quantity_type: "db",
-                                        labor_unit_price: 0,
-                                        material_unit_price: 0,
-                                    });
-                                }}
-                                className="w-full bg-green-500 text-black py-2 rounded"
-                            >
-                                Hozzáad
-                            </button>
-                        </div>
                     </div>
 
-                    <div className="w-full">
-                        <table className="w-full">
-                            <thead>
-                                <tr>
-                                    <th>Tétel megnevezés</th>
-                                    <th>Mennyiség</th>
-                                    <th>Munkadíj egységár</th>
-                                    <th>Anyag egységár</th>
-                                    <th>Munkadíj</th>
-                                    <th>Anyagdíj</th>
-                                    <th>Műveletek</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {fields.map((field, index) => {
-                                    const laborTotal = field.quantity * field.labor_unit_price;
-                                    const materialTotal = field.quantity * field.material_unit_price;
 
-                                    return (
-                                        <tr key={field.id}>
-                                            <td>{field.name}</td>
-                                            <td>{field.quantity}{field.quantity_type}</td>
-                                            <td>{field.labor_unit_price} Ft</td>
-                                            <td>{field.material_unit_price} Ft</td>
-                                            <td>{laborTotal} Ft</td>
-                                            <td>{materialTotal} Ft</td>
-                                            <td>implementálásra vár</td>
+                    {/* T É T E L E K  T Á B L Á Z A T A */}
+                    <div className="relative w-full rounded-md">
+
+                        <div className="absolute -inset-1.5 bg-green-500 rounded-md blur-sm opacity-25"></div>
+
+                        <div className="relative rounded-md overflow-hidden bg-slate-900">
+                            <table className="w-full border-collapse">
+                                <thead>
+                                    <tr>
+                                        <th className="text-green-500 p-3 text-lg">Tétel megnevezés</th>
+                                        <th className="text-green-500 p-3 text-lg">Mennyiség</th>
+                                        <th className="text-green-500 p-3 text-lg">Munkadíj egységár</th>
+                                        <th className="text-green-500 p-3 text-lg">Anyag egységár</th>
+                                        <th className="text-green-500 p-3 text-lg">Munkadíj</th>
+                                        <th className="text-green-500 p-3 text-lg">Anyagdíj</th>
+                                        <th className="text-green-500 p-3 text-lg">Műveletek</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {fields.length === 0 ? (
+                                        <tr>
+                                            <td colSpan={7} className="text-center py-10 text-lg text-slate-400">
+                                                Nincsenek még hozzáadott tételek.
+                                            </td>
                                         </tr>
-                                    );
-                                })}
-                            </tbody>
-                        </table>
+                                    ) : (
+                                        fields.map((field) => (
+                                            <tr key={field.id} className="border-t border-slate-800 text-center odd:bg-white even:bg-green-200">
+                                                <td className="p-2 text-lg text-black">{field.name}</td>
+                                                <td className="p-2 text-lg text-black">{field.quantity} {field.quantity_type} Ft</td>
+                                                <td className="p-2 text-lg text-black">{field.labor_unit_price} Ft</td>
+                                                <td className="p-2 text-lg text-black">{field.material_unit_price} Ft</td>
+                                                <td className="p-2 text-lg text-black">{field.quantity * field.labor_unit_price} Ft</td>
+                                                <td className="p-2 text-lg text-black">{field.quantity * field.material_unit_price} Ft</td>
+                                                <td className="p-2 text-lg text-black">implementálásra vár</td>
+                                            </tr>
+                                        ))
+                                    )}
+                                </tbody>
+
+                            </table>
+                        </div>
                     </div>
 
 
 
                     <button
                         type="submit"
-                        className="w-full bg-green-600 text-white py-3 rounded hover:bg-green-700 transition"
+                        className="w-3/12 bg-green-600 text-white py-3 rounded hover:bg-green-700 transition my-7"
                     >
-                        Ajánlat mentése
+                        Ajánlat létrehozása
                     </button>
                 </form>
             </main>
