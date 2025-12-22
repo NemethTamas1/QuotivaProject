@@ -24,7 +24,7 @@ export default function Home() {
         </Link>
 
         <div className="hidden md:flex gap-6 text-2xl">
-          <Link href="#" className="hover:text-green-400 transition">Új árajánlat</Link>
+          <Link href="/createoffer" className="hover:text-green-400 transition">Új árajánlat</Link>
           <Link href="#" className="hover:text-green-400 transition">Árajánlataim</Link>
           <Link href="#" className="hover:text-green-400 transition">Belépés</Link>
         </div>
