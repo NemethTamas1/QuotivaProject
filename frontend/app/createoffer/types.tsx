@@ -3,6 +3,7 @@ export type OfferStatus = "pending" | "accepted" | "rejected";
 export type Currency = "HUF" | "EUR";
 
 export interface OfferItem {
+    id: number,
     name: string;
     quantity: number;
     quantity_type: QuantityType;
