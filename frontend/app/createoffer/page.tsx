@@ -5,7 +5,9 @@ import { useForm, useFieldArray, SubmitHandler } from "react-hook-form";
 import Link from "next/link";
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faBars } from "@fortawesome/free-solid-svg-icons";
+import { faBars, faTrash } from "@fortawesome/free-solid-svg-icons";
+import { faPenToSquare } from "@fortawesome/free-solid-svg-icons";
+
 
 import type { CreateOfferForm } from "./types";
 import type { QuantityType } from "./types";
@@ -97,49 +99,19 @@ export default function CreateOfferPage() {
         newItem.quantity > 0 &&
         newItem.material_unit_price > 0;
 
+        
+
     return (
         <div className="min-h-screen bg-black text-white flex flex-col">
-            {/* NavBar */}
-            <nav className="w-full py-4 flex justify-between px-3 items-center backdrop-blur-md bg-black">
-                <Link href="/" className="text-3xl font-semibold tracking-wide">
-                    Quotiva
-                </Link>
-
-                <div className="hidden md:flex gap-6 text-2xl">
-                    <Link href="#" className="hover:text-green-400 transition">Új árajánlat</Link>
-                    <Link href="#" className="hover:text-green-400 transition">Árajánlataim</Link>
-                    <Link href="#" className="hover:text-green-400 transition">Belépés</Link>
-                </div>
-
-                <div className="md:hidden">
-                    <button onClick={() => setIsOpen(!isOpen)} className="md:hidden">
-                        <FontAwesomeIcon icon={faBars} />
-                    </button>
-                </div>
-            </nav>
-            {isOpen && (
-                <div
-                    className={
-                        `md:hidden overflow-hidden transition-all duration-300 bg-black border-t border-white/10
-      ${isOpen ? "max-h-96 opacity-100" : "max-h-0 opacity-0"}`
-                    }
-                >
-                    <div className="flex flex-col gap-4 px-4 py-4 text-xl">
-                        <a href="#" className="hover:text-green-400 transition">Új árajánlat</a>
-                        <a href="#" className="hover:text-green-400 transition">Árajánlataim</a>
-                        <a href="#" className="hover:text-green-400 transition">Belépés</a>
-                    </div>
-                </div>
-            )}
-
-
             {/* Main */}
             <main className="px-4 py-10">
 
                 <form onSubmit={handleSubmit(onSubmit)} className="w-full mx-auto max-w-7xl text-black rounded-lg p-6">
 
                     {/* M E G R E N D E L Ő  A D A T O K */}
-                    <h2 className="text-2xl font-semibold text-green-400 mb-7">Megrendelő adatai</h2>
+                    <h2 className="text-2xl font-semibold text-green-400 mb-7" style={{
+                        textShadow: "0px 0px 20px rgba(34, 197, 94, 1"
+                    }}>Megrendelő adatai</h2>
 
                     <div className="relative">
                         <div className="absolute -inset-1.5 bg-green-500 rounded-md blur-sm opacity-25"></div>
@@ -185,6 +157,9 @@ export default function CreateOfferPage() {
                             <div>
                                 <label className="block mb-1 text-white">Irányítószám*</label>
                                 <input
+                                    type="number"
+                                    inputMode="numeric"
+                                    pattern="[0-9]"
                                     {...register("client_zip", { valueAsNumber: true })}
                                     placeholder="1111"
                                     className="border rounded w-full px-3 py-2"
@@ -265,7 +240,9 @@ export default function CreateOfferPage() {
 
 
                     {/* T É T E L E K */}
-                    <h2 className="text-2xl font-semibold text-green-400">Tétel hozzáadása</h2>
+                    <h2 className="text-2xl font-semibold text-green-400" style={{
+                        textShadow: "0px 0px 20px rgba(34, 197, 94, 1"
+                    }}>Tétel hozzáadása</h2>
 
                     <div className="relative">
                         <div className="absolute -inset-1.5 bg-green-500 rounded-md blur-sm opacity-25"></div>
@@ -401,15 +378,15 @@ export default function CreateOfferPage() {
                                         </tr>
                                     ) : (
                                         fields.map((field) => (
-                                            <tr key={field.id} className="border-t border-slate-800 text-center odd:bg-white even:bg-green-200">
+                                            <tr key={field.id} className="border-t text-center odd:bg-white even:bg-green-200">
                                                 <td className="p-2 text-lg text-black">{field.name}</td>
-                                                <td className="p-2 text-lg text-black">{field.quantity} {field.quantity_type} Ft</td>
+                                                <td className="p-2 text-lg text-black">{field.quantity} Ft</td>
                                                 <td className="p-2 text-lg text-black">{field.labor_unit_price} Ft</td>
                                                 <td className="p-2 text-lg text-black">{field.material_unit_price} Ft</td>
                                                 <td className="p-2 text-lg text-black">{field.quantity * field.labor_unit_price} Ft</td>
                                                 <td className="p-2 text-lg text-black">{field.quantity * field.material_unit_price} Ft</td>
-                                                <td className="p-2 text-lg text-black">implementálásra vár</td>
-                                            </tr>
+                                                <td className="p-2 text-lg text-black"><FontAwesomeIcon icon={faPenToSquare} size="xl" className="text-white bg-green-500 rounded-md py-1"/> <FontAwesomeIcon icon={faTrash} size="xl" className="text-white bg-red-500 rounded-md py-1"/></td>
+                                            </tr> 
                                         ))
                                     )}
                                 </tbody>
@@ -420,10 +397,8 @@ export default function CreateOfferPage() {
 
 
 
-                    <button
-                        type="submit"
-                        className="w-3/12 bg-green-600 text-white py-3 rounded hover:bg-green-700 transition my-7"
-                    >
+                    <button type="submit" className="w-2/12 bg-green-600 text-black font-semibold text-lg py-3 rounded hover:bg-green-700 transition my-7"
+>
                         Ajánlat létrehozása
                     </button>
                 </form>
