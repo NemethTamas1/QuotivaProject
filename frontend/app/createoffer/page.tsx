@@ -2,19 +2,20 @@
 
 import { useState, useEffect } from "react";
 import { useForm, useFieldArray, SubmitHandler } from "react-hook-form";
-import Link from "next/link";
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBars, faTrash } from "@fortawesome/free-solid-svg-icons";
 import { faPenToSquare } from "@fortawesome/free-solid-svg-icons";
 
 
-import type { CreateOfferForm, OfferItemInput } from "./types";
-import type { QuantityType } from "./types";
+import { AllCurrencies, TaxOptions, type CreateOfferForm, type OfferItemInput } from "./types";
+import type { QuantityType, TaxPercent } from "./types";
 
 export default function CreateOfferPage() {
 
     const [isOpen, setIsOpen] = useState(false);
+
+
 
     const [newItem, setNewItem] = useState<OfferItemInput>({
         name: "",
@@ -24,14 +25,17 @@ export default function CreateOfferPage() {
         material_unit_price: 0,
     });
 
-    const { register, handleSubmit, control } = useForm<CreateOfferForm>({
+    const { register, handleSubmit, control, setValue, watch } = useForm<CreateOfferForm>({
         defaultValues: {
             status: "pending",
-            currency: "HUF",
-            tax_percent: 27, // Később ki kell venni, hogy állítani lehessen. (alanyi adómentes)
             items: [],
+            "tax_percent": 27,
+            "currency": "HUF", 
         },
     });
+
+    const taxPercent = watch("tax_percent") ?? 27;
+    const hasTax = taxPercent === 27;
 
     const { fields, append, remove } = useFieldArray({
         control,
@@ -48,7 +52,7 @@ export default function CreateOfferPage() {
         };
 
         try {
-            const response = await fetch("http://localhost:8000/api/offers", {
+            const response = await fetch(`${apiUrl}/api/offers`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -93,7 +97,7 @@ export default function CreateOfferPage() {
         newItem.quantity > 0 &&
         newItem.material_unit_price > 0;
 
-        
+
 
     return (
         <div className="min-h-screen bg-black text-white flex flex-col">
@@ -228,6 +232,38 @@ export default function CreateOfferPage() {
                                     className="w-full border rounded px-3 py-2"
                                 />
                             </div>
+
+                            <div>
+                                <label className="block mb-1 text-white">Pénznem</label>
+                                <select {...register("currency")} className="w-full border rounded px-3 py-2">
+                                    {AllCurrencies.map((currency) => (
+                                        <option key={currency} value={currency}>{currency}</option>
+                                    ))}
+                                </select>
+                            </div>
+
+
+                            <div>
+                                <label className="block mb-2 text-white">Áfa kulcs</label>
+
+                                <div className="flex items-center gap-4">
+                                    <span className="text-sm text-gray-400">0%</span>
+                                    <input type="hidden" {...register("tax_percent", {valueAsNumber: true})} />
+                                    <button
+                                        type="button"
+                                        onClick={() => setValue("tax_percent", hasTax ? 0 : 27, {
+                                            shouldDirty: true,
+                                            shouldTouch: true,
+                                            shouldValidate: true,
+                                        })}
+                                        className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${hasTax ? "bg-green-500" : "bg-gray-400"}`}>
+                                        <span className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${hasTax ? "translate-x-6" : "translate-x-1"}`} />
+                                    </button>
+
+                                    <span className="text-sm text-gray-400">27%</span>
+                                </div>
+                            </div>
+
                         </div>
                     </div>
 
@@ -330,7 +366,7 @@ export default function CreateOfferPage() {
                                         setNewItem({
                                             name: "",
                                             quantity: 1,
-                                            quantity_type: "db",    
+                                            quantity_type: "db",
                                             labor_unit_price: 0,
                                             material_unit_price: 0,
                                         });
@@ -379,8 +415,8 @@ export default function CreateOfferPage() {
                                                 <td className="p-2 text-lg text-black">{field.material_unit_price} Ft</td>
                                                 <td className="p-2 text-lg text-black">{field.quantity * field.labor_unit_price} Ft</td>
                                                 <td className="p-2 text-lg text-black">{field.quantity * field.material_unit_price} Ft</td>
-                                                <td className="p-2 text-lg text-black"><FontAwesomeIcon icon={faPenToSquare} size="xl" className="text-white bg-green-500 rounded-md py-1"/> <FontAwesomeIcon icon={faTrash} size="xl" className="text-white bg-red-500 rounded-md py-1"/></td>
-                                            </tr> 
+                                                <td className="p-2 text-lg text-black"><FontAwesomeIcon icon={faPenToSquare} size="xl" className="text-white bg-green-500 rounded-md py-1" /> <FontAwesomeIcon icon={faTrash} size="xl" className="text-white bg-red-500 rounded-md py-1" /></td>
+                                            </tr>
                                         ))
                                     )}
                                 </tbody>
@@ -392,7 +428,7 @@ export default function CreateOfferPage() {
 
 
                     <button type="submit" className="w-2/12 bg-green-600 text-black font-semibold text-lg py-3 rounded hover:bg-green-700 transition my-7"
->
+                    >
                         Ajánlat létrehozása
                     </button>
                 </form>

@@ -1,6 +1,13 @@
 export type QuantityType = "ora" | "db" | "fm" | "m2" | "m3" | "kg";
 export type OfferStatus = "pending" | "accepted" | "rejected";
-export type Currency = "HUF" | "EUR";
+
+// Readonly string literal
+export const AllCurrencies = ["HUF", "EUR"] as const;
+export type Currency = typeof AllCurrencies[number];
+
+// Readonly number literal
+export const TaxOptions = [0, 27] as const;
+export type TaxPercent = typeof TaxOptions[number];
 
 export interface OfferItemInput {
     name: string;
