@@ -2,14 +2,18 @@ export type QuantityType = "ora" | "db" | "fm" | "m2" | "m3" | "kg";
 export type OfferStatus = "pending" | "accepted" | "rejected";
 export type Currency = "HUF" | "EUR";
 
-export interface OfferItem {
-    id: number,
+export interface OfferItemInput {
     name: string;
     quantity: number;
     quantity_type: QuantityType;
     labor_unit_price: number;
     material_unit_price: number;
 };
+
+export interface OfferItem extends OfferItemInput {
+    id: number;
+};
+
 
 export interface CreateOfferForm {
     offer_number: string;
@@ -29,5 +33,5 @@ export interface CreateOfferForm {
     client_street: string;
     client_house_number: string;
 
-    items: OfferItem[];
+    items: OfferItemInput[];
 };

@@ -9,20 +9,14 @@ import { faBars, faTrash } from "@fortawesome/free-solid-svg-icons";
 import { faPenToSquare } from "@fortawesome/free-solid-svg-icons";
 
 
-import type { CreateOfferForm } from "./types";
+import type { CreateOfferForm, OfferItemInput } from "./types";
 import type { QuantityType } from "./types";
 
 export default function CreateOfferPage() {
 
     const [isOpen, setIsOpen] = useState(false);
 
-    const [newItem, setNewItem] = useState<{
-        name: string,
-        quantity: number,
-        quantity_type: QuantityType,
-        labor_unit_price: number,
-        material_unit_price: number,
-    }>({
+    const [newItem, setNewItem] = useState<OfferItemInput>({
         name: "",
         quantity: 1,
         quantity_type: "db",
@@ -336,7 +330,7 @@ export default function CreateOfferPage() {
                                         setNewItem({
                                             name: "",
                                             quantity: 1,
-                                            quantity_type: "db",
+                                            quantity_type: "db",    
                                             labor_unit_price: 0,
                                             material_unit_price: 0,
                                         });
