@@ -8,15 +8,11 @@ import { faBars, faTrash } from "@fortawesome/free-solid-svg-icons";
 import { faPenToSquare } from "@fortawesome/free-solid-svg-icons";
 
 
-import { AllCurrencies, TaxOptions, type CreateOfferForm, type OfferItemInput } from "./types";
-import type { QuantityType, TaxPercent } from "./types";
+import { AllCurrencies, type CreateOfferForm, type OfferItemInput } from "./types";
+import type { EditableOfferItem } from "./types";
+import EditItem from "../components/EditItem";
 
 export default function CreateOfferPage() {
-
-    const [isOpen, setIsOpen] = useState(false);
-
-
-
     const [newItem, setNewItem] = useState<OfferItemInput>({
         name: "",
         quantity: 1,
@@ -30,14 +26,14 @@ export default function CreateOfferPage() {
             status: "pending",
             items: [],
             "tax_percent": 27,
-            "currency": "HUF", 
+            "currency": "HUF",
         },
     });
 
     const taxPercent = watch("tax_percent") ?? 27;
     const hasTax = taxPercent === 27;
 
-    const { fields, append, remove } = useFieldArray({
+    const { fields, append, remove, update } = useFieldArray({
         control,
         name: "items",
     });
@@ -97,6 +93,8 @@ export default function CreateOfferPage() {
         newItem.quantity > 0 &&
         newItem.material_unit_price > 0;
 
+    const [editingItem, setEditingItem] =
+        useState<EditableOfferItem | null>(null);
 
 
     return (
@@ -248,7 +246,7 @@ export default function CreateOfferPage() {
 
                                 <div className="flex items-center gap-4">
                                     <span className="text-sm text-gray-400">0%</span>
-                                    <input type="hidden" {...register("tax_percent", {valueAsNumber: true})} />
+                                    <input type="hidden" {...register("tax_percent", { valueAsNumber: true })} />
                                     <button
                                         type="button"
                                         onClick={() => setValue("tax_percent", hasTax ? 0 : 27, {
@@ -415,7 +413,35 @@ export default function CreateOfferPage() {
                                                 <td className="p-2 text-lg text-black">{field.material_unit_price} Ft</td>
                                                 <td className="p-2 text-lg text-black">{field.quantity * field.labor_unit_price} Ft</td>
                                                 <td className="p-2 text-lg text-black">{field.quantity * field.material_unit_price} Ft</td>
-                                                <td className="p-2 text-lg text-black"><FontAwesomeIcon icon={faPenToSquare} size="xl" className="text-white bg-green-500 rounded-md py-1" /> <FontAwesomeIcon icon={faTrash} size="xl" className="text-white bg-red-500 rounded-md py-1" /></td>
+                                                <td className="p-2 text-lg text-black">
+                                                    <FontAwesomeIcon
+                                                        icon={faPenToSquare}
+                                                        size="xl"
+                                                        className="text-white bg-green-500 rounded-md py-1"
+                                                        onClick={() => {
+                                                            setEditingItem({
+                                                                _fieldId: field.id,
+                                                                name: field.name,
+                                                                quantity: field.quantity,
+                                                                quantity_type: field.quantity_type,
+                                                                labor_unit_price: field.labor_unit_price,
+                                                                material_unit_price: field.material_unit_price,
+                                                            })
+                                                        }} />
+                                                    <FontAwesomeIcon
+                                                    icon={faTrash}
+                                                    size="xl"
+                                                    className="text-white bg-red-500 rounded-md py-1" 
+                                                    onClick={() => {
+                                                        const index = fields.findIndex(
+                                                            (f) => f.id === field.id
+                                                        );
+
+                                                        if (index !== -1) {
+                                                            remove(index);
+                                                        }
+                                                    }}/>
+                                                </td>
                                             </tr>
                                         ))
                                     )}
@@ -431,6 +457,30 @@ export default function CreateOfferPage() {
                     >
                         Ajánlat létrehozása
                     </button>
+                    {editingItem ? (
+                        <EditItem
+                            item={editingItem}
+                            onClose={() => setEditingItem(null)}
+                            onSave={(updatedItem) => {
+                                const index = fields.findIndex(
+                                    (f) => f.id === updatedItem._fieldId
+                                );
+
+                                if (index !== -1) {
+                                    update(index, {
+                                        name: updatedItem.name,
+                                        quantity: updatedItem.quantity,
+                                        quantity_type: updatedItem.quantity_type,
+                                        labor_unit_price: updatedItem.labor_unit_price,
+                                        material_unit_price: updatedItem.material_unit_price,
+                                    });
+                                }
+
+                                setEditingItem(null);
+                            }}
+                        />
+                    ) : null}
+
                 </form>
             </main>
         </div>
