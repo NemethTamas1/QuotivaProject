@@ -9,10 +9,6 @@ export type Currency = typeof AllCurrencies[number];
 export const TaxOptions = [0, 27] as const;
 export type TaxPercent = typeof TaxOptions[number];
 
-export type EditableOfferItem = OfferItem & {
-  _fieldId: string;
-};
-
 
 export interface OfferItemInput {
     name: string;
