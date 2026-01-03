@@ -130,7 +130,6 @@ export default function OfferItemDetails({ append }: Props) {
                         <button
                             type="button"
                             onClick={() => {
-                                console.log("Appending new item: ", newItem);
                                 append(newItem);
                                 setNewItem({
                                     name: "",
