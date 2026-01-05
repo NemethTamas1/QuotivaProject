@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DataController;
 use App\Http\Controllers\OfferController;
 use App\Http\Controllers\UserProfileController;
@@ -20,3 +21,9 @@ Route::apiResource("/datas", DataController::class);
 Route::apiResource("/offers", OfferController::class);
 
 Route::apiResource("/user-profiles", UserProfileController::class);
+
+//Route::post("/login", [AuthController::class, "login"]);
+
+Route::middleware('auth:sanctum')->group(function () {
+    Route::get("/me", [AuthController::class, "me"]);
+});
