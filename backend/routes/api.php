@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\DataController;
 use App\Http\Controllers\OfferController;
+use App\Http\Controllers\UserProfileController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -17,3 +18,5 @@ Route::get("/test", function(){
 Route::apiResource("/datas", DataController::class);
 
 Route::apiResource("/offers", OfferController::class);
+
+Route::apiResource("/user-profiles", UserProfileController::class);
