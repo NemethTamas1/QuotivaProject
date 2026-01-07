@@ -11,7 +11,12 @@ class AuthController extends Controller
 {
     public function login(AuthRequest $request)
     {
-        $credentials = $request->validated();
+        //$credentials = $request->validated();
+
+        $credentials = $request->validate([
+            'email' => ['required', 'email'],
+            'password' => ['required'],
+        ]);
 
         if (! Auth::attempt($credentials)) {
             return response()->json(["message" => "Hibás email vagy jelszó."], 401);
