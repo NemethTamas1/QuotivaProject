@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -10,3 +11,20 @@ Route::get('/', function () {
 Route::post('/login', [AuthController::class, 'login']);
 
 Route::post("/logout", [AuthController::class, "logout"]);
+
+Route::get('/csrf-test', function () {
+    return response()->json([
+        'csrf' => csrf_token(),
+    ]);
+});
+
+Route::post('/csrf-test', function (Request $request) {
+    return response()->json([
+        'ok' => true,
+        'token' => csrf_token(),
+    ]);
+});
+
+Route::get("/whoami", function(Request $request){
+    return $request->user() ?: 'NO USER';
+});
