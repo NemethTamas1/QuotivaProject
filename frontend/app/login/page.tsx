@@ -1,6 +1,64 @@
 'use client';
 
+import http from "@/lib/http";
+import { useState } from "react";
+
 export default function LoginPage() {
+
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+    const [csrfToken, setCsrfToken] = useState<string | null>(null);
+
+    const getCsrfToken = async () => {
+        try {
+            const res = await http.get("/csrf-test", {
+                withCredentials: true,
+            });
+            setCsrfToken(res.data.csrf);
+            return res.data.csrf;
+
+        } catch (error) {
+            console.error('Error fetching CSRF token:', error);
+        }
+    };
+
+    const handleLogin = async () => {
+        try {
+            const token = csrfToken || await getCsrfToken();
+            if (!token) {
+                throw new Error('CSRF token not available');
+            }
+
+            await http.post("/login", { email, password }, {
+                headers: {
+                    'X-CSRF-TOKEN': token,
+                }
+            })
+
+            await getCsrfToken();
+
+            alert('Sikeres bejelentkezés!');
+        } catch (error) {
+            console.error('Login error:', error);
+            alert('Hiba a bejelentkezés során. Kérlek, próbáld újra.');
+        }
+    };
+
+    const fetchMe = async () => {
+        try {
+            const res = await http.get("/api/me", {
+                headers: {
+                    Accept: "application/json",
+                },
+            });
+
+            console.log(res.data.user);
+            return res.data.user;
+        } catch (error) {
+            console.error("Fetch me error:", error);
+        }
+    };
+
 
     return (
         <>
@@ -17,12 +75,14 @@ export default function LoginPage() {
                         <div className="mx-auto w-7/12 flex flex-col gap-5">
 
                             <div className="flex flex-col gap-5">
-                                <input type="text" name="email" placeholder="Email" className="p-3 rounded-md" />
-                                <input type="password" name="password" placeholder="Jelszó" className="p-3 rounded-md" />
+                                <input value={email} onChange={(e) => setEmail(e.target.value)} type="text" name="email" placeholder="Email" className="text-black p-3 rounded-md" />
+                                <input value={password} onChange={(e) => setPassword(e.target.value)} type="password" name="password" placeholder="Jelszó" className="text-black p-3 rounded-md" />
                                 <p className="ml-auto text-green-400">Elfelejtett jelszó?</p>
                             </div>
 
-                            <button className="bg-green-400 mx-auto p-4 rounded-md lg:mb-5 text-black text-lg font-semibold">Bejelentkezés</button>
+                            <button onClick={handleLogin} className="bg-green-400 mx-auto p-4 rounded-md lg:mb-5 text-black text-lg font-semibold">Bejelentkezés</button>
+
+                            <button onClick={fetchMe} className="p-3 text-lg font font-semibold text-black bg-blue-300">Fetch me!</button>
                         </div>
 
                     </div>
