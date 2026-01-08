@@ -81,8 +81,6 @@ export default function LoginPage() {
                             </div>
 
                             <button onClick={handleLogin} className="bg-green-400 mx-auto p-4 rounded-md lg:mb-5 text-black text-lg font-semibold">Bejelentkezés</button>
-
-                            <button onClick={fetchMe} className="p-3 text-lg font font-semibold text-black bg-blue-300">Fetch me!</button>
                         </div>
 
                     </div>
