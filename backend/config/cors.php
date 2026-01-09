@@ -19,7 +19,7 @@ return [
 
     'allowed_methods' => ['*'],
 
-    'allowed_origins' => ['http://localhost:3000', "https://www.quotiva-frontend.fly.dev"],
+    'allowed_origins' => ['http://localhost:3000', "https://quotiva-frontend.fly.dev"],
 
     'allowed_origins_patterns' => [],
 
