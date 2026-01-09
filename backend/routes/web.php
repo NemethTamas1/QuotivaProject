@@ -10,7 +10,7 @@ Route::get('/', function () {
 
 Route::post('/login', [AuthController::class, 'login']);
 
-Route::post("/logout", [AuthController::class, "logout"]);
+Route::post("/logout", [AuthController::class, "logout"])->middleware('auth');
 
 Route::get('/csrf-test', function () {
     return response()->json([
@@ -25,6 +25,6 @@ Route::post('/csrf-test', function (Request $request) {
     ]);
 });
 
-Route::get("/whoami", function(Request $request){
-    return $request->user() ?: 'NO USER';
-});
+// Route::get("/whoami", function(Request $request){
+//     return $request->user() ?: 'NO USER';
+// });
