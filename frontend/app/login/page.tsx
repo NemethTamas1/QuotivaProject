@@ -2,62 +2,85 @@
 
 import http from "@/lib/http";
 import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { json } from "stream/consumers";
 
 export default function LoginPage() {
 
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const [csrfToken, setCsrfToken] = useState<string | null>(null);
-
-    const getCsrfToken = async () => {
-        try {
-            const res = await http.get("/csrf-test", {
-                withCredentials: true,
-            });
-            setCsrfToken(res.data.csrf);
-            return res.data.csrf;
-
-        } catch (error) {
-            console.error('Error fetching CSRF token:', error);
-        }
-    };
+    const router = useRouter();
 
     const handleLogin = async () => {
+        const api = process.env.NEXT_PUBLIC_API_URL;
         try {
-            const token = csrfToken || await getCsrfToken();
-            if (!token) {
-                throw new Error('CSRF token not available');
+            // CSRF COOKIE
+            try {
+                console.log("CSRF cookie lekérése...")
+                await fetch(`${api}/sanctum/csrf-cookie`, {
+                    credentials: 'include'
+                });
+                console.log("CSRF cookie lekérése sikeres.")
+            } catch (error) {
+                console.error("CSRF cookie lekérése sikertelen.")
             }
 
-            await http.post("/login", { email, password }, {
+            const token = decodeURIComponent(
+                document.cookie
+                    .split('; ')
+                    .find(c => c.startsWith('XSRF-TOKEN='))
+                    ?.split('=')[1] ?? ''
+            );
+            console.log("token: ", token)
+
+            // LOGIN
+            const res = await fetch(`${api}/login`, {
+                method: 'POST',
+                credentials: 'include',
                 headers: {
+                    'Content-Type': 'application/json',
                     'X-CSRF-TOKEN': token,
-                }
-            })
-
-            await getCsrfToken();
-
-            alert('Sikeres bejelentkezés!');
-        } catch (error) {
-            console.error('Login error:', error);
-            alert('Hiba a bejelentkezés során. Kérlek, próbáld újra.');
-        }
-    };
-
-    const fetchMe = async () => {
-        try {
-            const res = await http.get("/api/me", {
-                headers: {
-                    Accept: "application/json",
                 },
+                body: JSON.stringify({
+                    email,
+                    password
+                }),
             });
 
-            console.log(res.data.user);
-            return res.data.user;
+            if (!res.ok) {
+                throw new Error("Login failed");
+            }
+
+            alert("Sikeres bejelentkezés");
+            router.push("/");
+            router.refresh();
         } catch (error) {
-            console.error("Fetch me error:", error);
+            console.error("Login hiba:", error);
         }
     };
+
+
+    const handleLogout = async () => {
+        try {
+            const res = await fetch(
+                `${process.env.NEXT_PUBLIC_API_URL}/api/logout`,
+                {
+                    method: "POST",
+                    credentials: "include",
+                }
+            );
+
+            if (!res.ok) {
+                throw new Error("Logout failed");
+            }
+
+            alert("Kijelentkezve");
+            router.push("/");
+        } catch (error) {
+            console.error("Logout hiba:", error);
+        }
+    };
+
 
 
     return (
@@ -81,6 +104,8 @@ export default function LoginPage() {
                             </div>
 
                             <button onClick={handleLogin} className="bg-green-400 mx-auto p-4 rounded-md lg:mb-5 text-black text-lg font-semibold">Bejelentkezés</button>
+
+                            <button onClick={handleLogout} className="bg-white text-black p-5">Kijelentkezés</button>
                         </div>
 
                     </div>
@@ -89,4 +114,5 @@ export default function LoginPage() {
             </div>
         </>
     );
-}
+
+};
