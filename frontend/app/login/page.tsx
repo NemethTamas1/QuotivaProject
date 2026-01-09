@@ -40,7 +40,6 @@ export default function LoginPage() {
 
             alert("Sikeres bejelentkezés");
             router.push("/");
-            router.refresh();
         } catch (error) {
             console.error("Login hiba:", error);
         }
