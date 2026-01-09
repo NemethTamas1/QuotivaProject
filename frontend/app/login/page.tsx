@@ -85,8 +85,6 @@ export default function LoginPage() {
                             </div>
 
                             <button onClick={handleLogin} className="bg-green-400 mx-auto p-4 rounded-md lg:mb-5 text-black text-lg font-semibold">Bejelentkezés</button>
-
-                            <button onClick={handleLogout} className="bg-white text-black p-5">Kijelentkezés</button>
                         </div>
 
                     </div>
