@@ -1,11 +1,11 @@
 'use client'
 
 import { useEffect, useState } from "react";
-import type { EditableOfferItem } from "@/app/createoffer/types";
+import { OfferItem } from "../createoffer/types";
 
 interface Props {
-    item: EditableOfferItem;
-    onSave: (item: EditableOfferItem) => void;
+    item: OfferItem;
+    onSave: (item: OfferItem) => void;
     onClose: () => void;
 }
 
