@@ -14,6 +14,10 @@ export default function LoginPage() {
     const handleLogin = async () => {
         const api = process.env.NEXT_PUBLIC_API_URL;
         try {
+            // CSRF COOKIE
+            await fetch(`${api}/sanctum/csrf-cookie`, {
+                credentials: 'include',
+            });
 
             // LOGIN
             const res = await fetch(`${api}/login`, {
