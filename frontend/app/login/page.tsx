@@ -12,6 +12,8 @@ export default function LoginPage() {
     const router = useRouter();
 
     const handleLogin = async () => {
+        
+        console.log('NEXT_PUBLIC_API_URL (client):', process.env.NEXT_PUBLIC_API_URL);
         const api = process.env.NEXT_PUBLIC_API_URL;
         try {
             // CSRF COOKIE
@@ -43,30 +45,6 @@ export default function LoginPage() {
             console.error("Login hiba:", error);
         }
     };
-
-
-    const handleLogout = async () => {
-        try {
-            const res = await fetch(
-                `${process.env.NEXT_PUBLIC_API_URL}/api/logout`,
-                {
-                    method: "POST",
-                    credentials: "include",
-                }
-            );
-
-            if (!res.ok) {
-                throw new Error("Logout failed");
-            }
-
-            alert("Kijelentkezve");
-            router.push("/");
-        } catch (error) {
-            console.error("Logout hiba:", error);
-        }
-    };
-
-
 
     return (
         <>
