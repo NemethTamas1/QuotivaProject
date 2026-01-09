@@ -11,8 +11,11 @@ import { OfferItem, type CreateOfferForm } from "./types";
 import EditItem from "../components/EditItem";
 import OfferItemDetails from "./components/OfferItemDetails";
 import OfferItemsTable from "./components/OfferItemsTable";
+import { useRouter } from "next/navigation";
+import { whoAmI } from "@/lib/auth";
 
 export default function CreateOfferPage() {
+
     const methods = useForm<CreateOfferForm>({
         defaultValues: {
             status: "pending",
@@ -22,15 +25,21 @@ export default function CreateOfferPage() {
         },
     });
 
-    const { register, handleSubmit } = methods;
-
-    const { control } = useForm<CreateOfferForm>();
+    const { control, register, handleSubmit } = methods;
 
     const { fields, append, remove, update } = useFieldArray({
         control,
         name: "items",
     });
 
+    const [editingItem, setEditingItem] =
+        useState<OfferItem | null>(null);
+    
+    useEffect(() => {
+        const apiUrl = process.env.NEXT_PUBLIC_API_URL;
+        console.log("USE EFFECT FUT");
+        console.log("API_URL:", process.env.NEXT_PUBLIC_API_URL);
+    }, []);
 
     const onSubmit: SubmitHandler<CreateOfferForm> = async (data) => {
         console.log("SUBMIT PAYLOAD: ", data);
@@ -62,17 +71,6 @@ export default function CreateOfferPage() {
             console.error("Error while creating offer", error);
         }
     };
-
-    useEffect(() => {
-        const apiUrl = process.env.NEXT_PUBLIC_API_URL;
-        console.log("USE EFFECT FUT");
-        console.log("API_URL:", process.env.NEXT_PUBLIC_API_URL);
-    }, []);
-
-    const [editingItem, setEditingItem] =
-        useState<OfferItem | null>(null);
-
-    
 
     return (
         <div className="min-h-screen bg-black text-white flex flex-col">
