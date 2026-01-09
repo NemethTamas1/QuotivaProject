@@ -25,6 +25,10 @@ Route::post('/csrf-test', function (Request $request) {
     ]);
 });
 
+Route::middleware('auth:sanctum')->get('/me', function (Request $request) {
+    return $request->user();
+});
+
 // Route::get("/whoami", function(Request $request){
 //     return $request->user() ?: 'NO USER';
 // });
