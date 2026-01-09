@@ -20,13 +20,15 @@ class OffersTest extends TestCase
     public function test_can_create_offer(): void
     {
         $offerData = [
-            "offer_number" => "OFF-2025-002",
+            "offer_name" => "Test offer",
             "status" => "pending",
+            "dated" => "2025-12-30",
             "valid_until" => "2025-12-31",
             "currency" => "HUF",
             "tax_percent" => 27,
 
             "client_name" => "Teszt Kft.",
+            "client_email" => "tesztemail@gmail.com",
             "client_phone" => "+3612345678",
             "client_tax_number" => "12345678-1-42",
             "client_zip" => "1011",
@@ -46,7 +48,7 @@ class OffersTest extends TestCase
                 [
                     "name" => "PVC cső 50mm",
                     "quantity" => 3,
-                    "quantity_type" => "darab",
+                    "quantity_type" => "db",
                     "labor_unit_price" => 0,
                     "material_unit_price" => 1500
                 ],
@@ -65,7 +67,7 @@ class OffersTest extends TestCase
         $response
             ->assertStatus(201)
             ->assertJsonFragment([
-                'offer_number' => "OFF-2025-002",
+                'offer_name' => "Test offer",
                 'status' => 'pending',
                 'client_name' => 'Teszt Kft.'
             ]);
@@ -74,8 +76,9 @@ class OffersTest extends TestCase
     public function test_created_offer_contains_must_have_data(): void
     {
         $offerData = [
-            "offer_number" => "OFF-2025-002",
+            "offer_name" => "Test offer",
             "status" => "pending",
+            "dated" => "2025-12-30",
             "valid_until" => "2025-12-31",
             "currency" => "HUF",
             "tax_percent" => 27,
@@ -100,7 +103,7 @@ class OffersTest extends TestCase
                 [
                     "name" => "PVC cső 50mm",
                     "quantity" => 3,
-                    "quantity_type" => "darab",
+                    "quantity_type" => "db",
                     "labor_unit_price" => 0,
                     "material_unit_price" => 1500
                 ],
@@ -118,7 +121,7 @@ class OffersTest extends TestCase
 
         $response
             ->assertJsonFragment([
-                'offer_number' => "OFF-2025-002",
+                'offer_name' => "Test offer",
                 'status' => 'pending',
                 'client_name' => 'Teszt Kft.',
                 'net_total' => 56500,
@@ -135,7 +138,7 @@ class OffersTest extends TestCase
             ->assertJsonFragment([
                 'name' => 'PVC cső 50mm',
                 'quantity' => 3,
-                'quantity_type' => 'darab',
+                'quantity_type' => 'db',
                 'labor_unit_price' => 0,
                 'material_unit_price' => 1500,
             ])
