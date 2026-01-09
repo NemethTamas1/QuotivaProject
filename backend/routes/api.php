@@ -1,6 +1,5 @@
 <?php
 
-use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DataController;
 use App\Http\Controllers\OfferController;
 use App\Http\Controllers\UserProfileController;
@@ -12,7 +11,7 @@ Route::get('/user', function (Request $request) {
 })->middleware('auth:sanctum');
 
 
-Route::get("/test", function(){
+Route::get("/test", function () {
     return response()->json(["message" => "API teszt backendről"]);
 });
 
@@ -22,8 +21,6 @@ Route::apiResource("/offers", OfferController::class);
 
 Route::apiResource("/user-profiles", UserProfileController::class);
 
-//Route::post("/login", [AuthController::class, "login"]);
-
-Route::middleware('auth:sanctum')->group(function () {
-    Route::get("/me", [AuthController::class, "me"]);
+Route::middleware('auth:sanctum')->get('/me', function (Request $request) {
+    return $request->user();
 });
