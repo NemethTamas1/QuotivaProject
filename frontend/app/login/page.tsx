@@ -14,24 +14,6 @@ export default function LoginPage() {
     const handleLogin = async () => {
         const api = process.env.NEXT_PUBLIC_API_URL;
         try {
-            // CSRF COOKIE
-            try {
-                console.log("CSRF cookie lekérése...")
-                await fetch(`${api}/sanctum/csrf-cookie`, {
-                    credentials: 'include'
-                });
-                console.log("CSRF cookie lekérése sikeres.")
-            } catch (error) {
-                console.error("CSRF cookie lekérése sikertelen.")
-            }
-
-            const token = decodeURIComponent(
-                document.cookie
-                    .split('; ')
-                    .find(c => c.startsWith('XSRF-TOKEN='))
-                    ?.split('=')[1] ?? ''
-            );
-            console.log("token: ", token)
 
             // LOGIN
             const res = await fetch(`${api}/login`, {
@@ -39,7 +21,6 @@ export default function LoginPage() {
                 credentials: 'include',
                 headers: {
                     'Content-Type': 'application/json',
-                    'X-CSRF-TOKEN': token,
                 },
                 body: JSON.stringify({
                     email,
