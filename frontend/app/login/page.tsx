@@ -11,37 +11,46 @@ export default function LoginPage() {
     const [password, setPassword] = useState('');
     const router = useRouter();
 
-    const handleLogin = async () => {
-        
-        console.log('NEXT_PUBLIC_API_URL (client):', process.env.NEXT_PUBLIC_API_URL);
-        const api = process.env.NEXT_PUBLIC_API_URL;
-        try {
-            // CSRF COOKIE
-            await fetch(`${api}/sanctum/csrf-cookie`, {
-                credentials: 'include',
-            });
+    function getCookie(name: string): string | undefined {
+        if (typeof document === 'undefined') return undefined;
 
-            // LOGIN
+        const value = `; ${document.cookie}`;
+        const parts = value.split(`; ${name}=`);
+
+        if (parts.length === 2) {
+            const lastPart = parts.pop();
+            if (lastPart) {
+                return decodeURIComponent(lastPart.split(';').shift() || '');
+            }
+        }
+        return undefined;
+    }
+
+    const login = async () => {
+        const api = process.env.NEXT_PUBLIC_API_URL;
+
+        try {
+            await fetch(`${api}/sanctum/csrf-cookie`, { credentials: 'include' });
+
             const res = await fetch(`${api}/login`, {
                 method: 'POST',
                 credentials: 'include',
                 headers: {
                     'Content-Type': 'application/json',
+                    'Accept': 'application/json',
                 },
-                body: JSON.stringify({
-                    email,
-                    password
-                }),
+                body: JSON.stringify({ email, password }),
             });
 
-            if (!res.ok) {
-                throw new Error("Login failed");
+            if (res.ok) {
+                console.log("Sikeres bejelentkezés!");
+                //router.push('/dashboard');
+            } else {
+                const errorData = await res.json();
+                console.error("Login hiba:", errorData);
             }
-
-            alert("Sikeres bejelentkezés");
-            router.push("/");
-        } catch (error) {
-            console.error("Login hiba:", error);
+        } catch (err) {
+            console.error("Hiba:", err);
         }
     };
 
@@ -65,7 +74,7 @@ export default function LoginPage() {
                                 <p className="ml-auto text-green-400">Elfelejtett jelszó?</p>
                             </div>
 
-                            <button onClick={handleLogin} className="bg-green-400 mx-auto p-4 rounded-md lg:mb-5 text-black text-lg font-semibold">Bejelentkezés</button>
+                            <button onClick={login} className="bg-green-400 mx-auto p-4 rounded-md lg:mb-5 text-black text-lg font-semibold">Bejelentkezés</button>
                         </div>
 
                     </div>
