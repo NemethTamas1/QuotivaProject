@@ -13,7 +13,8 @@ export default function NavBar() {
 
   const handleCreateOfferLink = async () => {
     try {
-      await whoAmI();
+      const res = await whoAmI();
+      console.log("whoami response: ", res)
       router.push("/createoffer");
     } catch (error) {
       router.push("/login");
@@ -24,31 +25,20 @@ export default function NavBar() {
     try {
       const api = process.env.NEXT_PUBLIC_API_URL;
 
-      // CSRF TOKEN
-      await fetch(`${api}/sanctum/csrf-cookie`, {
-        credentials: 'include'
-      });
-      const token = decodeURIComponent(
-        document.cookie
-          .split('; ')
-          .find(c => c.startsWith('XSRF-TOKEN='))
-          ?.split('=')[1] ?? ''
-      );
-
       const res = await fetch(`${api}/logout`, {
         method: 'POST',
         credentials: 'include',
         headers: {
-          'Content-Type': 'application/json',
-          'X-CSRF-TOKEN': token,
+          'Accept': 'application/json',
         }
       });
-      alert("sikeres kijelentkezés")
-      setIsLoggedIn(false);
-      router.push("/");
 
+      if (res.ok) {
+        setIsLoggedIn(false);
+        router.push("/login");
+      }
     } catch (error) {
-      console.error("kijelentkezési hiba: ", error)
+      console.error("Logout error", error);
     }
   };
 
