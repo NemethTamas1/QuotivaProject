@@ -1,57 +1,27 @@
 'use client'
 
-import { useEffect, useState } from "react"
+import { useState } from "react"
+import { useAuth } from "@/context/AuthContext"
 import Link from "next/link"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faBars } from "@fortawesome/free-solid-svg-icons"
-import { whoAmI } from "@/lib/auth"
 import { useRouter } from "next/navigation"
 
 export default function NavBar() {
-
-
-
-  const handleCreateOfferLink = async () => {
-    try {
-      const res = await whoAmI();
-      console.log("whoami response: ", res)
-      router.push("/createoffer");
-    } catch (error) {
-      router.push("/login");
-    }
-  };
-
-  const handleLogOut = async () => {
-    try {
-      const api = process.env.NEXT_PUBLIC_API_URL;
-
-      const res = await fetch(`${api}/logout`, {
-        method: 'POST',
-        credentials: 'include',
-        headers: {
-          'Accept': 'application/json',
-        }
-      });
-
-      if (res.ok) {
-        setIsLoggedIn(false);
-        router.push("/login");
-      }
-    } catch (error) {
-      console.error("Logout error", error);
-    }
-  };
-
+  
   const [isOpen, setIsOpen] = useState(false)
-  const [isLoggedIn, setIsLoggedIn] = useState<boolean | null>(null);
-
+  const {isLoggedIn, loading, logout} = useAuth();
   const router = useRouter();
 
-  useEffect(() => {
-    whoAmI()
-      .then(() => setIsLoggedIn(true))
-      .catch(() => setIsLoggedIn(false))
-  }, [])
+  const handleCreateOfferLink = async () => {
+
+    if(isLoggedIn) router.push("/createoffer");
+    else router.push("/login");
+
+  };
+
+  if(loading) return <div>Töltés...</div>
+
 
   return (
     <>
@@ -65,12 +35,11 @@ export default function NavBar() {
 
           <Link href="/offers">Árajánlataim</Link>
 
-          {isLoggedIn === null ? null : isLoggedIn ? (
-            <button onClick={handleLogOut}>Kijelentkezés</button>
+          {isLoggedIn ? (
+              <button onClick={logout}>Kijelentkezés</button>
           ) : (
             <Link href="/login">Belépés</Link>
-          )
-          }
+          )}
 
         </div>
 
@@ -89,7 +58,7 @@ export default function NavBar() {
             )}
 
             {isLoggedIn ? (
-              <button onClick={handleLogOut}>Kijelentkezés</button>
+              <button onClick={logout}>Kijelentkezés</button>
             ) : (
               <Link href="/login">Belépés</Link>
             )}

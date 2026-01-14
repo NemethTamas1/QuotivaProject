@@ -1,30 +1,27 @@
 'use client';
 
-import http from "@/lib/http";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { json } from "stream/consumers";
 
 export default function LoginPage() {
 
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const router = useRouter();
 
-    function getCookie(name: string): string | undefined {
-        if (typeof document === 'undefined') return undefined;
+    // function getCookie(name: string): string | undefined {
+    //     if (typeof document === 'undefined') return undefined;
 
-        const value = `; ${document.cookie}`;
-        const parts = value.split(`; ${name}=`);
+    //     const value = `; ${document.cookie}`;
+    //     const parts = value.split(`; ${name}=`);
 
-        if (parts.length === 2) {
-            const lastPart = parts.pop();
-            if (lastPart) {
-                return decodeURIComponent(lastPart.split(';').shift() || '');
-            }
-        }
-        return undefined;
-    }
+    //     if (parts.length === 2) {
+    //         const lastPart = parts.pop();
+    //         if (lastPart) {
+    //             return decodeURIComponent(lastPart.split(';').shift() || '');
+    //         }
+    //     }
+    //     return undefined;
+    // }
 
     const login = async () => {
         const api = process.env.NEXT_PUBLIC_API_URL;
