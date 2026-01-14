@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Fira_Sans } from "next/font/google";
 import "./globals.css";
 import NavBar from "./components/NavBar";
+import { AuthProvider } from "@/context/AuthContext";
 
 // const geistSans = Geist({
 //   variable: "--font-geist-sans",
@@ -15,7 +16,7 @@ import NavBar from "./components/NavBar";
 
 const fira = Fira_Sans({
   subsets: ["latin"],
-  weight: ["100","200","300","400","500","600","700","800","900"],
+  weight: ["100", "200", "300", "400", "500", "600", "700", "800", "900"],
   variable: "--font-fira-sans",
 })
 
@@ -34,8 +35,10 @@ export default function RootLayout({
       <body
         className={`${fira.variable} ${fira.variable} antialiased`}
       >
-        <NavBar />
-        {children}
+        <AuthProvider>
+          <NavBar />
+          {children}
+        </AuthProvider>
       </body>
     </html>
   );

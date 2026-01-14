@@ -11,8 +11,6 @@ import { OfferItem, type CreateOfferForm } from "./types";
 import EditItem from "../components/EditItem";
 import OfferItemDetails from "./components/OfferItemDetails";
 import OfferItemsTable from "./components/OfferItemsTable";
-import { useRouter } from "next/navigation";
-import { whoAmI } from "@/lib/auth";
 
 export default function CreateOfferPage() {
 
@@ -36,7 +34,6 @@ export default function CreateOfferPage() {
         useState<OfferItem | null>(null);
     
     useEffect(() => {
-        const apiUrl = process.env.NEXT_PUBLIC_API_URL;
         console.log("USE EFFECT FUT");
         console.log("API_URL:", process.env.NEXT_PUBLIC_API_URL);
     }, []);

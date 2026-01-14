@@ -1,13 +1,8 @@
 'use client';
 
-import { useState, useEffect } from "react";
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faBars } from "@fortawesome/free-solid-svg-icons";
-import Link from "next/link";
+import { useEffect } from "react";
 
 export default function Home() {
-
-  const [isOpen, setIsOpen] = useState(false);
 
   useEffect(() => {
     const apiUrl = process.env.NEXT_PUBLIC_API_URL;

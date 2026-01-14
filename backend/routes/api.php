@@ -22,5 +22,5 @@ Route::apiResource("/offers", OfferController::class);
 Route::apiResource("/user-profiles", UserProfileController::class);
 
 Route::middleware('auth:sanctum')->get('/me', function (Request $request) {
-    return $request->user();
+    return response()->json($request->user());
 });

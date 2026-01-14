@@ -1,87 +1,55 @@
 'use client';
 
-import http from "@/lib/http";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { json } from "stream/consumers";
 
 export default function LoginPage() {
 
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const router = useRouter();
 
-    const handleLogin = async () => {
+    // function getCookie(name: string): string | undefined {
+    //     if (typeof document === 'undefined') return undefined;
+
+    //     const value = `; ${document.cookie}`;
+    //     const parts = value.split(`; ${name}=`);
+
+    //     if (parts.length === 2) {
+    //         const lastPart = parts.pop();
+    //         if (lastPart) {
+    //             return decodeURIComponent(lastPart.split(';').shift() || '');
+    //         }
+    //     }
+    //     return undefined;
+    // }
+
+    const login = async () => {
         const api = process.env.NEXT_PUBLIC_API_URL;
+
         try {
-            // CSRF COOKIE
-            try {
-                console.log("CSRF cookie lekérése...")
-                await fetch(`${api}/sanctum/csrf-cookie`, {
-                    credentials: 'include'
-                });
-                console.log("CSRF cookie lekérése sikeres.")
-            } catch (error) {
-                console.error("CSRF cookie lekérése sikertelen.")
-            }
+            await fetch(`${api}/sanctum/csrf-cookie`, { credentials: 'include' });
 
-            const token = decodeURIComponent(
-                document.cookie
-                    .split('; ')
-                    .find(c => c.startsWith('XSRF-TOKEN='))
-                    ?.split('=')[1] ?? ''
-            );
-            console.log("token: ", token)
-
-            // LOGIN
             const res = await fetch(`${api}/login`, {
                 method: 'POST',
                 credentials: 'include',
                 headers: {
                     'Content-Type': 'application/json',
-                    'X-CSRF-TOKEN': token,
+                    'Accept': 'application/json',
                 },
-                body: JSON.stringify({
-                    email,
-                    password
-                }),
+                body: JSON.stringify({ email, password }),
             });
 
-            if (!res.ok) {
-                throw new Error("Login failed");
+            if (res.ok) {
+                console.log("Sikeres bejelentkezés!");
+                //router.push('/dashboard');
+            } else {
+                const errorData = await res.json();
+                console.error("Login hiba:", errorData);
             }
-
-            alert("Sikeres bejelentkezés");
-            router.push("/");
-            router.refresh();
-        } catch (error) {
-            console.error("Login hiba:", error);
+        } catch (err) {
+            console.error("Hiba:", err);
         }
     };
-
-
-    const handleLogout = async () => {
-        try {
-            const res = await fetch(
-                `${process.env.NEXT_PUBLIC_API_URL}/api/logout`,
-                {
-                    method: "POST",
-                    credentials: "include",
-                }
-            );
-
-            if (!res.ok) {
-                throw new Error("Logout failed");
-            }
-
-            alert("Kijelentkezve");
-            router.push("/");
-        } catch (error) {
-            console.error("Logout hiba:", error);
-        }
-    };
-
-
 
     return (
         <>
@@ -103,9 +71,7 @@ export default function LoginPage() {
                                 <p className="ml-auto text-green-400">Elfelejtett jelszó?</p>
                             </div>
 
-                            <button onClick={handleLogin} className="bg-green-400 mx-auto p-4 rounded-md lg:mb-5 text-black text-lg font-semibold">Bejelentkezés</button>
-
-                            <button onClick={handleLogout} className="bg-white text-black p-5">Kijelentkezés</button>
+                            <button onClick={login} className="bg-green-400 mx-auto p-4 rounded-md lg:mb-5 text-black text-lg font-semibold">Bejelentkezés</button>
                         </div>
 
                     </div>
