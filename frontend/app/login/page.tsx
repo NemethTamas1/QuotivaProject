@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import Link from "next/dist/client/link";
 
 export default function LoginPage() {
 
@@ -63,15 +64,17 @@ export default function LoginPage() {
                         }}>Bejelentkezés</h1>
 
                         {/* Inputok */}
-                        <div className="mx-auto w-7/12 flex flex-col gap-5">
+                        <div className="mx-auto w-7/12 flex flex-col">
 
                             <div className="flex flex-col gap-5">
                                 <input value={email} onChange={(e) => setEmail(e.target.value)} type="text" name="email" placeholder="Email" className="text-black p-3 rounded-md" />
                                 <input value={password} onChange={(e) => setPassword(e.target.value)} type="password" name="password" placeholder="Jelszó" className="text-black p-3 rounded-md" />
-                                <p className="ml-auto text-green-400">Elfelejtett jelszó?</p>
+                                <p className="ml-auto text-green-400 mb-5">Elfelejtett jelszó?</p>
                             </div>
 
                             <button onClick={login} className="bg-green-400 mx-auto p-4 rounded-md lg:mb-5 text-black text-lg font-semibold">Bejelentkezés</button>
+
+                            <p className="text-center mb-5">Nincs fiókod? <Link href="/register" className="text-green-400">Regisztrálj itt</Link></p>
                         </div>
 
                     </div>
