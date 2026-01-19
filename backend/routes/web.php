@@ -8,9 +8,9 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::post('/login', [AuthController::class, 'login']);
+Route::post('/login', [AuthController::class, 'login'])->middleware('web');
 
-Route::post("/logout", [AuthController::class, "logout"])->middleware('auth');
+Route::post("/logout", [AuthController::class, "logout"])->middleware('web');
 
 Route::get('/csrf-test', function () {
     return response()->json([
