@@ -13,6 +13,7 @@ class Offer extends Model
     public $timestamps = true;
 
     protected $fillable = [
+        "user_id",
         "offer_number",
         "offer_name",
         "status",

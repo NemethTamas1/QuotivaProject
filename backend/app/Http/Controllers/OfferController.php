@@ -8,6 +8,7 @@ use App\Http\Requests\StoreOfferRequest;
 use App\Http\Requests\UpdateOfferRequest;
 use App\Http\Resources\OfferResource;
 use App\Models\OfferItem;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use PhpParser\Node\Stmt\TryCatch;
 
@@ -29,6 +30,7 @@ class OfferController extends Controller
         try {
             // Ajánlat létrehozás
             $offer = Offer::create([
+                "user_id" => Auth::id(),
                 "offer_number" => $this->generateOfferNumber(),
                 "offer_name" => $data["offer_name"],
                 "status" => $data["status"] ?? "pending",

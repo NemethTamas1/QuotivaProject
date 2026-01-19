@@ -54,6 +54,7 @@ export default function CreateOfferPage() {
                     "Content-Type": "application/json",
                     "Accept": "application/json",
                 },
+                credentials: "include",
                 body: JSON.stringify(data),
             });
 

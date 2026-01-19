@@ -15,10 +15,11 @@ class StoreOfferRequest extends FormRequest
     {
         return [
             // Alap
+            //"user_id" => ["required", "exists:users,id"],
             "offer_name" => ["required", "string", "max:100"],
             "status" => ["nullable", "string", "in:pending,accepted,rejected"],
-            "dated" => ["required", "date"],
-            "valid_until" => ["required", "date"],
+            "dated" => ["nullable", "date"],
+            "valid_until" => ["nullable", "date"],
             "currency" => ["required", "string", "max:10", "in:USD,EUR,HUF"],
             "tax_percent" => ["required", "integer", "min:0", "max:27"],
             "net_total" => ["prohibited"],
