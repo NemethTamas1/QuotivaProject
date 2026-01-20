@@ -2,6 +2,8 @@
 
 import { useState, useEffect } from "react";
 import { useForm, useFieldArray, SubmitHandler, FormProvider } from "react-hook-form";
+import { pdf } from '@react-pdf/renderer';
+import { OfferPDFDocument } from "./pdfexport/OfferDocumentPDF";
 
 import CustomerDetails from "./components/CustomerDetails";
 import OfferDetails from "./components/OfferDetails";
@@ -32,7 +34,7 @@ export default function CreateOfferPage() {
 
     const [editingItem, setEditingItem] =
         useState<OfferItem | null>(null);
-    
+
     useEffect(() => {
         console.log("USE EFFECT FUT");
         console.log("API_URL:", process.env.NEXT_PUBLIC_API_URL);
@@ -48,8 +50,10 @@ export default function CreateOfferPage() {
         };
 
         try {
+            await fetch(`${apiUrl}/sanctum/csrf-cookie`, { credentials: 'include' });
             const response = await fetch(`${apiUrl}/api/offers`, {
                 method: "POST",
+                credentials: "include",
                 headers: {
                     "Content-Type": "application/json",
                     "Accept": "application/json",
@@ -58,12 +62,30 @@ export default function CreateOfferPage() {
                 body: JSON.stringify(data),
             });
 
-
             if (!response.ok) {
                 console.log("Offer creation failed.");
             }
 
-            console.log("Offer created successfully.");
+            console.log("Offer created successfully on backend.");
+
+            try {
+                const doc = <OfferPDFDocument data={data} />;
+                const blob = await pdf(doc).toBlob();
+
+                const pdfUrl = URL.createObjectURL(blob);
+
+                const link = document.createElement('a');
+                link.href = pdfUrl;
+                link.download = `ajanlat_${data.client_name.replace(/\s+/g, '_')}.pdf`;
+                document.body.appendChild(link);
+                link.click();
+
+                document.body.removeChild(link);
+                URL.revokeObjectURL(pdfUrl);
+                console.log("PDF download started.");
+            } catch (pdfError) {
+                console.error("Error generating or downloading PDF", pdfError);
+            }
 
         } catch (error) {
             console.error("Error while creating offer", error);
@@ -83,8 +105,8 @@ export default function CreateOfferPage() {
 
                         <OfferItemDetails append={append} />
 
-                        <OfferItemsTable fields={fields} remove={remove} setEditingItem={setEditingItem}/>
-                        
+                        <OfferItemsTable fields={fields} remove={remove} setEditingItem={setEditingItem} />
+
                         <button type="submit" className="w-2/12 bg-green-600 text-black font-semibold text-lg py-3 rounded hover:bg-green-700 transition my-7"
                         >
                             Ajánlat létrehozása

@@ -1,5 +1,9 @@
 export async function whoAmI() {
     const api = process.env.NEXT_PUBLIC_API_URL;
+    await fetch(`${api}/sanctum/csrf-cookie`, {
+        method: 'GET',
+        credentials: 'include',
+    });
 
     const res = await fetch(`${api}/api/me`, {
         method: 'GET',
