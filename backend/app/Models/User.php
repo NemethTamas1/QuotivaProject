@@ -47,7 +47,7 @@ class User extends Authenticatable
         ];
     }
 
-    public function profile():HasMany
+    public function profiles():HasMany
     {
         return $this->hasMany(UserProfile::class);
     }
