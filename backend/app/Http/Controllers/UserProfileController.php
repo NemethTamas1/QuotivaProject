@@ -6,6 +6,8 @@ use App\Models\UserProfile;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreUserProfileRequest;
 use App\Http\Requests\UpdateUserProfileRequest;
+use App\Http\Resources\UserProfileResource;
+use Illuminate\Support\Facades\Auth;
 
 class UserProfileController extends Controller
 {
@@ -14,7 +16,11 @@ class UserProfileController extends Controller
      */
     public function index()
     {
-        //
+        $user_id = Auth::id();
+
+        $profiles = UserProfile::where('user_id', $user_id)->get();
+
+        return UserProfileResource::collection($profiles);
     }
 
     /**
@@ -22,7 +28,11 @@ class UserProfileController extends Controller
      */
     public function store(StoreUserProfileRequest $request)
     {
-        //
+        $data = $request->validated();
+
+        $userProfile = UserProfile::create($data);
+
+        return new UserProfileResource($userProfile);
     }
 
     /**
