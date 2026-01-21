@@ -11,7 +11,7 @@ class StoreUserProfileRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return true;
+        return $this->user() !== null;
     }
 
     /**
@@ -22,9 +22,9 @@ class StoreUserProfileRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'user_id' => ['required|exists:users,id'],
+            'user_id' => ['required', 'exists:users,id'],
             'company_name' => ['required', 'string', 'max:50'],
-            'tax_number' => ['nullable', 'integer', "digits:11"],
+            'tax_number' => ['nullable', 'string', "size:13"],
             'company_email' => ['required', 'email:rfc', 'max:50'],
             'city' => ['required', 'string', 'max:30'],
             'zip' => ['required', 'integer', "digits:4"],
