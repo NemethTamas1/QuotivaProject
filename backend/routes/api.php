@@ -20,7 +20,7 @@ Route::apiResource("/datas", DataController::class);
 
 Route::apiResource("/offers", OfferController::class);
 
-Route::apiResource("/user-profiles", UserProfileController::class);
+Route::apiResource("/user-profiles", UserProfileController::class)->middleware('auth:sanctum');
 
 Route::post("/register", [RegisterController::class, "store"]);
 
