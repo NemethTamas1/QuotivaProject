@@ -1,36 +1,30 @@
 'use client';
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
 import Link from "next/dist/client/link";
+import http from "@/lib/http";
+import { useRouter } from "next/navigation";
 
 export default function LoginPage() {
 
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const router = useRouter();
 
     const login = async () => {
         const api = process.env.NEXT_PUBLIC_API_URL;
 
         try {
-            await fetch(`${api}/sanctum/csrf-cookie`, { credentials: 'include' });
+            await http.get('/sanctum/csrf-cookie'); 
 
-            const res = await fetch(`${api}/login`, {
-                method: 'POST',
-                credentials: 'include',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Accept': 'application/json',
-                },
-                body: JSON.stringify({ email, password }),
+            const res = await http.post('/login', {
+                email,
+                password
             });
 
-            if (res.ok) {
+            if (res.status === 200 || res.status === 204) {
                 console.log("Sikeres bejelentkezés!");
-                //router.push('/dashboard');
-            } else {
-                const errorData = await res.json();
-                console.error("Login hiba:", errorData);
+                router.push('/dashboard');
             }
         } catch (err) {
             console.error("Hiba:", err);
