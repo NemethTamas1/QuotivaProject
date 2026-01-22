@@ -11,7 +11,7 @@ interface Props {
 
 export default function ProfileCompiler({ profile, onSave, onClose }: Props) {
     const [formData, setFormData] = useState<Partial<profileType>>({
-        user_id: 1,
+        user_id: 2,
         company_name: '',
         tax_number: '',
         company_phone: '',
@@ -20,10 +20,6 @@ export default function ProfileCompiler({ profile, onSave, onClose }: Props) {
         zip: null,
         ...profile
     });
-
-    useEffect(() => {
-        if (profile) setFormData(profile);
-    }, [profile]);
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;

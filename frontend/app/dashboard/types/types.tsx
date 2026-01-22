@@ -1,4 +1,5 @@
 export interface profileType {
+    id: number,
     user_id: number,
     company_name: string,
     tax_number: string,
