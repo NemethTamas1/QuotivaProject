@@ -35,6 +35,13 @@ return new class extends Migration
             $table->longText('payload');
             $table->integer('last_activity')->index();
         });
+
+        Schema::table('users', function(Blueprint $table) {
+            $table->foreignId('active_user_profile_id')
+                ->nullable()
+                ->constrained('user_profiles')
+                ->nullOnDelete();
+        });
     }
 
     /**

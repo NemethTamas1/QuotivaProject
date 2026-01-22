@@ -47,6 +47,11 @@ class User extends Authenticatable
         ];
     }
 
+    public function activeProfile()
+    {
+        return $this->belongsTo(UserProfile::class, 'active_user_profile_id');
+    }
+
     public function profiles():HasMany
     {
         return $this->hasMany(UserProfile::class);

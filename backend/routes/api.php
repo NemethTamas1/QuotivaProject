@@ -27,3 +27,5 @@ Route::post("/register", [RegisterController::class, "store"]);
 Route::middleware('auth:sanctum')->get('/me', function (Request $request) {
     return response()->json($request->user());
 });
+
+Route::middleware('auth:sanctum')->apiResource('/user-profiles', UserProfileController::class);

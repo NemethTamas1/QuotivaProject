@@ -25,8 +25,13 @@ return Application::configure(basePath: dirname(__DIR__))
         //     'sanctum/csrf-cookie'
         // ]);
 
+        $middleware->statefulApi();
+
         $middleware->validateCsrfTokens(except:[
-            '/logout'
+            'logout',
+            'login',
+            'sanctum/csrf-cookie',
+            'api/user-profiles',
         ]);
 
         $middleware->statefulApi();
