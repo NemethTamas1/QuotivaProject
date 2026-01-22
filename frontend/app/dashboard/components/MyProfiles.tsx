@@ -1,35 +1,30 @@
 'use client';
 
+import http from "@/lib/http";
 import { profileType } from "../types/types";
 import ProfileCompiler from "./ProfileCompiler";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 export default function MyProfiles() {
 
     const [isCompilerOpen, setIsCompilerOpen] = useState(false);
+    const [profiles, setProfiles] = useState<profileType[]>([]);
+    const [isLoading, setIsLoading] = useState(false);
+    const [error, setError] = useState<string | null>(null);
 
     const handleProfileSave = async (data: Partial<profileType>) => {
         try {
             console.log("Profil mentés próba:", data);
 
-            const api = process.env.NEXT_PUBLIC_API_URL;
-            await fetch(`${api}/sanctum/csrf-cookie`, { credentials: 'include' });
-            const res = await fetch(`${api}/api/user-profiles`, {
-                method: 'POST',
-                credentials: 'include',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Accept': 'application/json',
-                },
-                body: JSON.stringify(data),
-            });
+            await http.get(`/sanctum/csrf-cookie`);
 
-            if (res.ok) {
+            const res = await http.post(`/api/user-profiles`, data);
+
+            if (res.status === 201) {
                 console.log("Profil sikeresen mentve.");
                 alert("Profil sikeresen mentve.");
                 setIsCompilerOpen(false);
             } else {
-                const error = await res.json();
                 console.error("Hiba a profil mentésekor:", error);
                 alert("Hiba történt a profil mentésekor.");
             }
@@ -40,17 +35,56 @@ export default function MyProfiles() {
 
     };
 
+    const fetchProfiles = async () => {
+        setIsLoading(true);
+        setError(null);
+
+        try {
+            const res = await http.get('/api/user-profiles');
+            const items: profileType[] = res.data?.data ?? [];
+            setProfiles(items);
+        } catch (e) {
+            setError("Hiba történt a profilok betöltésekor.");
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
+
+    useEffect(() => {
+        fetchProfiles();
+    }, [])
+
     return (
         <div className="p-8">
-            <h1 className="text-2xl text-center my-10">Profiljaim</h1>
+            <h1 className="text-3xl p-6">Profiljaim</h1>
 
-            <div className="flex justify-center">
+            <div className="flex p-5">
                 <button
                     onClick={() => setIsCompilerOpen(true)}
-                    className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg transition-all"
+                    className="bg-green-400 text-black px-6 py-2 rounded-lg transition-all"
                 >
                     + Új profil létrehozása
                 </button>
+            </div>
+
+            <div>
+                {/* Profilok listázása ide jön majd */}
+                {!isLoading && !error && profiles.length > 0 && (
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-4 grid-flow-row mx-auto">
+                        {profiles.map((p) => (
+                            <div key={p.id} className="rounded-xl bg-[#27272A] p-4 shadow-[0_0_25px_0_#18181B]">
+                                <div className="font-semibold text-lg">{p.company_name}</div>
+                                <div className="text-sm text-gray-300">
+                                    {p.city} {p.zip} • {p.street} {p.house_number}
+                                </div>
+                                <div className="text-sm text-gray-300">
+                                    {p.company_email} • {p.company_phone}
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                )}
             </div>
 
             {isCompilerOpen && (
