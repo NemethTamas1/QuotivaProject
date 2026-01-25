@@ -28,9 +28,16 @@ class OfferController extends Controller
         DB::beginTransaction();
 
         try {
+            $user = Auth::user();
+
+            if (!$user) {
+                return response()->json([
+                    "message" => "Unauthorized"
+                ], 401);
+            }
             // Ajánlat létrehozás
             $offer = Offer::create([
-                "user_id" => Auth::id(),
+                "user_id" => $user->id,
                 "offer_number" => $this->generateOfferNumber(),
                 "offer_name" => $data["offer_name"],
                 "status" => $data["status"] ?? "pending",
