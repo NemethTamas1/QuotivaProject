@@ -12,15 +12,10 @@ export default function LoginPage() {
     const router = useRouter();
 
     const login = async () => {
-        const api = process.env.NEXT_PUBLIC_API_URL;
-
         try {
             await http.get('/sanctum/csrf-cookie'); 
 
-            const res = await http.post('/login', {
-                email,
-                password
-            });
+            const res = await http.post('/login', {email,password});
 
             if (res.status === 200 || res.status === 204) {
                 console.log("Sikeres bejelentkezés!");

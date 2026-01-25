@@ -3,6 +3,7 @@
 import React, { createContext, useContext, useState, ReactNode, useEffect } from 'react';
 import { whoAmI } from '@/lib/auth';
 import { useRouter } from 'next/navigation';
+import http from '@/lib/http';
 
 interface AuthContextType {
     user: any;
@@ -36,14 +37,8 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
     const logout = async () => {
         try {
-            const api = process.env.NEXT_PUBLIC_API_URL;
-            await fetch(`${api}/logout`, {
-                method: 'POST',
-                credentials: 'include',
-                headers: {
-                    'Accept': 'application/json',
-                }
-            });
+            //const api = process.env.NEXT_PUBLIC_API_URL;
+            await http.post(`/logout`);
 
         } catch (error) {
             console.error("Logout error:", error);

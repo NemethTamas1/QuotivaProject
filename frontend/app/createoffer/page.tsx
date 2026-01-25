@@ -13,6 +13,7 @@ import { OfferItem, type CreateOfferForm } from "./types";
 import EditItem from "../components/EditItem";
 import OfferItemDetails from "./components/OfferItemDetails";
 import OfferItemsTable from "./components/OfferItemsTable";
+import http from "@/lib/http";
 
 export default function CreateOfferPage() {
 
@@ -41,31 +42,15 @@ export default function CreateOfferPage() {
     }, []);
 
     const onSubmit: SubmitHandler<CreateOfferForm> = async (data) => {
-        console.log("SUBMIT PAYLOAD: ", data);
-        const apiUrl = process.env.NEXT_PUBLIC_API_URL;
-
-        if (!apiUrl) {
-            console.error("API URL is not defined");
-            return;
-        };
 
         try {
-            await fetch(`${apiUrl}/sanctum/csrf-cookie`, { credentials: 'include' });
-            const response = await fetch(`${apiUrl}/api/offers`, {
-                method: "POST",
-                credentials: "include",
-                headers: {
-                    "Content-Type": "application/json",
-                    "Accept": "application/json",
-                },
-                body: JSON.stringify(data),
-            });
+            await http.get(`/sanctum/csrf-cookie`);
 
-            if (!response.ok) {
-                console.log("Offer creation failed.");
+            const response = await http.post(`/api/offers`, data);
+
+            if (response.status !== 201) {
+                throw new Error("Sikertelen létrehozás backenden");
             }
-
-            console.log("Offer created successfully on backend.");
 
             try {
                 const doc = <OfferPDFDocument data={data} />;
