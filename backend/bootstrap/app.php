@@ -3,6 +3,7 @@
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
+use Illuminate\Http\Middleware\HandleCors;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
@@ -12,29 +13,19 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware) {
+
+        $middleware->statefulApi();
+
+        //$middleware->append(HandleCors::class);
+
         // $middleware->validateCsrfTokens(except: [
-        //     'api/offers',
-        //     'login',
         //     'logout',
-        //     'dashboard',
-        //     'api/user-profiles',
-        //     'api/register',
-        //     'api/login',
-        //     'api/logout',
-        //     'api/me',
-        //     'sanctum/csrf-cookie'
+        //     'login',
+        //     //     'sanctum/csrf-cookie',
+        //     //     'api/user-profiles',
+        //     //     'api/offers',
+        //     //     'api/offers/*',
         // ]);
-
-        $middleware->statefulApi();
-
-        $middleware->validateCsrfTokens(except:[
-            'logout',
-            'login',
-            'sanctum/csrf-cookie',
-            'api/user-profiles',
-        ]);
-
-        $middleware->statefulApi();
     })
     ->withExceptions(function (Exceptions $exceptions) {
         //
