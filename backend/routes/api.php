@@ -18,9 +18,6 @@ Route::get("/test", function () {
 
 Route::apiResource("/datas", DataController::class);
 
-Route::apiResource("/offers", OfferController::class);
-
-Route::apiResource("/user-profiles", UserProfileController::class)->middleware('auth:sanctum');
 
 Route::post("/register", [RegisterController::class, "store"]);
 
@@ -28,4 +25,5 @@ Route::middleware('auth:sanctum')->get('/me', function (Request $request) {
     return response()->json($request->user());
 });
 
+Route::middleware('auth:sanctum')->apiResource("/offers", OfferController::class);
 Route::middleware('auth:sanctum')->apiResource('/user-profiles', UserProfileController::class);
