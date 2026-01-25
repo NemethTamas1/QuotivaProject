@@ -12,6 +12,8 @@ class StoreUserProfileRequest extends FormRequest
     public function authorize(): bool
     {
         return $this->user() !== null;
+
+        //$a = $this->user()->id();
     }
 
     /**
