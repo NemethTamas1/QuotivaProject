@@ -2,6 +2,13 @@
 
 use Illuminate\Support\Str;
 
+$secureCookie = env('SESSION_SECURE_COOKIE');
+if($secureCookie === null){
+    $secureCookie = str_starts_with((string) env('APP_URL', ''), 'https://');
+} else {
+    $secureCookie = filter_var($secureCookie, FILTER_VALIDATE_BOOLEAN);
+}
+
 return [
 
     /*
@@ -127,10 +134,12 @@ return [
     |
     */
 
-    'cookie' => env(
-        'SESSION_COOKIE',
-        Str::slug(env('APP_NAME', 'laravel'), '_').'_session'
-    ),
+    // 'cookie' => env(
+    //     'SESSION_COOKIE',
+    //     Str::slug(env('APP_NAME', 'laravel'), '_').'_session'
+    // ),
+
+    'cookie' => env('SESSION_COOKIE', 'laravel_session'),
 
     /*
     |--------------------------------------------------------------------------
@@ -169,7 +178,7 @@ return [
     |
     */
 
-    'secure' => env('SESSION_SECURE_COOKIE', true),
+    'secure' => $secureCookie,
 
     /*
     |--------------------------------------------------------------------------
@@ -182,7 +191,7 @@ return [
     |
     */
 
-    'http_only' => false,
+    'http_only' => true,
 
     /*
     |--------------------------------------------------------------------------
@@ -199,7 +208,7 @@ return [
     |
     */
 
-    'same_site' => env('SESSION_SAME_SITE', 'none'),
+    'same_site' => env('SESSION_SAME_SITE', $secureCookie ? 'none' : 'lax'),
 
     /*
     |--------------------------------------------------------------------------
