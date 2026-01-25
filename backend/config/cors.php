@@ -15,11 +15,24 @@ return [
     |
     */
 
-    'paths' => ['api/*', 'login', 'me', 'whoami', 'user-profiles', 'dashboard', 'register', 'logout', 'csrf-test', 'sanctum/csrf-cookie'],
+    'paths' => [
+        'api/*',
+        'sanctum/csrf-cookie',
+        'login',
+        'logout',
+        // 'me',
+        // 'whoami',
+        // 'dashboard',
+        // 'register',
+        // 'csrf-test',
+    ],
 
     'allowed_methods' => ['*'],
 
-    'allowed_origins' => ['http://localhost:3000', "https://quotiva-frontend.fly.dev"],
+    'allowed_origins' => [
+        'http://localhost:3000',
+        "http://127.0.0.1:3000",
+        "https://quotiva-frontend.fly.dev"],
 
     'allowed_origins_patterns' => [],
 
