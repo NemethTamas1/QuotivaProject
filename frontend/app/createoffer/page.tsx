@@ -44,7 +44,6 @@ export default function CreateOfferPage() {
     const onSubmit: SubmitHandler<CreateOfferForm> = async (data) => {
 
         try {
-            await http.get(`/sanctum/csrf-cookie`);
 
             const response = await http.post(`/api/offers`, data);
 
