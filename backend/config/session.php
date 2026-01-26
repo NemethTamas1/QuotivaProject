@@ -2,13 +2,6 @@
 
 use Illuminate\Support\Str;
 
-$secureCookie = env('SESSION_SECURE_COOKIE');
-if($secureCookie === null){
-    $secureCookie = str_starts_with((string) env('APP_URL', ''), 'https://');
-} else {
-    $secureCookie = filter_var($secureCookie, FILTER_VALIDATE_BOOLEAN);
-}
-
 return [
 
     /*
@@ -178,7 +171,7 @@ return [
     |
     */
 
-    'secure' => $secureCookie,
+    'secure' => env('SESSION_SECURE_COOKIE'),
 
     /*
     |--------------------------------------------------------------------------
@@ -191,7 +184,7 @@ return [
     |
     */
 
-    'http_only' => true,
+    'http_only' => env('SESSION_HTTP_ONLY', true),
 
     /*
     |--------------------------------------------------------------------------
@@ -208,7 +201,7 @@ return [
     |
     */
 
-    'same_site' => env('SESSION_SAME_SITE', $secureCookie ? 'none' : 'lax'),
+    'same_site' => env('SESSION_SAME_SITE', 'lax'),
 
     /*
     |--------------------------------------------------------------------------
