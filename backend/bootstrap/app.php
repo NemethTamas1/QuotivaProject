@@ -13,19 +13,6 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware) {
-
-        $middleware->statefulApi();
-
-        //$middleware->append(HandleCors::class);
-
-        // $middleware->validateCsrfTokens(except: [
-        //     'logout',
-        //     'login',
-        //     //     'sanctum/csrf-cookie',
-        //     //     'api/user-profiles',
-        //     //     'api/offers',
-        //     //     'api/offers/*',
-        // ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {
         //
