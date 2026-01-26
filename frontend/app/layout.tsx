@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 import { Fira_Sans } from "next/font/google";
 import "./globals.css";
-import NavBar from "./components/NavBar";
 import { AuthProvider } from "@/context/AuthContext";
+import NavBar from "./components/NavBar";
 
 // const geistSans = Geist({
 //   variable: "--font-geist-sans",
@@ -36,7 +36,6 @@ export default function RootLayout({
         className={`${fira.variable} ${fira.variable} antialiased`}
       >
         <AuthProvider>
-          <NavBar />
           {children}
         </AuthProvider>
       </body>
