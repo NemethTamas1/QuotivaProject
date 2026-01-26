@@ -10,18 +10,15 @@ import { useRouter } from "next/navigation"
 export default function NavBar() {
   
   const [isOpen, setIsOpen] = useState(false)
-  const {isLoggedIn, loading, logout} = useAuth();
+  const {user, logout} = useAuth();
   const router = useRouter();
 
   const handleCreateOfferLink = async () => {
 
-    if(isLoggedIn) router.push("/createoffer");
+    if(user) router.push("/createoffer");
     else router.push("/login");
 
   };
-
-  if(loading) return <div>Töltés...</div>
-
 
   return (
     <>
@@ -35,7 +32,7 @@ export default function NavBar() {
 
           <Link href="/offers">Árajánlataim</Link>
 
-          {isLoggedIn ? (
+          {user ? (
               <button onClick={logout}>Kijelentkezés</button>
           ) : (
             <Link href="/login">Belépés</Link>
@@ -51,13 +48,13 @@ export default function NavBar() {
       {isOpen && (
         <div className="md:hidden bg-black border-t border-white/10">
           <div className="flex flex-col gap-4 px-4 py-4 text-xl">
-            {isLoggedIn ? (
+            {user ? (
               <button onClick={handleCreateOfferLink}>Új árajánlat</button>
             ) : (
               <button onClick={() => router.push("/login")}>Új árajánlat</button>
             )}
 
-            {isLoggedIn ? (
+            {user ? (
               <button onClick={logout}>Kijelentkezés</button>
             ) : (
               <Link href="/login">Belépés</Link>
