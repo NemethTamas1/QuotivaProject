@@ -16,8 +16,6 @@ export default function MyProfiles() {
         try {
             console.log("Profil mentés próba:", data);
 
-            await http.get(`/sanctum/csrf-cookie`);
-
             const res = await http.post(`/api/user-profiles`, data);
 
             if (res.status === 201) {
