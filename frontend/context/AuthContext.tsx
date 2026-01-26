@@ -1,60 +1,102 @@
 'use client';
 
-import React, { createContext, useContext, useState, ReactNode, useEffect } from 'react';
-import { whoAmI } from '@/lib/auth';
-import { useRouter } from 'next/navigation';
+import { createContext, useContext, useState, useEffect } from 'react';
 import http from '@/lib/http';
+import { get } from 'http';
+import { init } from 'next/dist/compiled/webpack/webpack';
+import { useRouter } from 'next/navigation';
+
+interface User {
+    id: number;
+    name: string;
+    email: string;
+}
 
 interface AuthContextType {
-    user: any;
-    isLoggedIn: boolean;
+    user: User | null;
+    token: string | null;
     loading: boolean;
-    checkAuth: () => Promise<void>;
-    logout: () => Promise<void>;
+    login: (credentials: Partial<User>) => Promise<{ success: boolean; message?: string }>;
+    logout: () => void;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
-    const [user, setUser] = useState<any>(null);
-    const [isLoggedIn, setLoggedIn] = useState<boolean>(false);
+    const [user, setUser] = useState<User | null>(null);
+    const [token, setToken] = useState<string | null>(null);
     const [loading, setLoading] = useState<boolean>(true);
     const router = useRouter();
 
-    const checkAuth = async () => {
-        try {
-            const userData = await whoAmI();
-            setUser(userData);
-            setLoggedIn(true);
-        } catch (error) {
-            setUser(null);
-            setLoggedIn(false);
-        } finally {
-            setLoading(false);
-        }
-    };
-
-    const logout = async () => {
-        try {
-            //const api = process.env.NEXT_PUBLIC_API_URL;
-            await http.post(`/logout`);
-
-        } catch (error) {
-            console.error("Logout error:", error);
-        } finally {
-            setUser(null);
-            setLoggedIn(false);
-            router.push("/");
-        }
-    };
-
     useEffect(() => {
-        checkAuth();
+
+        const initAuth = async () => {
+            const savedToken = sessionStorage.getItem('token');
+
+            if (savedToken) {
+                setToken(savedToken);
+                await getUserData(savedToken);
+            }
+
+            setLoading(false);
+        };
+
+        initAuth();
+
     }, []);
 
+    const getUserData = async (authToken: string) => {
+        console.log("getUserData meghívva.");
+        try {
+            const res = await http.get('/api/user', {
+                headers: {
+                    'Authorization': `Bearer ${authToken}`
+                }
+            });
+
+            if (res.status == 200) {
+                setUser(res.data);
+                console.log("user betöltve: ", res.data);
+            }
+        } catch (error) {
+            console.error("Hiba a felhasználói adatok lekérésekor", error);
+            sessionStorage.removeItem('token');
+            setToken(null);
+        }
+    };
+
+    const login = async (credentials: Partial<User>) => {
+        try {
+            const res = await http.post('/api/authenticate', credentials);
+            const { token } = res.data.data;
+
+            if (res.status == 200) {
+                setToken(token);
+                console.log("token mentés: ", token);
+                sessionStorage.setItem('token', token);
+
+                getUserData(token);
+
+                return { success: true };
+            };
+            return { success: false, message: 'Invalid credentials' };
+
+        } catch (error) {
+            return { success: false, message: 'Login failed' };
+        }
+    }
+
+    const logout = () => {
+        setUser(null);
+        setToken(null);
+        sessionStorage.removeItem('token');
+        sessionStorage.removeItem('user');
+        router.push("/");
+    };
+
     return (
-        <AuthContext.Provider value={{ user, isLoggedIn, loading, checkAuth, logout }}>
+        <AuthContext.Provider value={{ user, token, loading, login, logout }}>
             {children}
         </AuthContext.Provider>
     );
