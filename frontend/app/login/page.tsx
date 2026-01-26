@@ -4,30 +4,33 @@ import { useState } from "react";
 import Link from "next/dist/client/link";
 import http from "@/lib/http";
 import { useRouter } from "next/navigation";
+import NavBar from "../components/NavBar";
+import { useAuth } from "@/context/AuthContext";
 
 export default function LoginPage() {
 
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [error, setError] = useState<string | null>(null);
+
     const router = useRouter();
+    const { login } = useAuth();
 
-    const login = async () => {
-        try {
-            await http.get('/sanctum/csrf-cookie'); 
+    const handleLogin = async() => {
+        setError(null);
 
-            const res = await http.post('/login', {email,password});
+        const result = await login({ email, password } as any);
 
-            if (res.status === 200 || res.status === 204) {
-                console.log("Sikeres bejelentkezés!");
-                router.push('/dashboard');
-            }
-        } catch (err) {
-            console.error("Hiba:", err);
+        if(result.success) {
+            router.push('/dashboard');
+        } else {
+            setError(result.message || 'Hiba a bejelentkezés során');
         }
     };
 
     return (
         <>
+        <NavBar />
             <div>
                 <div className="relative w-3/12 mx-auto lg:my-20">
 
@@ -46,7 +49,7 @@ export default function LoginPage() {
                                 <p className="ml-auto text-green-400 mb-5">Elfelejtett jelszó?</p>
                             </div>
 
-                            <button onClick={login} className="bg-green-400 mx-auto p-4 rounded-md lg:mb-5 text-black text-lg font-semibold">Bejelentkezés</button>
+                            <button onClick={handleLogin} className="bg-green-400 mx-auto p-4 rounded-md lg:mb-5 text-black text-lg font-semibold">Bejelentkezés</button>
 
                             <p className="text-center mb-5">Nincs fiókod? <Link href="/register" className="text-green-400">Regisztrálj itt</Link></p>
                         </div>
