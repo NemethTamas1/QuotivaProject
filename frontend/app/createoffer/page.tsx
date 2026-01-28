@@ -14,6 +14,7 @@ import EditItem from "../components/EditItem";
 import OfferItemDetails from "./components/OfferItemDetails";
 import OfferItemsTable from "./components/OfferItemsTable";
 import http from "@/lib/http";
+import NavBar from "../components/NavBar";
 
 export default function CreateOfferPage() {
 
@@ -78,6 +79,7 @@ export default function CreateOfferPage() {
     return (
         <div className="min-h-screen bg-black text-white flex flex-col">
             {/* Main */}
+            <NavBar />
             <main className="px-4 py-10">
                 <FormProvider {...methods}>
                     <form onSubmit={handleSubmit(onSubmit)} className="w-full mx-auto max-w-7xl text-black rounded-lg p-6">
