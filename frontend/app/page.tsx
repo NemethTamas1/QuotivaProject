@@ -1,15 +1,14 @@
 'use client';
 
-import { useEffect } from "react";
 import NavBar from "./components/NavBar";
+import Link from "next/link"
+
+import { useAuth } from "@/context/AuthContext";
+
 
 export default function Home() {
 
-  useEffect(() => {
-    const apiUrl = process.env.NEXT_PUBLIC_API_URL;
-    console.log("USE EFFECT FUT");
-    console.log("API_URL:", apiUrl);
-  });
+  const { user } = useAuth();
 
   return (
     <div className="min-h-screen bg-black text-white flex flex-col">
@@ -32,9 +31,13 @@ export default function Home() {
           </p>
 
           <div className="mt-10 flex justify-center gap-4">
-            <a href="#" className="px-6 py-3 bg-green-500 text-black font-bold rounded-md hover:bg-green-400 transition shadow-[0_0_15px_#00ff80]">Új árajánlat készítése</a>
+            {user ? (
+              <Link href="/createoffer" className="px-6 py-3 bg-green-500 text-black font-bold rounded-md hover:bg-green-400 transition shadow-[0_0_15px_#00ff80]">Új árajánlat készítése</Link>
+            ) : (
+              <Link href="/login" className="px-6 py-3 bg-green-500 text-black font-bold rounded-md hover:bg-green-400 transition shadow-[0_0_15px_#00ff80]">Új árajánlat készítése</Link>
+            )}
 
-            <a href="#" className="px-6 py-3 border border-white/20 rounded-md hover:bg-white/10 transition">Árajánlatok megtekintése</a>
+            <Link href="#" className="px-6 py-3 border border-white/20 rounded-md hover:bg-white/10 transition">Árajánlatok megtekintése</Link>
           </div>
         </div>
       </main>

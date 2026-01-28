@@ -8,17 +8,10 @@ import { faBars } from "@fortawesome/free-solid-svg-icons"
 import { useRouter } from "next/navigation"
 
 export default function NavBar() {
-  
+
   const [isOpen, setIsOpen] = useState(false)
-  const {user, logout} = useAuth();
+  const { user, logout } = useAuth();
   const router = useRouter();
-
-  const handleCreateOfferLink = async () => {
-
-    if(user) router.push("/createoffer");
-    else router.push("/login");
-
-  };
 
   return (
     <>
@@ -28,12 +21,20 @@ export default function NavBar() {
         </Link>
 
         <div className="hidden md:flex gap-6 text-2xl">
-          <button onClick={handleCreateOfferLink}>Új árajánlat</button>
+          {user && (
+            <Link href="/createoffer">Új árajánlat</Link>
+          )}
 
-          <Link href="/offers">Árajánlataim</Link>
+          {user && (
+            <Link href="/offers">Árajánlataim</Link>
+          )}
+
+          {user && (
+            <Link href="/dashboard">Dashboard</Link>
+          )}
 
           {user ? (
-              <button onClick={logout}>Kijelentkezés</button>
+            <button onClick={logout}>Kijelentkezés</button>
           ) : (
             <Link href="/login">Belépés</Link>
           )}
@@ -48,10 +49,8 @@ export default function NavBar() {
       {isOpen && (
         <div className="md:hidden bg-black border-t border-white/10">
           <div className="flex flex-col gap-4 px-4 py-4 text-xl">
-            {user ? (
-              <button onClick={handleCreateOfferLink}>Új árajánlat</button>
-            ) : (
-              <button onClick={() => router.push("/login")}>Új árajánlat</button>
+            {user && (
+              <Link href="/createoffer">Új árajánlat</Link>
             )}
 
             {user ? (
