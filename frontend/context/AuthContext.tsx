@@ -2,11 +2,10 @@
 
 import { createContext, useContext, useState, useEffect } from 'react';
 import http from '@/lib/http';
-import { get } from 'http';
-import { init } from 'next/dist/compiled/webpack/webpack';
 import { useRouter } from 'next/navigation';
+import { profileType } from '@/app/dashboard/types/types';
 
-interface User {
+export interface User {
     id: number;
     name: string;
     email: string;
@@ -18,6 +17,9 @@ interface AuthContextType {
     loading: boolean;
     login: (credentials: Partial<User>) => Promise<{ success: boolean; message?: string }>;
     logout: () => void;
+
+    selectedUserProfile: profileType | null;
+    setSelectedUserProfile: (profile: profileType | null) => void;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -27,7 +29,9 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     const [user, setUser] = useState<User | null>(null);
     const [token, setToken] = useState<string | null>(null);
     const [loading, setLoading] = useState<boolean>(true);
+    const [selectedUserProfile, setSelectedUserProfile] = useState<profileType | null>(null);
     const router = useRouter();
+
 
     useEffect(() => {
 
@@ -91,12 +95,12 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         setUser(null);
         setToken(null);
         sessionStorage.removeItem('token');
-        sessionStorage.removeItem('user');
+        setSelectedUserProfile(null);
         router.push("/");
     };
 
     return (
-        <AuthContext.Provider value={{ user, token, loading, login, logout }}>
+        <AuthContext.Provider value={{ user, token, loading, login, logout, selectedUserProfile, setSelectedUserProfile}}>
             {children}
         </AuthContext.Provider>
     );
