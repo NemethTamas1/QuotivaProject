@@ -1,8 +1,12 @@
 import { Document, Page, Text, View } from '@react-pdf/renderer';
 import { pdfStyles as styles } from './styles';
 import { CreateOfferForm } from '../types';
+import { useAuth, User } from '@/context/AuthContext';
+import { profileType } from '@/app/dashboard/types/types';
 
-export const OfferPDFDocument = ({ data }: { data: CreateOfferForm }) => (
+export const OfferPDFDocument = ({ data, profile, user }: { data: CreateOfferForm, profile: profileType | null, user: User | null }) => (
+
+
   <Document>
     <Page size="A4" style={styles.page}>
       {/* 1. Fejléc: Cégadatok és Vevő adatok egymás mellett */}
@@ -28,11 +32,11 @@ export const OfferPDFDocument = ({ data }: { data: CreateOfferForm }) => (
 
         <View style={styles.column}>
           <Text style={styles.label}>Ajánlattevő:</Text>
-          <Text style={styles.value}>AjánlatTevő Kft.</Text>
-          <Text style={styles.value}>ajanlattevo@gmail.com</Text>
-          <Text style={styles.value}>Teszt Endre</Text>
-          <Text style={styles.value}>1234 Budapest</Text>
-          <Text style={styles.value}>Ajánlat utca 12</Text>
+          <Text style={styles.value}>{profile?.company_name}</Text>
+          <Text style={styles.value}>{profile?.company_email}</Text>
+          <Text style={styles.value}>{user?.name}</Text>
+          <Text style={styles.value}>{profile?.zip} {profile?.city}</Text>
+          <Text style={styles.value}>{profile?.street} {profile?.house_number}</Text>
         </View>
 
         <View style={styles.column}>
