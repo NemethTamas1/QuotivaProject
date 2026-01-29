@@ -15,6 +15,8 @@ import OfferItemDetails from "./components/OfferItemDetails";
 import OfferItemsTable from "./components/OfferItemsTable";
 import http from "@/lib/http";
 import NavBar from "../components/NavBar";
+import { useAuth } from "@/context/AuthContext";
+import { useRouter } from "next/navigation";
 
 export default function CreateOfferPage() {
 
@@ -27,6 +29,13 @@ export default function CreateOfferPage() {
         },
     });
 
+    const { user } = useAuth();
+    const router = useRouter();
+
+    const [loading, setLoading] = useState<boolean>(true);
+
+    const {selectedUserProfile} = useAuth();
+
     const { control, register, handleSubmit } = methods;
 
     const { fields, append, remove, update } = useFieldArray({
@@ -38,23 +47,24 @@ export default function CreateOfferPage() {
         useState<OfferItem | null>(null);
 
     useEffect(() => {
-        console.log("USE EFFECT FUT");
-        console.log("API_URL:", process.env.NEXT_PUBLIC_API_URL);
+        if (!user) router.push("/");
+        else setLoading(false);
     }, []);
 
     const onSubmit: SubmitHandler<CreateOfferForm> = async (data) => {
 
         try {
 
-            const response = await http.post(`/api/offers`, data);
+            const payload = {...data, user_profile_id: selectedUserProfile?.id};
+            const response = await http.post(`/api/offers`, payload);
 
             if (response.status !== 201) {
                 throw new Error("Sikertelen létrehozás backenden");
             }
 
             try {
-                const doc = <OfferPDFDocument data={data} />;
-                const blob = await pdf(doc).toBlob();
+                const doc = <OfferPDFDocument data={data} profile={selectedUserProfile} user={user}/>;
+                const blob = await pdf(doc).toBlob();   
 
                 const pdfUrl = URL.createObjectURL(blob);
 
@@ -75,6 +85,15 @@ export default function CreateOfferPage() {
             console.error("Error while creating offer", error);
         }
     };
+
+
+    if (loading || !user) {
+        return (
+            <div className="min-h-screen bg-black flex items-center justify-center text-white">
+                <p>Betöltés...</p>
+            </div>
+        );
+    }
 
     return (
         <div className="min-h-screen bg-black text-white flex flex-col">
