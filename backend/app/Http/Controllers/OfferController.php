@@ -24,6 +24,7 @@ class OfferController extends Controller
     public function store(StoreOfferRequest $request)
     {
         $data = $request->validated();
+        $userProfileId = $request->input('user_profile_id');
 
         DB::beginTransaction();
 
@@ -37,7 +38,7 @@ class OfferController extends Controller
             }
             // Ajánlat létrehozás
             $offer = Offer::create([
-                "user_id" => $user->id,
+                "profile_id" => $userProfileId,
                 "offer_number" => $this->generateOfferNumber(),
                 "offer_name" => $data["offer_name"],
                 "status" => $data["status"] ?? "pending",
