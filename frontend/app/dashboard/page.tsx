@@ -1,13 +1,32 @@
 'use client';
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import HomePage from "./components/HomePage";
 import MyProfiles from "./components/MyProfiles";
 import NavBar from "../components/NavBar";
+import { useAuth } from "@/context/AuthContext";
+import { useRouter } from "next/navigation";
+
 
 export default function Dashboard() {
 
     const [selectedPage, setSelectedPage] = useState<string>('Home');
+    const [loading, setLoading] = useState<boolean>(false);
+    const { user } = useAuth();
+    const router = useRouter();
+
+    useEffect(() => {
+        if (!user) router.push("/");
+        else setLoading(false);
+    }, []);
+
+    if (loading || !user) {
+        return (
+            <div className="min-h-screen bg-black flex items-center justify-center text-white">
+                <p>Betöltés...</p>
+            </div>
+        );
+    }
 
     return (
         <>
