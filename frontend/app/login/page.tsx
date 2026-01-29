@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import Link from "next/dist/client/link";
-import http from "@/lib/http";
 import { useRouter } from "next/navigation";
 import NavBar from "../components/NavBar";
 import { useAuth } from "@/context/AuthContext";
