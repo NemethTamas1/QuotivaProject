@@ -41,6 +41,8 @@ export default function MyProfiles() {
             const res = await http.get('/api/user-profiles');
             const items: profileType[] = res.data?.data ?? [];
             setProfiles(items);
+
+            if(items.length > 0 && !selectedUserProfile) setSelectedUserProfile(items[0]);
         } catch (e) {
             setError("Hiba történt a profilok betöltésekor.");
         } finally {
@@ -57,7 +59,6 @@ export default function MyProfiles() {
         if(selectedUserProfile) alert("Jelenlegi user profil: " + selectedUserProfile?.company_name);
         else alert("Nincs kiválasztott profil!");
     };
-
 
     useEffect(() => {
         fetchProfiles();
