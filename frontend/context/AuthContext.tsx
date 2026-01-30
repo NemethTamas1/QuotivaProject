@@ -51,7 +51,6 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     }, []);
 
     const getUserData = async (authToken: string) => {
-        console.log("getUserData meghívva.");
         try {
             const res = await http.get('/api/user', {
                 headers: {
@@ -61,7 +60,6 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
             if (res.status == 200) {
                 setUser(res.data);
-                console.log("user betöltve: ", res.data);
             }
         } catch (error) {
             console.error("Hiba a felhasználói adatok lekérésekor", error);
@@ -77,7 +75,6 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
             if (res.status == 200) {
                 setToken(token);
-                console.log("token mentés: ", token);
                 sessionStorage.setItem('token', token);
 
                 await getUserData(token);

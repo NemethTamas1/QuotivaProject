@@ -22,7 +22,6 @@ export default function LoginPage() {
             const res = await login({ email, password } as any);
 
             if (res.success) router.push("/dashboard");
-            console.log("lefutott az átirányítás")
         } catch (error) {
             console.error('Hiba a bejelentkezés során', error);
             setError("Hiba a bejelentkezés során");

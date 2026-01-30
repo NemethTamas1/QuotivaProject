@@ -35,7 +35,6 @@ export default function RegisterPage() {
             });
 
             if(res.ok) {
-                console.log("Sikeres regisztráció!");
                 alert("Sikeres regisztráció!");
             } else {
                 const errorData = await res.json();

@@ -16,12 +16,10 @@ export default function MyProfiles() {
 
     const handleProfileSave = async (data: Partial<profileType>) => {
         try {
-            console.log("Profil mentés próba:", data);
 
             const res = await http.post(`/api/user-profiles`, data);
 
             if (res.status === 201) {
-                console.log("Profil sikeresen mentve.");
                 alert("Profil sikeresen mentve.");
                 setIsCompilerOpen(false);
             } else {
@@ -95,7 +93,7 @@ export default function MyProfiles() {
                                     {p.company_email} • {p.company_phone}
                                 </div>
 
-                                {selectedUserProfile === p ? (
+                                {selectedUserProfile?.id === p?.id ? (
                                     <button className="disabled p-2 bg-green-300 text-black rounded-md hover:bg-green-400 transition-colors">Kiválasztva</button>
                                 ) : (
                                     <button
