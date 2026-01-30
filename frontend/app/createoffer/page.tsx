@@ -17,8 +17,16 @@ import http from "@/lib/http";
 import NavBar from "../components/NavBar";
 import { useAuth } from "@/context/AuthContext";
 import { useRouter } from "next/navigation";
+import { profileType } from "../dashboard/types/types";
+import Link from "next/link";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faTriangleExclamation } from "@fortawesome/free-solid-svg-icons";
 
 export default function CreateOfferPage() {
+
+    const [loading, setLoading] = useState<boolean>(true);
+    const [profiles, setProfiles] = useState<profileType[]>([]);
+    const [hasNoProfile, setHasNoProfile] = useState<boolean>(false);
 
     const methods = useForm<CreateOfferForm>({
         defaultValues: {
@@ -31,31 +39,43 @@ export default function CreateOfferPage() {
 
     const { user } = useAuth();
     const router = useRouter();
-
-    const [loading, setLoading] = useState<boolean>(true);
-
-    const {selectedUserProfile} = useAuth();
-
+    const { selectedUserProfile } = useAuth();
     const { control, register, handleSubmit } = methods;
-
     const { fields, append, remove, update } = useFieldArray({
         control,
         name: "items",
     });
 
+    const fetchProfiles = async () => {
+        try {
+            setLoading(true);
+            const res = await http.get('/api/user-profiles');
+            const items: profileType[] = res.data?.data ?? [];
+            setProfiles(items);
+
+            if (items.length == 0) setHasNoProfile(true);
+        } catch (e) {
+            throw new Error("Hiba történt a profilok betöltésekor.");
+        } finally {
+            setLoading(false);
+        }
+    };
+
     const [editingItem, setEditingItem] =
         useState<OfferItem | null>(null);
 
     useEffect(() => {
-        if (!user) router.push("/");
-        else setLoading(false);
-    }, []);
+        if (!user) {
+            router.push("/")
+        };
+        fetchProfiles();
+    }, [user]);
 
     const onSubmit: SubmitHandler<CreateOfferForm> = async (data) => {
 
         try {
 
-            const payload = {...data, user_profile_id: selectedUserProfile?.id};
+            const payload = { ...data, user_profile_id: selectedUserProfile?.id };
             const response = await http.post(`/api/offers`, payload);
 
             if (response.status !== 201) {
@@ -63,8 +83,8 @@ export default function CreateOfferPage() {
             }
 
             try {
-                const doc = <OfferPDFDocument data={data} profile={selectedUserProfile} user={user}/>;
-                const blob = await pdf(doc).toBlob();   
+                const doc = <OfferPDFDocument data={data} profile={selectedUserProfile} user={user} />;
+                const blob = await pdf(doc).toBlob();
 
                 const pdfUrl = URL.createObjectURL(blob);
 
@@ -76,7 +96,6 @@ export default function CreateOfferPage() {
 
                 document.body.removeChild(link);
                 URL.revokeObjectURL(pdfUrl);
-                console.log("PDF download started.");
             } catch (pdfError) {
                 console.error("Error generating or downloading PDF", pdfError);
             }
@@ -89,9 +108,47 @@ export default function CreateOfferPage() {
 
     if (loading || !user) {
         return (
-            <div className="min-h-screen bg-black flex items-center justify-center text-white">
-                <p>Betöltés...</p>
-            </div>
+            <>
+                <NavBar />
+                <div className="min-h-screen bg-black flex items-center justify-center text-white">
+                    <p>Betöltés...</p>
+                </div>
+            </>
+        );
+    }
+
+    if (hasNoProfile) {
+        return (
+            <>
+                <NavBar />
+                <div className="min-h-[calc(100vh-64px)] bg-black flex flex-col items-center justify-center text-white p-4">
+                    <div className="max-w-md w-full text-center space-y-6 bg-gray-900 p-8 rounded-2xl border border-gray-800 shadow-2xl">
+
+                        <div className="mx-auto w-16 h-16 bg-yellow-500/10 rounded-full flex items-center justify-center">
+                            <span className="text-yellow-500 text-3xl"><FontAwesomeIcon icon={faTriangleExclamation} /></span>
+                        </div>
+
+                        <div className="space-y-2">
+                            <h1 className="text-2xl font-bold tracking-tight">
+                                Nincs aktív profilja
+                            </h1>
+                            <p className="text-gray-400">
+                                Az ajánlatok létrehozásához előbb el kell készítenie a saját profilját.
+                            </p>
+                        </div>
+
+                        <div className="flex flex-col gap-3">
+                            <Link href="/dashboard" className="w-full py-3 px-4 bg-green-400 text-black font-semibold rounded-lg hover:bg-green-300 transition-all active:scale-95">
+                                Vissza a Dashboardra
+                            </Link>
+
+                            <p className="text-xs text-gray-500 italic">
+                                A profilokat a beállítások menüpont alatt találja.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </>
         );
     }
 
