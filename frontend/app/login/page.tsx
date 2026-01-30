@@ -15,21 +15,23 @@ export default function LoginPage() {
     const router = useRouter();
     const { login } = useAuth();
 
-    const handleLogin = async() => {
+    const handleLogin = async () => {
         setError(null);
 
-        const result = await login({ email, password } as any);
+        try {
+            const res = await login({ email, password } as any);
 
-        if(result.success) {
-            router.push('/dashboard');
-        } else {
-            setError(result.message || 'Hiba a bejelentkezés során');
+            if (res.success) router.push("/dashboard");
+            console.log("lefutott az átirányítás")
+        } catch (error) {
+            console.error('Hiba a bejelentkezés során', error);
+            setError("Hiba a bejelentkezés során");
         }
     };
 
     return (
         <>
-        <NavBar />
+            <NavBar />
             <div>
                 <div className="relative w-10/12 lg:w-3/12 my-36 mx-auto lg:my-20">
 

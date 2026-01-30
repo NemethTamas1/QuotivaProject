@@ -80,7 +80,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
                 console.log("token mentés: ", token);
                 sessionStorage.setItem('token', token);
 
-                getUserData(token);
+                await getUserData(token);
 
                 return { success: true };
             };
