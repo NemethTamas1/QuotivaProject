@@ -1,6 +1,8 @@
 'use client';
 
+import { useAuth } from "@/context/AuthContext";
 import { useState } from "react";
+import NavBar from "../components/NavBar";
 
 export default function RegisterPage() {
 
@@ -8,46 +10,15 @@ export default function RegisterPage() {
     const [password, setPassword] = useState('');
     const [name, setName] = useState('');
 
-    const handleRegister = async () => {
+    const { register } = useAuth();
 
-        try {
-            const api = process.env.NEXT_PUBLIC_API_URL;
-            await fetch(`${api}/sanctum/csrf-cookie`, {
-                method: 'GET',
-                credentials: 'include',
-            });
-
-            const res = await fetch(`${api}/api/register`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Accept': 'application/json',
-                    'X-XSRF-TOKEN': decodeURIComponent(
-                        document.cookie.split('; ').find(row => row.startsWith('XSRF-TOKEN='))?.split('=')[1] || ''
-                    ),
-                },
-                body: JSON.stringify({
-                    name: name,
-                    email: email,
-                    password: password
-                }),
-                credentials: 'include',
-            });
-
-            if(res.ok) {
-                alert("Sikeres regisztráció!");
-            } else {
-                const errorData = await res.json();
-                console.error("Regisztrációs hiba:", errorData);
-            }
-
-        } catch (error) {
-            console.error("Regisztrációs hiba:", error);
-        }
+    const handleRegister = () => {
+        register({ name, email, password });
     };
 
     return (
         <>
+        <NavBar />
             <div>
                 <div className="relative w-3/12 mx-auto lg:my-20">
 
