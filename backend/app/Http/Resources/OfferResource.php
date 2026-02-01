@@ -14,7 +14,6 @@ class OfferResource extends JsonResource
             "profile_id" => $this->profile_id,
             "offer_number" => $this->offer_number,
             "offer_name" => $this->offer_name,
-            "customer_id" => $this->customer_id,
             "status" => $this->status,
             "dated" => $this->dated,
             "valid_until" => $this->valid_until,
