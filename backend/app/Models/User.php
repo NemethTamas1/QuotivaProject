@@ -5,6 +5,7 @@ namespace App\Models;
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
@@ -23,6 +24,7 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'role'
     ];
 
     /**
@@ -56,5 +58,9 @@ class User extends Authenticatable
     public function profiles():HasMany
     {
         return $this->hasMany(UserProfile::class);
+    }
+
+    public function offers():HasManyThrough{
+        return $this->hasManyThrough(Offer::class, "user_id", "profile_id");
     }
 }
