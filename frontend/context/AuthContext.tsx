@@ -15,11 +15,18 @@ interface AuthContextType {
     user: User | null;
     token: string | null;
     loading: boolean;
+    register: (credentials: IRegisterCredentials) => void;
     login: (credentials: Partial<User>) => Promise<{ success: boolean; message?: string }>;
     logout: () => void;
 
     selectedUserProfile: profileType | null;
     setSelectedUserProfile: (profile: profileType | null) => void;
+}
+
+interface IRegisterCredentials {
+    name: string,
+    email: string,
+    password:string
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -96,8 +103,17 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         router.push("/");
     };
 
+    const register = async(credentials: IRegisterCredentials) => {
+        try {
+            const res = await http.post("/api/register", credentials);
+            alert(`A(z) ${credentials.email} sikeresen regisztrált.`);
+        } catch (error) {
+            alert("Sikertelen regisztráció.")
+        }
+    };
+
     return (
-        <AuthContext.Provider value={{ user, token, loading, login, logout, selectedUserProfile, setSelectedUserProfile}}>
+        <AuthContext.Provider value={{ user, token, loading, register, login, logout, selectedUserProfile, setSelectedUserProfile}}>
             {children}
         </AuthContext.Provider>
     );
