@@ -41,8 +41,8 @@ class Offer extends Model
         return $this->hasMany(OfferItem::class);
     }
 
-    public function user():BelongsTo
+    public function profile():BelongsTo
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(UserProfile::class);
     }
 }

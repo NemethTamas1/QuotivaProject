@@ -12,6 +12,7 @@ Route::middleware('auth:sanctum')->get('/me', function (Request $request) {
     return response()->json($request->user());
 });
 
+Route::get("/offers", [OfferController::class, "index"])->middleware("can:admin-only");
 Route::middleware('auth:sanctum')->apiResource("/offers", OfferController::class);
 Route::middleware('auth:sanctum')->apiResource('/user-profiles', UserProfileController::class);
 

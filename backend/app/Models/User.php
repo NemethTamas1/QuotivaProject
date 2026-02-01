@@ -61,6 +61,6 @@ class User extends Authenticatable
     }
 
     public function offers():HasManyThrough{
-        return $this->hasManyThrough(Offer::class, "user_id", "profile_id");
+        return $this->hasManyThrough(Offer::class, UserProfile::class, "user_id", "profile_id", "id", "id");
     }
 }
