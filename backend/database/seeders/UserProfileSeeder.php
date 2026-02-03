@@ -15,7 +15,7 @@ class UserProfileSeeder extends Seeder
     {
         DB::table('user_profiles')->insert([
             [
-                'user_id' => 2,
+                'user_id' => 1,
                 'company_name' => 'ElsőProfil Cég Kft.',
                 'tax_number' => 'TAX123456',
                 'company_email' => 'elsoprofil@gmail.com',
@@ -26,7 +26,7 @@ class UserProfileSeeder extends Seeder
                 'company_phone' => '+3612345678',
             ],
             [
-                'user_id' => 2,
+                'user_id' => 1,
                 'company_name' => 'MásodikProfil Cég Kft.',
                 'tax_number' => 'TAX123456',
                 'company_email' => 'masodikprofil@gmail.com',
