@@ -17,7 +17,7 @@ class StoreOfferRequest extends FormRequest
             // Alap
             //"user_id" => ["required", "exists:users,id"],
             "offer_name" => ["required", "string", "max:100"],
-            "status" => ["nullable", "string", "in:pending,accepted,rejected"],
+            "status" => ["required", "string", "in:pending,accepted,rejected"],
             "dated" => ["nullable", "date"],
             "valid_until" => ["nullable", "date"],
             "currency" => ["required", "string", "max:10", "in:USD,EUR,HUF"],
@@ -28,12 +28,12 @@ class StoreOfferRequest extends FormRequest
             // Ügyfél
             "client_name" => ["required", "string", "max:100"],
             "client_email" => ["nullable", "string", "email:rfc", "max:50"],
-            "client_phone" => ["nullable", "string", "max:50"],
-            "client_tax_number" => ["nullable", "string", "max:50"],
+            "client_phone" => ["nullable", "string", "max:20"],
+            "client_tax_number" => ["nullable", "string", "max:25"],
             "client_zip" => ["required", "integer", "digits:4"],
-            "client_city" => ["required", "string", "max:100"],
-            "client_street" => ["required", "string", "max:100"],
-            "client_house_number" => ["required", "string", "max:20"],
+            "client_city" => ["required", "string", "max:30"],
+            "client_street" => ["required", "string", "max:50"],
+            "client_house_number" => ["required", "string", "max:10"],
 
             // Tételek tömbje
             "items" => ["required", "array", "min:1"],
