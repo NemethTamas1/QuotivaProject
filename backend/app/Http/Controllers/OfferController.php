@@ -35,7 +35,7 @@ class OfferController extends Controller
     public function store(StoreOfferRequest $request)
     {
         $data = $request->validated();
-        $userProfileId = $request->input('user_profile_id');
+        $userProfileId = $request->input('profile_id');
 
         DB::beginTransaction();
 

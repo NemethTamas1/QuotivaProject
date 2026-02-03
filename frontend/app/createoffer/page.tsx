@@ -75,7 +75,7 @@ export default function CreateOfferPage() {
 
         try {
 
-            const payload = { ...data, user_profile_id: selectedUserProfile?.id };
+            const payload = { ...data, profile_id: selectedUserProfile?.id };
             const response = await http.post(`/api/offers`, payload);
 
             if (response.status !== 201) {
