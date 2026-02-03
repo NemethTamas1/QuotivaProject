@@ -12,20 +12,6 @@ use Illuminate\Support\Facades\Auth;
 
 class UserProfileController extends Controller
 {
-
-    public function activate(Request $request, UserProfile $userProfile)
-    {
-        if ($userProfile->user_id !== Auth::id()) {
-            abort(403, 'Unauthorized action.');
-        }
-
-        $user = $request->user();
-        $user->active_user_profile_id = $userProfile->id;
-        $user->save();
-
-        return response()->json(['message' => 'User profile activated successfully.']);
-    }
-
     /**
      * Display a listing of the resource.
      */
