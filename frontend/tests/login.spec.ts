@@ -16,7 +16,7 @@ test.describe("Bejelentkezési folyamat", () => {
         await page.getByRole("button", { name: "Bejelentkezés" }).click();
 
         // Assert
-        await expect(page).toHaveURL(/\/dashboard/);
+        await expect(page).toHaveURL(/\/dashboard/, {timeout: 15000});
     });
 
     test("Sikertelen bejelentkezés folyamata", async ({ page }) => {

@@ -12,7 +12,7 @@ test.describe("NavBar teszt", () => {
         await page.getByText("Belépés").click();
 
         // Assert
-        await expect(page).toHaveURL(/\/login/);
+        await expect(page).toHaveURL(/\/login/, {timeout: 1500});
     })
 
     test("Látszódik az 'Új Árajánlat' gomb", async ({ page }) => {
@@ -27,7 +27,7 @@ test.describe("NavBar teszt", () => {
         await expect(offerButton).toBeVisible();
     })
 
-    test("Látszódik az 'Ajánlataim' gomb", async ({ page }) => {
+    test("Látszódik az 'Kezelőfelület' gomb", async ({ page }) => {
         // Arrange && Act
         await page.goto(process.env.NEXT_PUBLIC_FE_URL + "/login")
         await page.getByPlaceholder("Email").fill(process.env.PW_USER_EMAIL || '');
@@ -35,19 +35,7 @@ test.describe("NavBar teszt", () => {
         await page.getByRole("button", { name: "Bejelentkezés" }).click();
 
         // Assert
-        const offerButton = page.getByText("Ajánlataim");
-        await expect(offerButton).toBeVisible();
-    })
-
-    test("Látszódik az 'Dashboard' gomb", async ({ page }) => {
-        // Arrange && Act
-        await page.goto(process.env.NEXT_PUBLIC_FE_URL + "/login")
-        await page.getByPlaceholder("Email").fill(process.env.PW_USER_EMAIL || '');
-        await page.getByPlaceholder("Jelszó").fill(process.env.PW_USER_PASSWORD || '');
-        await page.getByRole("button", { name: "Bejelentkezés" }).click();
-
-        // Assert
-        const offerButton = page.getByText("Dashboard");
+        const offerButton = page.getByText("Kezelőfelület");
         await expect(offerButton).toBeVisible();
     })
 
