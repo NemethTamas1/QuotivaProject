@@ -78,7 +78,9 @@ export default function CreateOfferPage() {
             const payload = { ...data, profile_id: selectedUserProfile?.id };
             const response = await http.post(`/api/offers`, payload);
 
-            if (response.status !== 201) {
+            if(response.status == 201) {
+                alert("Sikeres ajánlat létrehozás.")
+            } else {
                 throw new Error("Sikertelen létrehozás backenden");
             }
 
