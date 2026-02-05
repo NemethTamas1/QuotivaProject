@@ -46,13 +46,14 @@ export default function OfferItemDetails({ append }: Props) {
                 <div className="absolute -inset-1.5 bg-green-500 rounded-md blur-sm opacity-25"></div>
                 <div className="rounded-md p-3 flex flex-row bg-slate-900 my-7 relative">
                     <div className="mx-1 flex-col">
-                        <label className="block font-semibold mb-1 text-white">Tétel megnevezése</label>
+                        <label htmlFor="name" className="block font-semibold mb-1 text-white">Tétel megnevezése</label>
                         <input
                             value={newItem.name}
                             onChange={(e) =>
                                 setNewItem({ ...newItem, name: e.target.value })
                             }
                             className="w-full border rounded px-3 py-2"
+                            name="name"
                         />
                     </div>
 
@@ -108,7 +109,7 @@ export default function OfferItemDetails({ append }: Props) {
                     </div>
 
                     <div>
-                        <label className="block font-semibold text-white mb-1">Anyag egységár</label>
+                        <label htmlFor="material_unit_price" className="block font-semibold text-white mb-1">Anyag egységár</label>
                         <input
                             type="number"
                             value={newItem.material_unit_price}
@@ -119,6 +120,7 @@ export default function OfferItemDetails({ append }: Props) {
                                 })
                             }
                             className="w-10/12 border rounded px-3 py-2"
+                            name="material_unit_price"
                         />
                         {hasValidMaterialValue && (
                             <p className="opacity-50 text-white">= {netMaterialTotal} Ft</p>

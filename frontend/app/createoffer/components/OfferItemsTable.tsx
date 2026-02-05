@@ -44,7 +44,7 @@ export default function OfferItemsTable({ fields, remove, setEditingItem }: Prop
                                 fields.map((field) => (
                                     <tr key={field.id} className="border-t text-center odd:bg-white even:bg-green-200">
                                         <td className="p-2 text-lg text-black">{field.name}</td>
-                                        <td className="p-2 text-lg text-black">{field.quantity} Ft</td>
+                                        <td className="p-2 text-lg text-black">{field.quantity} {field.quantity_type}</td>
                                         <td className="p-2 text-lg text-black">{field.labor_unit_price} Ft</td>
                                         <td className="p-2 text-lg text-black">{field.material_unit_price} Ft</td>
                                         <td className="p-2 text-lg text-black">{field.quantity * field.labor_unit_price} Ft</td>

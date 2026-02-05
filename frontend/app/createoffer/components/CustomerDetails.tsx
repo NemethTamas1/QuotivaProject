@@ -52,44 +52,48 @@ export default function CustomerDetails({ register }: Props) {
 
                 <div className="bg-slate-900 flex flex-row flex-wrap gap-5 p-3 rounded-md relative">
                     <div>
-                        <label className="block mb-1 text-white">Név*</label>
+                        <label htmlFor="client_name" className="block mb-1 text-white">Név*</label>
                         <input
                             {...register("client_name")}
                             placeholder="Teszt Kft."
                             className="border rounded w-full px-3 py-2"
+                            name="client_name"
                         />
                     </div>
 
                     <div>
-                        <label className="block mb-1 text-white">Email*</label>
+                        <label htmlFor="client_email" className="block mb-1 text-white">Email*</label>
                         <input
                             {...register("client_email")}
                             placeholder="tesztcegkft@gmail.com"
                             type="email"
                             className="border rounded w-full px-3 py-2"
+                            name="client_email"
                         />
                     </div>
 
                     <div>
-                        <label className="block mb-1 text-white">Telefonszám</label>
+                        <label htmlFor="client_phone" className="block mb-1 text-white">Telefonszám</label>
                         <input
                             {...register("client_phone")}
                             placeholder="+36 20 123 4567"
                             className="border rounded w-full px-3 py-2"
+                            name="client_phone"
                         />
                     </div>
 
                     <div>
-                        <label className="block mb-1 text-white">Adószám <i>(cég esetén)</i></label>
+                        <label htmlFor="client_tax_number" className="block mb-1 text-white">Adószám <i>(cég esetén)</i></label>
                         <input
                             {...register("client_tax_number")}
                             placeholder="12345678-1-12"
                             className="border rounded w-full px-3 py-2"
+                            name="client_tax_number"
                         />
                     </div>
 
                     <div>
-                        <label className="block mb-1 text-white">Irányítószám*</label>
+                        <label htmlFor="client_zip" className="block mb-1 text-white">Irányítószám*</label>
                         <input
                             type="number"
                             inputMode="numeric"
@@ -97,33 +101,37 @@ export default function CustomerDetails({ register }: Props) {
                             {...register("client_zip", { valueAsNumber: true })}
                             placeholder="1111"
                             className="border rounded w-full px-3 py-2"
+                            name="client_zip"
                         />
                     </div>
 
                     <div>
-                        <label className="block mb-1 text-white">Város*</label>
+                        <label htmlFor="client_city" className="block mb-1 text-white">Város*</label>
                         <input
                             {...register("client_city")}
                             placeholder="Budapest"
                             className="border rounded w-full px-3 py-2"
+                            name="client_city"
                         />
                     </div>
 
                     <div>
-                        <label className="block mb-1 text-white">Utca*</label>
+                        <label htmlFor="client_street" className="block mb-1 text-white">Utca*</label>
                         <input
                             {...register("client_street")}
                             placeholder="Teszt utca"
                             className="border rounded w-full px-3 py-2"
+                            name="client_street"
                         />
                     </div>
 
                     <div>
-                        <label className="block mb-1 text-white">Házszám*</label>
+                        <label htmlFor="client_house_number" className="block mb-1 text-white">Házszám*</label>
                         <input
                             {...register("client_house_number")}
                             placeholder="11"
                             className="border rounded w-full px-3 py-2"
+                            name="client_house_number"
                         />
                     </div>
                 </div>
