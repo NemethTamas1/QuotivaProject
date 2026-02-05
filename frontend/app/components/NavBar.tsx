@@ -26,11 +26,7 @@ export default function NavBar() {
           )}
 
           {user && (
-            <Link href="/offers">Árajánlataim</Link>
-          )}
-
-          {user && (
-            <Link href="/dashboard">Dashboard</Link>
+            <Link href="/dashboard">Kezelőfelület</Link>
           )}
 
           {user ? (
