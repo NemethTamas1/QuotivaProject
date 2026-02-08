@@ -5,6 +5,7 @@ import Link from "next/dist/client/link";
 import { useRouter } from "next/navigation";
 import NavBar from "../components/NavBar";
 import { useAuth } from "@/context/AuthContext";
+import { showSuccess } from "@/lib/toast";
 
 export default function LoginPage() {
 
@@ -20,7 +21,6 @@ export default function LoginPage() {
 
         try {
             const res = await login({ email, password } as any);
-
             if (res.success) router.push("/dashboard");
         } catch (error) {
             console.error('Hiba a bejelentkezés során', error);

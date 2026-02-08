@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useForm, useFieldArray, SubmitHandler, FormProvider } from "react-hook-form";
+import { showSuccess } from "@/lib/toast";
 import { pdf } from '@react-pdf/renderer';
 import { OfferPDFDocument } from "./pdfexport/OfferDocumentPDF";
 
@@ -79,7 +80,8 @@ export default function CreateOfferPage() {
             const response = await http.post(`/api/offers`, payload);
 
             if(response.status == 201) {
-                alert("Sikeres ajánlat létrehozás.")
+                //alert("Sikeres ajánlat létrehozás.")
+                showSuccess("Sikeres ajánlat létrehozás!")
             } else {
                 throw new Error("Sikertelen létrehozás backenden");
             }

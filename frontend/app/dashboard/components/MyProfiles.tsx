@@ -1,10 +1,9 @@
-'use client';
-
 import http from "@/lib/http";
 import { profileType } from "../types/types";
 import ProfileCompiler from "./ProfileCompiler";
 import { useEffect, useState } from "react";
 import { useAuth } from "@/context/AuthContext";
+import { showInfo, showSuccess } from "@/lib/toast";
 
 export default function MyProfiles() {
 
@@ -20,7 +19,7 @@ export default function MyProfiles() {
             const res = await http.post(`/api/user-profiles`, data);
 
             if (res.status === 201) {
-                alert("Profil sikeresen mentve.");
+                showSuccess(data.company_name + "sikeresen mentve.")
                 setIsCompilerOpen(false);
             } else {
                 console.error("Hiba a profil mentésekor:", error);
@@ -42,7 +41,7 @@ export default function MyProfiles() {
             const items: profileType[] = res.data?.data ?? [];
             setProfiles(items);
 
-            if(items.length > 0 && !selectedUserProfile) setSelectedUserProfile(items[0]);
+            if (items.length > 0 && !selectedUserProfile) setSelectedUserProfile(items[0]);
         } catch (e) {
             setError("Hiba történt a profilok betöltésekor.");
         } finally {
@@ -52,11 +51,12 @@ export default function MyProfiles() {
 
     const saveProfile = async (profile: profileType) => {
         setSelectedUserProfile(profile);
-        alert("Alprofil sikeresen kiválasztva.")
+        //alert("Alprofil sikeresen kiválasztva.")
+        showInfo("A(z) " + profile.company_name + "sikeresen kiválasztva.");
     };
 
     const showCurrentProfile = () => {
-        if(selectedUserProfile) alert("Jelenlegi user profil: " + selectedUserProfile?.company_name);
+        if (selectedUserProfile) alert("Jelenlegi user profil: " + selectedUserProfile?.company_name);
         else alert("Nincs kiválasztott profil!");
     };
 
@@ -75,9 +75,6 @@ export default function MyProfiles() {
                 >
                     + Új profil létrehozása
                 </button>
-
-                {/* KIVENNI MAJD, EZ CSAK HELPER */}
-                <button onClick={() => showCurrentProfile()} className="bg-orange-400 text-black px-6 py-2 rounded-lg transition-all">Ki vagyok én?</button>
             </div>
 
             <div>

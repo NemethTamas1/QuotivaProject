@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { Fira_Sans } from "next/font/google";
 import "./globals.css";
 import { AuthProvider } from "@/context/AuthContext";
+import { ToastContainer } from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css';
 
 const fira = Fira_Sans({
   subsets: ["latin"],
@@ -26,6 +28,7 @@ export default function RootLayout({
       >
         <AuthProvider>
           {children}
+          <ToastContainer />
         </AuthProvider>
       </body>
     </html>
