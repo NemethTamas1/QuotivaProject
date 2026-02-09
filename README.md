@@ -42,13 +42,17 @@ A GitHub Actions munkafolyamat segítségével minden `main` ágra történő pu
    Majd futtassuk is azt (paraméternek megadható -d flag, így detached módban fog elindulni):
    > docker compose -f docker-compose-dev.yaml up -d
 
-   Ezt követően érdemes feltölteni a rendszert teszt adatokkal. Ehhez tegyük a következőt:
+   Ezt követően két féle indítási opció áll rendelkezésünkre. Vagy teszt adatok nélkül, vagy teszt adatokkal. Ehhez tegyük a következőt:
    - A projekt gyökeréből kiadva a ***docker ps*** parancsot láthatjuk a futó backend és frontend konténereket. Nekünk a backend konténerbe kell belépnünk. Ehhez figyeljük meg a backend konténer **nevét**, majd adjuk ki a következő parancsot:
-     > docker compose exec -it quotiva-dev-backend-1 bash
+     > docker exec -it quotiva-dev-backend-1 bash
 
-     A backend konténerbe belépve pedig már csak a seed-elés maradt:
-     > php artisan migrate:fresh --seed
-
+     A backend konténerbe belépve pedig már csak az indítási opció maradt:
+     > php artisan app:setup --woData *(without data: Csak a demó felhasználó jön létre.)*
+     
+     VAGY
+   
+     > php artisan app:setup --wData *(with data: Demó felhasználó mellé létrejönnek előre generált teszt ajánlatok, illetve 2db felhasználói profil.)*
+    
      Ezzel lefutnak a migrációk, adatbázis táblák, kapcsolatok létrejönnek, és a DatabaseSeeder.php fájl is lefut, így egy teszt adatokkal ellátott adatbázist kapva.
    
    Leállításhoz adjuk ki a következő parancsot (ahhoz, hogy minden adatot, például seed-elt adatokat is töröljünk a leállítást követően, adjuk ki a -v, azaz verbose flag-et):
