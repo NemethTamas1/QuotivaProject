@@ -33,7 +33,7 @@ export default function Dashboard() {
             <NavBar />
             <div className="w-full flex flex-col lg:flex-row lg:min-h-screen">
                 {/* Bal oldali oldalsáv */}
-                <div className="w-full flex flex-row lg:block lg:w-1/12 bg-[#27272A] relative z-10 shadow-[12px_0_24px_-12px_#18181B]">
+                <div className="w-full flex flex-row lg:block lg:w-36 bg-[#27272A] relative z-10 shadow-[12px_0_24px_-12px_#18181B]">
                     <button onClick={() => setSelectedPage('Home')} className={`mx-auto block text-2xl p-2 ${selectedPage === 'Home' ? 'text-green-400' : 'text-gray-200'}`}>Főoldal</button>
 
                     <button onClick={() => setSelectedPage('myOffers')} className={`mx-auto block text-2xl p-2 ${selectedPage === 'myOffers' ? 'text-green-400' : 'text-gray-200'}`}>Árajánlatok</button>
