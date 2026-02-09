@@ -49,15 +49,14 @@ export default function NavBar() {
               <Link href="/createoffer">Új árajánlat</Link>
             )}
 
+            {user && (
+              <Link href="/dashboard">Kezelőfelület</Link>
+            )}
             {user ? (
-              <button onClick={logout}>Kijelentkezés</button>
+              <button onClick={logout} className="text-left">Kijelentkezés</button>
             ) : (
               <Link href="/login">Belépés</Link>
             )}
-
-            <Link href="/offers">Árajánlataim</Link>
-
-            <Link href="/login">Belépés</Link>
           </div>
         </div>
       )}
