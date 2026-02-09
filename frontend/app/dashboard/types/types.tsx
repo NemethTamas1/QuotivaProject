@@ -10,3 +10,11 @@ export interface profileType {
     house_number: string,
     company_phone: string
 };
+
+export type DataPoint = { x: number, y: number };
+
+export type LineChartProps = {
+    width: number;
+    height: number;
+    data: DataPoint[];
+}
