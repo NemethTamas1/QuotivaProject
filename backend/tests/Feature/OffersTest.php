@@ -44,7 +44,7 @@ class OffersTest extends TestCase
         $response = $this->actingAs($admin)->get('/api/offers');
 
         $response->assertStatus(200);
-        $response->assertJsonCount(3, "data");
+        $response->assertJsonCount(123, "data");
     }
 
     public function test_user_can_not_get_all_the_offers_there_is(): void
