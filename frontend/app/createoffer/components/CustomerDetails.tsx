@@ -33,7 +33,7 @@ export default function CustomerDetails({ register }: Props) {
         <>
             {/* M E G R E N D E L Ő   A D A T O K*/}
             <div className="flex flex-row justify-between items-baseline mb-7">
-                <h2 className="text-2xl font-semibold text-green-400" style={{
+                <h2 className="text-xl lg:text-2xl font-semibold text-green-400" style={{
                     textShadow: "0px 0px 20px rgba(34, 197, 94, 1"
                 }}>
                     Megrendelő adatai
@@ -41,7 +41,7 @@ export default function CustomerDetails({ register }: Props) {
 
                 <div className="flex items-center gap-2">
                     <span className="text-sm text-gray-400 font-medium italic">Profil:</span>
-                    <span className="text-lg font-bold text-green-400 bg-green-400/10 px-3 py-1 rounded-full border border-green-400/20 shadow-[0_0_15px_rgba(34,197,94,0.2)]">
+                    <span className="text-md lg:text-lg font-bold text-green-400 bg-green-400/10 px-3 py-1 rounded-full border border-green-400/20 shadow-[0_0_15px_rgba(34,197,94,0.2)]">
                         {selectedUserProfile?.company_name || "Nincs kiválasztva"}
                     </span>
                 </div>
@@ -50,7 +50,7 @@ export default function CustomerDetails({ register }: Props) {
             <div className="relative">
                 <div className="absolute -inset-1.5 bg-green-500 rounded-md blur-sm opacity-25"></div>
 
-                <div className="bg-slate-900 flex flex-row flex-wrap gap-5 p-3 rounded-md relative">
+                <div className="bg-slate-900 flex flex-row flex-wrap gap-3 lg:gap-5 p-3 rounded-md relative">
                     <div>
                         <label htmlFor="client_name" className="block mb-1 text-white">Név*</label>
                         <input

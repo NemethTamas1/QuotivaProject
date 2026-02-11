@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from "react";
-import { useForm, useFieldArray, SubmitHandler, FormProvider } from "react-hook-form";
+import { useForm, useFieldArray, SubmitHandler, FormProvider, useWatch } from "react-hook-form";
 import { showSuccess } from "@/lib/toast";
 import { pdf } from '@react-pdf/renderer';
 import { OfferPDFDocument } from "./pdfexport/OfferDocumentPDF";
@@ -22,6 +22,8 @@ import { profileType } from "../dashboard/types/types";
 import Link from "next/link";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTriangleExclamation } from "@fortawesome/free-solid-svg-icons";
+import { sum } from "d3";
+import SumCalculations from "./components/SumCalculations";
 
 export default function CreateOfferPage() {
 
@@ -38,14 +40,29 @@ export default function CreateOfferPage() {
         },
     });
 
-    const { user } = useAuth();
     const router = useRouter();
-    const { selectedUserProfile } = useAuth();
+    const { selectedUserProfile, user } = useAuth();
     const { control, register, handleSubmit } = methods;
     const { fields, append, remove, update } = useFieldArray({
         control,
         name: "items",
     });
+
+    const items = useWatch({
+        name: "items",
+        control: control
+    });
+    const tax = useWatch({
+        name: "tax_percent",
+        control: control
+    });
+
+    const currency = useWatch({
+        name: "currency",
+        control: control
+    });
+
+    
 
     const fetchProfiles = async () => {
         try {
@@ -79,7 +96,7 @@ export default function CreateOfferPage() {
             const payload = { ...data, profile_id: selectedUserProfile?.id };
             const response = await http.post(`/api/offers`, payload);
 
-            if(response.status == 201) {
+            if (response.status == 201) {
                 //alert("Sikeres ajánlat létrehozás.")
                 showSuccess("Sikeres ajánlat létrehozás!")
             } else {
@@ -171,6 +188,8 @@ export default function CreateOfferPage() {
                         <OfferItemDetails append={append} />
 
                         <OfferItemsTable fields={fields} remove={remove} setEditingItem={setEditingItem} />
+
+                        <SumCalculations items={items} tax={tax} currency={currency}/>
 
                         <button type="submit" className="w-2/12 bg-green-600 text-black font-semibold text-lg py-3 rounded hover:bg-green-700 transition my-7"
                         >
