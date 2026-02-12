@@ -62,7 +62,7 @@ export default function CreateOfferPage() {
         control: control
     });
 
-    
+
 
     const fetchProfiles = async () => {
         try {
@@ -189,12 +189,14 @@ export default function CreateOfferPage() {
 
                         <OfferItemsTable fields={fields} remove={remove} setEditingItem={setEditingItem} />
 
-                        <SumCalculations items={items} tax={tax} currency={currency}/>
+                        <SumCalculations items={items} tax={tax} currency={currency} />
 
-                        <button type="submit" className="w-2/12 bg-green-600 text-black font-semibold text-lg py-3 rounded hover:bg-green-700 transition my-7"
-                        >
-                            Ajánlat létrehozása
-                        </button>
+                        <div className="w-full flex align-middle justify-center mx-auto lg:block">
+                            <button type="submit" className="w-6/12 lg:w-2/12 bg-green-600 text-black font-semibold text-lg py-3 rounded hover:bg-green-700 transition my-7"
+                            >
+                                Ajánlat létrehozása
+                            </button>
+                        </div>
                         {editingItem ? (
                             <EditItem
                                 item={editingItem}
