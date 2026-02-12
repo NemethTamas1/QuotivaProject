@@ -179,7 +179,7 @@ export default function CreateOfferPage() {
             <NavBar />
             <main className="px-4 py-10">
                 <FormProvider {...methods}>
-                    <form onSubmit={handleSubmit(onSubmit)} className="w-full mx-auto max-w-7xl text-black rounded-lg p-6">
+                    <form onSubmit={handleSubmit(onSubmit)} className="w-full mx-auto max-w-7xl text-black rounded-lg p-2 lg:p-6">
 
                         <CustomerDetails register={register} />
 
