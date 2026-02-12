@@ -32,7 +32,7 @@ export default function CustomerDetails({ register }: Props) {
     return (
         <>
             {/* M E G R E N D E L Ő   A D A T O K*/}
-            <div className="flex flex-row justify-between items-baseline mb-7">
+            <div className="flex flex-col lg:flex-row justify-between items-baseline mb-7">
                 <h2 className="text-xl lg:text-2xl font-semibold text-green-400" style={{
                     textShadow: "0px 0px 20px rgba(34, 197, 94, 1"
                 }}>
