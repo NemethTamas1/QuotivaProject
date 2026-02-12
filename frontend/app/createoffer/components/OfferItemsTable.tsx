@@ -20,7 +20,7 @@ export default function OfferItemsTable({ fields, remove, setEditingItem }: Prop
 
                 <div className="absolute -inset-1.5 bg-green-500 rounded-md blur-sm opacity-25"></div>
 
-                <div className="relative rounded-md overflow-hidden bg-slate-900">
+                <div className="relative overflow-x-auto rounded-md overflow-hidden bg-slate-900">
                     <table className="w-full border-collapse">
                         <thead>
                             <tr>
