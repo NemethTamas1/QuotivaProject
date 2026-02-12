@@ -20,15 +20,19 @@ export default function SumCalculations({ items, tax, currency }: Props) {
     const sumTax = Math.floor(totalNet * (tax / 100));
     const totalGross = totalNet + sumTax;
 
+    const formatValue = (value: number) => {
+        return new Intl.NumberFormat('hu-HU').format(value);
+    };
+
     return (
         < div className="flex-row pt-5" >
             <div className="flex">
-                <h2 className="text-xl lg:text-2xl font-semibold text-green-400" style={{ textShadow: "0px 0px 10px rgba(34, 197, 94, 1" }}> Munkadíj összesen:</h2><span className="text-white text-xl lg:text-2xl pl-2">{sumLabor} {currency}</span>
+                <h2 className="text-lg lg:text-2xl font-semibold text-green-400" style={{ textShadow: "0px 0px 10px rgba(34, 197, 94, 1" }}> Munkadíj összesen:</h2><span className="text-white text-xl lg:text-2xl pl-2">{formatValue(sumLabor)} {currency}</span>
             </div>
 
             <div className="flex">
                 <h2 className="text-xl lg:text-2xl font-semibold text-green-400" style={{ textShadow: "0px 0px 10px rgba(34, 197, 94, 1" }}> Anyag összesen:
-                </h2><span className="text-white text-xl lg:text-2xl pl-2">{sumMaterial} {currency}</span>
+                </h2><span className="text-white text-xl lg:text-2xl pl-2">{formatValue(sumMaterial)} {currency}</span>
             </div>
 
             <div className="flex">
@@ -40,14 +44,14 @@ export default function SumCalculations({ items, tax, currency }: Props) {
                 ) : (
                     <>
                         <h2 className="text-xl lg:text-2xl font-semibold text-green-400" style={{ textShadow: "0px 0px 10px rgba(34, 197, 94, 1)" }}> Áfa összesen:
-                        </h2><span className="text-white text-xl lg:text-2xl pl-2">{sumTax} {currency}</span>
+                        </h2><span className="text-white text-xl lg:text-2xl pl-2">{formatValue(sumTax)} {currency}</span>
                     </>
                 )}
             </div>
 
             <div className="flex">
                 <h2 className="text-xl lg:text-2xl font-semibold text-green-400" style={{ textShadow: "0px 0px 10px rgba(34, 197, 94, 1" }}> Végösszeg:
-                </h2><span className="text-white text-xl lg:text-2xl pl-2">{totalGross} {currency}</span>
+                </h2><span className="text-white text-xl lg:text-2xl pl-2">{formatValue(totalGross)} {currency}</span>
             </div>
 
         </div >
