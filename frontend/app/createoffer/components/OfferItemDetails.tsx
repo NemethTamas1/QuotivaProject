@@ -44,7 +44,7 @@ export default function OfferItemDetails({ append }: Props) {
 
             <div className="relative">
                 <div className="absolute -inset-1.5 bg-green-500 rounded-md blur-sm opacity-25"></div>
-                <div className="rounded-md p-3 flex flex-row bg-slate-900 my-7 relative">
+                <div className="rounded-md p-3 flex flex-col lg:flex-row bg-slate-900 my-7 relative">
                     <div className="mx-1 flex-col">
                         <label htmlFor="name" className="block font-semibold mb-1 text-white">Tétel megnevezése</label>
                         <input
@@ -57,7 +57,7 @@ export default function OfferItemDetails({ append }: Props) {
                         />
                     </div>
 
-                    <div className="mx-1 flex flex-col w-1/6">
+                    <div className="mx-1 flex flex-col lg:w-1/6">
                         <label className="block font-semibold text-white mb-1">Mennyiség</label> {/* input group? */}
 
                         <div className="flex gap-2">
@@ -67,7 +67,7 @@ export default function OfferItemDetails({ append }: Props) {
                                 onChange={(e) =>
                                     setNewItem({ ...newItem, quantity: Number(e.target.value) })
                                 }
-                                className="w-5/12 border rounded px-3 py-2"
+                                className="w-full lg:w-5/12 border rounded px-3 py-2"
                             />
 
                             <select
@@ -141,7 +141,7 @@ export default function OfferItemDetails({ append }: Props) {
                                     material_unit_price: 0,
                                 });
                             }}
-                            className="w-full bg-green-500 text-black p-3 rounded"
+                            className="w-full bg-green-500 text-black mt-3 lg:block p-3 rounded"
                         >
                             Hozzáad
                         </button>
