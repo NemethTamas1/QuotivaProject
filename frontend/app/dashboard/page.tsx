@@ -6,6 +6,7 @@ import MyProfiles from "./components/MyProfiles";
 import NavBar from "../components/NavBar";
 import { useAuth } from "@/context/AuthContext";
 import { useRouter } from "next/navigation";
+import MyOffers from "./components/MyOffers";
 
 
 export default function Dashboard() {
@@ -49,9 +50,9 @@ export default function Dashboard() {
                     {selectedPage === 'Home' && (
                         <HomePage />
                     )}
-                    {/* {selectedPage === 'myOffers' && (
+                    {selectedPage === 'myOffers' && (
                         <MyOffers />
-                    )} */}
+                    )}
                     {selectedPage === 'myProfiles' && (
                         <MyProfiles />
                     )}
