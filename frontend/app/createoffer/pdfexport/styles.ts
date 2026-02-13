@@ -24,6 +24,15 @@ export const pdfStyles = StyleSheet.create({
         marginTop: 2,
         letterSpacing: 1,
     },
+    semibold: {
+        fontSize: 11,
+        fontWeight: 'semibold',
+        marginTop: 2,
+        letterSpacing: 1,
+        color: '#6B7280',
+        textTransform: 'uppercase',
+        marginBottom: 4,
+    },
     section: {
         margin: 10,
         padding: 10,
@@ -70,5 +79,11 @@ export const pdfStyles = StyleSheet.create({
     tableCol: {
         flex: 1,
         textAlign: 'right',
+    },
+    alignCenter: {
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        textAlign: "center"
     }
 });
