@@ -78,11 +78,13 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     const login = async (credentials: Partial<User>) => {
         try {
             const res = await http.post('/api/authenticate', credentials);
-            const { token } = res.data.data;
-
+            
             if (res.status == 200) {
+                const { token, user } = res.data.data;
                 setToken(token);
+                setUser(user);
                 sessionStorage.setItem('token', token);
+                sessionStorage.setItem('user', JSON.stringify(user));
 
                 await getUserData(token);
 

@@ -14,10 +14,12 @@ class AuthController extends Controller
 
         if(Auth::attempt($credentials)){
             $token = $request->user()->createToken('app');
+            $user = $request->user();
 
             return response()->json([
                 "data" => [
-                    "token" => $token->plainTextToken
+                    "token" => $token->plainTextToken,
+                    "user" => $user
                 ]
             ]);
 
