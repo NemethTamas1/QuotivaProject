@@ -18,3 +18,25 @@ export type LineChartProps = {
     height: number;
     data: DataPoint[];
 }
+
+export type MyOfferProps = {
+    id: number;
+    profile_id: number;
+    offer_number: string;
+    offer_name: string;
+    status: string;
+    dated: Date;
+    valid_until: Date;
+    currency: string;
+    tax_percent: number;
+    net_total: number;
+    gross_total: number;
+    client_name: string;
+    client_email: string;
+    client_phone: string;
+    client_tax_number: string;
+    client_zip: number;
+    client_city: string;
+    client_street: string;
+    client_house_number: string;
+};
