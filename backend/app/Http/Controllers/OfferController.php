@@ -119,7 +119,13 @@ class OfferController extends Controller
 
     public function update(UpdateOfferRequest $request, Offer $offer)
     {
-        //
+        $data = $request->validated();
+
+        $offer->update([
+            "status" => $data["status"],
+        ]);
+
+        return new OfferResource($offer->load("items"));
     }
 
     public function destroy(Offer $offer)
