@@ -77,12 +77,12 @@ export default function HomePage() {
     return (
         <>
             <h1 className="text-center md:text-left text-3xl p-6">Üdvözöljük, {user?.name}👋</h1>
-            <div className="bg-[#27272A] lg:p-4 rounded-xl inline-block">
-                <h2 className="text-xl lg:text-2xl font-semibold text-green-400 text-center md:text-left" style={{
-                    textShadow: "0px 0px 20px rgba(34, 197, 94, 1"
-                }}>
-                    {selectedUserProfile?.company_name} éves bevétele
-                </h2>
+            <h2 className="text-xl mb-3 lg:text-2xl font-semibold text-green-400 text-center md:text-left" style={{
+                textShadow: "0px 0px 20px rgba(34, 197, 94, 1"
+            }}>
+                {selectedUserProfile?.company_name} éves bevétele
+            </h2>
+            <div className="bg-[#1a1a1a] lg:p-4 rounded-xl inline-block">
                 <LineChart
                     data={formattedData}
                     width={chartWidth}
