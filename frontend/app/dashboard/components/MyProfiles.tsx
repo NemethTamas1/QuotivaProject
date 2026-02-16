@@ -51,13 +51,7 @@ export default function MyProfiles() {
 
     const saveProfile = async (profile: profileType) => {
         setSelectedUserProfile(profile);
-        //alert("Alprofil sikeresen kiválasztva.")
         showInfo("A(z) " + profile.company_name + "sikeresen kiválasztva.");
-    };
-
-    const showCurrentProfile = () => {
-        if (selectedUserProfile) alert("Jelenlegi user profil: " + selectedUserProfile?.company_name);
-        else alert("Nincs kiválasztott profil!");
     };
 
     useEffect(() => {
@@ -66,18 +60,24 @@ export default function MyProfiles() {
 
     return (
         <div className="p-8">
-            <h1 className="text-3xl p-6">Profiljaim</h1>
+            <h1 className="text-3xl text-center p-6 pb-0">Saját felhasználói profiljaim</h1>
 
             <div className="flex p-5">
                 <button
                     onClick={() => setIsCompilerOpen(true)}
-                    className="bg-green-400 text-black px-6 py-2 rounded-lg transition-all"
+                    className="bg-green-400 text-black px-6 py-2 mx-auto rounded-lg transition-all"
                 >
                     + Új profil létrehozása
                 </button>
             </div>
 
             <div>
+                {isLoading && (
+                    <div className="flex justify-center items-center my-20">
+                        <p className="text-xl animate-pulse">Adatok betöltése...</p>
+                    </div>
+                )}
+
                 {/* Profilok listázása */}
                 {!isLoading && !error && profiles.length > 0 && (
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-4 grid-flow-row mx-auto">
