@@ -23,6 +23,7 @@ return new class extends Migration
             $table->float("tax_percent");
             $table->float("net_total", 12, 2)->default(0);
             $table->float("gross_total", 12, 2)->default(0);
+            $table->boolean("send_email")->default(false);
 
             $table->string("client_name", 100);
             $table->string("client_email", 50)->nullable();

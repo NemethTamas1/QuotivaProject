@@ -27,6 +27,7 @@ class Offer extends Model
         "tax_percent",
         "net_total",
         "gross_total",
+        "send_email",
 
         "client_name",
         "client_email",

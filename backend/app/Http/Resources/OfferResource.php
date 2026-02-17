@@ -29,6 +29,7 @@ class OfferResource extends JsonResource
             "client_city" => $this->client_city,
             "client_street" => $this->client_street,
             "client_house_number" => $this->client_house_number,
+            "send_email" => $this->send_email,
             "items" => OfferItemResource::collection($this->whenLoaded('items')),
         ];
     }

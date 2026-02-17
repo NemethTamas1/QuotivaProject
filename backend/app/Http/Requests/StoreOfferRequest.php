@@ -24,6 +24,7 @@ class StoreOfferRequest extends FormRequest
             "tax_percent" => ["required", "integer", "min:0", "max:27"],
             "net_total" => ["prohibited"],
             "gross_total" => ["prohibited"],
+            "send_email" => ["required", "boolean"],
 
             // Ügyfél
             "client_name" => ["required", "string", "max:100"],
