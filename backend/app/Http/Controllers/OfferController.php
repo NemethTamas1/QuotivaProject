@@ -7,30 +7,31 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreOfferRequest;
 use App\Http\Requests\UpdateOfferRequest;
 use App\Http\Resources\OfferResource;
+use App\Mail\OfferEmailToClient;
 use App\Models\OfferItem;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
-use PhpParser\Node\Stmt\TryCatch;
+use Illuminate\Support\Facades\Mail;
 
 class OfferController extends Controller
 {
     public function index(Request $request)
-{
-    $user = $request->user();
+    {
+        $user = $request->user();
 
-    if ($user->role === 'admin') {
-        $offers = Offer::with(['items', 'profile'])->get();
+        if ($user->role === 'admin') {
+            $offers = Offer::with(['items', 'profile'])->get();
+            return OfferResource::collection($offers);
+        }
+
+        $offers = $user->offers()
+            ->with(['items', 'profile'])
+            ->latest()
+            ->get();
+
         return OfferResource::collection($offers);
     }
-
-    $offers = $user->offers()
-        ->with(['items', 'profile'])
-        ->latest()
-        ->get();
-
-    return OfferResource::collection($offers);
-}
 
     public function store(StoreOfferRequest $request)
     {
@@ -96,6 +97,10 @@ class OfferController extends Controller
                 "gross_total" => $grossTotal,
             ]);
 
+            if ($request->send_email) {
+                Mail::to($offer->client_email)->send(new OfferEmailToClient($offer));
+            }
+
             DB::commit();
 
             return response()->json([
@@ -104,6 +109,7 @@ class OfferController extends Controller
             ], 201);
         } catch (\Exception $ex) {
             DB::rollback();
+            dd($ex->getMessage());
 
             return response()->json([
                 "message" => "Failed to create offer",
