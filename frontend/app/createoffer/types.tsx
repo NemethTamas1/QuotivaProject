@@ -43,4 +43,6 @@ export interface CreateOfferForm {
     client_house_number: string;
 
     items: OfferItemInput[];
+
+    action_type: string;
 };

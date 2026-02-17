@@ -38,8 +38,8 @@ export default function CreateOfferPage() {
         },
     });
 
-    
-    
+
+
     const router = useRouter();
     const { selectedUserProfile, user } = useAuth();
     const { control, register, handleSubmit } = methods;
@@ -47,7 +47,7 @@ export default function CreateOfferPage() {
         control,
         name: "items",
     });
-    
+
     const allFields = useWatch({
         control: control
     });
@@ -59,17 +59,17 @@ export default function CreateOfferPage() {
 
     const missingInputs = useMemo(() => {
         const list = [];
-        
-        if(!allFields.client_name) list.push("Név");
-        if(!allFields.client_email) list.push("Email");
-        if(!allFields.client_zip) list.push("Irányítószám");
-        if(!allFields.client_city) list.push("Város");
-        if(!allFields.client_street) list.push("Utca");
-        if(!allFields.client_house_number) list.push("Házszám");
-        if(!allFields.offer_name) list.push("Ajánlat neve");
 
-        if(items.length === 0) list.push("Legalább egy tétel");
-        
+        if (!allFields.client_name) list.push("Név");
+        if (!allFields.client_email) list.push("Email");
+        if (!allFields.client_zip) list.push("Irányítószám");
+        if (!allFields.client_city) list.push("Város");
+        if (!allFields.client_street) list.push("Utca");
+        if (!allFields.client_house_number) list.push("Házszám");
+        if (!allFields.offer_name) list.push("Ajánlat neve");
+
+        if (items.length === 0) list.push("Legalább egy tétel");
+
         return list;
     }, [allFields]);
 
@@ -114,12 +114,16 @@ export default function CreateOfferPage() {
 
         try {
 
-            if(missingInputs.length > 0) {
+            if (missingInputs.length > 0) {
                 showError(`Kérem töltse ki a következő mezőket: ${missingInputs.join(", ")}`);
                 return;
             }
 
-            const payload = { ...data, profile_id: selectedUserProfile?.id };
+            const payload = {
+                ...data,
+                profile_id: selectedUserProfile?.id,
+                send_email: data.action_type === "email_only" || data.action_type === "both",
+            };
             const response = await http.post(`/api/offers`, payload);
 
             if (response.status == 201) {
@@ -128,22 +132,24 @@ export default function CreateOfferPage() {
                 throw new Error("Sikertelen létrehozás backenden");
             }
 
-            try {
-                const doc = <OfferPDFDocument data={data} profile={selectedUserProfile} user={user} />;
-                const blob = await pdf(doc).toBlob();
+            if (data.action_type === 'pdf_only' || data.action_type === 'both') {
+                try {
+                    const doc = <OfferPDFDocument data={data} profile={selectedUserProfile} user={user} />;
+                    const blob = await pdf(doc).toBlob();
 
-                const pdfUrl = URL.createObjectURL(blob);
+                    const pdfUrl = URL.createObjectURL(blob);
 
-                const link = document.createElement('a');
-                link.href = pdfUrl;
-                link.download = `ajanlat_${data.client_name.replace(/\s+/g, '_')}.pdf`;
-                document.body.appendChild(link);
-                link.click();
+                    const link = document.createElement('a');
+                    link.href = pdfUrl;
+                    link.download = `ajanlat_${data.client_name.replace(/\s+/g, '_')}.pdf`;
+                    document.body.appendChild(link);
+                    link.click();
 
-                document.body.removeChild(link);
-                URL.revokeObjectURL(pdfUrl);
-            } catch (pdfError) {
-                console.error("Error generating or downloading PDF", pdfError);
+                    document.body.removeChild(link);
+                    URL.revokeObjectURL(pdfUrl);
+                } catch (pdfError) {
+                    console.error("Error generating or downloading PDF", pdfError);
+                }
             }
 
         } catch (error) {
@@ -189,10 +195,32 @@ export default function CreateOfferPage() {
 
                         <SumCalculations items={items} tax={tax} currency={currency} />
 
-                        <div className="w-full flex align-middle justify-center mx-auto lg:block">
-                            <button type="submit" className="w-6/12 lg:w-2/12 bg-green-600 text-black font-semibold text-lg py-3 rounded hover:bg-green-700 transition my-7"
+                        <div className="w-full flex flex-col lg:flex-row gap-4 justify-center items-center my-7">
+                            {/* 1. OPCIÓ: Csak mentés és PDF */}
+                            <button
+                                type="submit"
+                                onClick={() => methods.setValue('action_type', 'pdf_only')}
+                                className="w-full lg:w-auto px-6 bg-blue-600 text-white font-semibold py-3 rounded hover:bg-blue-700 transition"
                             >
-                                Ajánlat létrehozása
+                                Mentés és PDF letöltése
+                            </button>
+
+                            {/* 2. OPCIÓ: Mentés és Email küldés */}
+                            <button
+                                type="submit"
+                                onClick={() => methods.setValue('action_type', 'email_only')}
+                                className="w-full lg:w-auto px-6 bg-purple-600 text-white font-semibold py-3 rounded hover:bg-purple-700 transition"
+                            >
+                                Mentés és Küldés Emailben
+                            </button>
+
+                            {/* 3. OPCIÓ: Mindkettő egyszerre */}
+                            <button
+                                type="submit"
+                                onClick={() => methods.setValue('action_type', 'both')}
+                                className="w-full lg:w-auto px-6 bg-green-600 text-black font-semibold py-3 rounded hover:bg-green-700 transition"
+                            >
+                                Mentés, PDF + Email küldése
                             </button>
                         </div>
                         {editingItem ? (
