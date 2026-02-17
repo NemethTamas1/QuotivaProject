@@ -1,7 +1,8 @@
 'use client';
 
 import type { OfferItemInput } from "@/app/createoffer/types";
-import { useState } from "react";
+import { showError } from "@/lib/toast";
+import { useMemo, useState } from "react";
 
 interface Props{
     append: (item: OfferItemInput) => void;
@@ -16,6 +17,25 @@ export default function OfferItemDetails({ append }: Props) {
         labor_unit_price: 0,
         material_unit_price: 0,
     });
+
+    const missingInputs = useMemo(() => {
+        const list:string[] = [];
+
+        if(!newItem.name) list.push("Tétel megnevezése");
+        if(newItem.quantity <= 0) list.push("Mennyiség");
+        if(newItem.material_unit_price <= 0 && newItem.labor_unit_price <= 0) list.push("Tétel ára");
+
+        return list;
+    },[newItem]);
+
+    const handleAppend = (newItem: OfferItemInput) => {
+        if(missingInputs.length > 0) {
+            showError(`Kérem töltse ki a következő mezőket: ${missingInputs.join(", ")}`);
+            return;
+        };
+
+        append(newItem);
+    };
 
     // Nettó sorösszeg
     const netLaborTotal = newItem.quantity > 0 && newItem.labor_unit_price > 0
@@ -132,7 +152,7 @@ export default function OfferItemDetails({ append }: Props) {
                         <button
                             type="button"
                             onClick={() => {
-                                append(newItem);
+                                handleAppend(newItem);
                                 setNewItem({
                                     name: "",
                                     quantity: 1,

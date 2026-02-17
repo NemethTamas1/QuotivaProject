@@ -1,8 +1,8 @@
 'use client';
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { useForm, useFieldArray, SubmitHandler, FormProvider, useWatch } from "react-hook-form";
-import { showSuccess } from "@/lib/toast";
+import { showError, showSuccess } from "@/lib/toast";
 import { pdf } from '@react-pdf/renderer';
 import { OfferPDFDocument } from "./pdfexport/OfferDocumentPDF";
 
@@ -19,12 +19,9 @@ import NavBar from "../components/NavBar";
 import { useAuth } from "@/context/AuthContext";
 import { useRouter } from "next/navigation";
 import { profileType } from "../dashboard/types/types";
-import Link from "next/link";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faTriangleExclamation } from "@fortawesome/free-solid-svg-icons";
-import { sum } from "d3";
 import SumCalculations from "./components/SumCalculations";
 import HasNoProfile from "../components/HasNoProfile";
+import { all } from "axios";
 
 export default function CreateOfferPage() {
 
@@ -41,6 +38,8 @@ export default function CreateOfferPage() {
         },
     });
 
+    
+    
     const router = useRouter();
     const { selectedUserProfile, user } = useAuth();
     const { control, register, handleSubmit } = methods;
@@ -48,11 +47,32 @@ export default function CreateOfferPage() {
         control,
         name: "items",
     });
+    
+    const allFields = useWatch({
+        control: control
+    });
 
     const items = useWatch({
         name: "items",
         control: control
     });
+
+    const missingInputs = useMemo(() => {
+        const list = [];
+        
+        if(!allFields.client_name) list.push("Név");
+        if(!allFields.client_email) list.push("Email");
+        if(!allFields.client_zip) list.push("Irányítószám");
+        if(!allFields.client_city) list.push("Város");
+        if(!allFields.client_street) list.push("Utca");
+        if(!allFields.client_house_number) list.push("Házszám");
+        if(!allFields.offer_name) list.push("Ajánlat neve");
+
+        if(items.length === 0) list.push("Legalább egy tétel");
+        
+        return list;
+    }, [allFields]);
+
     const tax = useWatch({
         name: "tax_percent",
         control: control
@@ -94,11 +114,15 @@ export default function CreateOfferPage() {
 
         try {
 
+            if(missingInputs.length > 0) {
+                showError(`Kérem töltse ki a következő mezőket: ${missingInputs.join(", ")}`);
+                return;
+            }
+
             const payload = { ...data, profile_id: selectedUserProfile?.id };
             const response = await http.post(`/api/offers`, payload);
 
             if (response.status == 201) {
-                //alert("Sikeres ajánlat létrehozás.")
                 showSuccess("Sikeres ajánlat létrehozás!")
             } else {
                 throw new Error("Sikertelen létrehozás backenden");
