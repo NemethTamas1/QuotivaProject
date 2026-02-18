@@ -3,15 +3,12 @@
 namespace Tests\Feature;
 
 use App\Models\User;
-use App\Models\UserProfile;
-use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 
 class UserProfileTest extends TestCase
 {
-    use DatabaseTransactions;
+    use RefreshDatabase;
     
     public function test_can_create_user_profile(): void
     {
