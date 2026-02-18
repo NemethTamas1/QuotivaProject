@@ -17,6 +17,8 @@ class OffersTest extends TestCase
 
     public function test_admin_can_get_all_offers_that_there_is(): void
     {
+        $initialCount = Offer::count();
+
         $admin = User::factory()->create([
             'role' => "admin"
         ]);
@@ -41,10 +43,12 @@ class OffersTest extends TestCase
                 "profile_id" => $profile2->id
             ]);
 
+        $afterCount = Offer::count();
+
         $response = $this->actingAs($admin)->get('/api/offers');
 
         $response->assertStatus(200);
-        $response->assertJsonCount(123, "data");
+        $response->assertJsonCount($initialCount + 3, "data");
     }
 
     public function test_user_can_not_get_all_the_offers_there_is(): void
@@ -660,14 +664,14 @@ class OffersTest extends TestCase
         ])->toArray();
 
         $data['items'] = [
-        [
-            "name" => null,
-            "quantity" => 1,
-            "quantity_type" => "db",
-            "labor_unit_price" => 0,
-            "material_unit_price" => 0,
-        ]
-    ];
+            [
+                "name" => null,
+                "quantity" => 1,
+                "quantity_type" => "db",
+                "labor_unit_price" => 0,
+                "material_unit_price" => 0,
+            ]
+        ];
 
         $response = $this->actingAs($user)->postJson('/api/offers', $data);
 

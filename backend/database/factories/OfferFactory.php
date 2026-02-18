@@ -26,6 +26,7 @@ class OfferFactory extends Factory
             "valid_until" => now()->addDay()->format("Y-m-d"),
             "currency" => "HUF",
             "tax_percent" => 27,
+            "send_email" => false,
 
             "client_name" => fake()->company(),
             "client_email" => fake()->unique()->safeEmail(),
