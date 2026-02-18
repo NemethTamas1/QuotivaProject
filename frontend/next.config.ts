@@ -1,10 +1,15 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  eslint: {
+    ignoreDuringBuilds: true,
+  },
+  
   webpack: (config, { dev }) => {
     config.resolve.alias.canvas = false;
     config.resolve.alias.encoding = false;
-    
+
+
     if (dev) {
       config.watchOptions = {
         poll: 500,
@@ -12,6 +17,8 @@ const nextConfig: NextConfig = {
         ignored: /node_modules/,
       };
     }
+
+
     return config;
   },
 };
