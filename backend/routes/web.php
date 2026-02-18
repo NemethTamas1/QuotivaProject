@@ -1,34 +1,15 @@
 <?php
 
-use App\Http\Controllers\AuthController;
-use Illuminate\Http\Request;
+use App\Models\Offer;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
     return view('welcome');
 });
 
-Route::post('/login', [AuthController::class, 'login']);
+Route::get('/response/{id}/{status}', function ($id, $status) {
+    $offer = Offer::findOrFail($id);
+    $offer->update(['status' => $status]);
 
-Route::post("/logout", [AuthController::class, "logout"])->middleware('auth');
-
-Route::get('/csrf-test', function () {
-    return response()->json([
-        'csrf' => csrf_token(),
-    ]);
+    return "Köszönjük a válaszát! A rendszert frissítettük.";
 });
-
-Route::post('/csrf-test', function (Request $request) {
-    return response()->json([
-        'ok' => true,
-        'token' => csrf_token(),
-    ]);
-});
-
-// Route::middleware('auth:sanctum')->get('/me', function (Request $request) {
-//     return $request->user();
-// });
-
-// Route::get("/whoami", function(Request $request){
-//     return $request->user() ?: 'NO USER';
-// });

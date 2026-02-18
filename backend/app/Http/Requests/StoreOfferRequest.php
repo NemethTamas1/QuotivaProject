@@ -8,31 +8,33 @@ class StoreOfferRequest extends FormRequest
 {
     public function authorize(): bool
     {
-        return true; // Később le kell venni a true-t és implementálni az autorizációs logikát.
+        return $this->user() !== null;
     }
 
     public function rules(): array
     {
         return [
             // Alap
+            //"user_id" => ["required", "exists:users,id"],
             "offer_name" => ["required", "string", "max:100"],
-            "status" => ["nullable", "string", "in:pending,accepted,rejected"],
-            "dated" => ["required", "date"],
-            "valid_until" => ["required", "date"],
+            "status" => ["required", "string", "in:pending,accepted,rejected"],
+            "dated" => ["nullable", "date"],
+            "valid_until" => ["nullable", "date"],
             "currency" => ["required", "string", "max:10", "in:USD,EUR,HUF"],
             "tax_percent" => ["required", "integer", "min:0", "max:27"],
             "net_total" => ["prohibited"],
             "gross_total" => ["prohibited"],
+            "send_email" => ["required", "boolean"],
 
             // Ügyfél
             "client_name" => ["required", "string", "max:100"],
             "client_email" => ["nullable", "string", "email:rfc", "max:50"],
-            "client_phone" => ["nullable", "string", "max:50"],
-            "client_tax_number" => ["nullable", "string", "max:50"],
+            "client_phone" => ["nullable", "string", "max:20"],
+            "client_tax_number" => ["nullable", "string", "max:25"],
             "client_zip" => ["required", "integer", "digits:4"],
-            "client_city" => ["required", "string", "max:100"],
-            "client_street" => ["required", "string", "max:100"],
-            "client_house_number" => ["required", "string", "max:20"],
+            "client_city" => ["required", "string", "max:30"],
+            "client_street" => ["required", "string", "max:50"],
+            "client_house_number" => ["required", "string", "max:10"],
 
             // Tételek tömbje
             "items" => ["required", "array", "min:1"],

@@ -17,29 +17,32 @@ export default function OfferDetails() {
                 <div className="absolute -inset-1.5 bg-green-500 rounded-md blur-sm opacity-25"></div>
                 <div className="bg-slate-900 flex flex-row flex-wrap gap-5 p-3 rounded-md my-7 relative">
                     <div>
-                        <label className="block mb-1 text-white">Ajánlat neve</label>
+                        <label htmlFor="offer_name" className="block mb-1 text-white">Ajánlat neve</label>
                         <input
                             {...register("offer_name")}
                             className="w-full border rounded px-3 py-2"
                             placeholder="Kazán szerelés"
+                            name="offer_name"
                         />
                     </div>
 
                     <div>
-                        <label className="block mb-1 text-white">Kelt</label>
+                        <label htmlFor="dated" className="block mb-1 text-white">Kelt</label>
                         <input
                             type="date"
                             {...register("dated")}
                             className="w-full border rounded px-3 py-2"
+                            name="dated"
                         />
                     </div>
 
                     <div>
-                        <label className="block mb-1 text-white">Érvényes eddig</label>
+                        <label htmlFor="valid_until" className="block mb-1 text-white">Érvényes eddig</label>
                         <input
                             type="date"
                             {...register("valid_until")}
                             className="w-full border rounded px-3 py-2"
+                            name="valid_until"
                         />
                     </div>
 

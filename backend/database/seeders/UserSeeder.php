@@ -18,12 +18,14 @@ class UserSeeder extends Seeder
            [
             "name" => "Tóth János",
             "email" => "tothjanos123@gmail.com",
-            "password" => Hash::make("tothjanos123")
+            "password" => Hash::make("tothjanos123"),
+            "role" => "user",
            ],
            [
             "name" => "Gipsz Jakab",
             "email" => "gipszjakab123@gmail.com",
-            "password" => Hash::make("gipszjakab123")
+            "password" => Hash::make("gipszjakab123"),
+            "role" => "user",
            ] 
         ]);
     }

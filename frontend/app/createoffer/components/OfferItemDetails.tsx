@@ -1,7 +1,8 @@
 'use client';
 
 import type { OfferItemInput } from "@/app/createoffer/types";
-import { useState } from "react";
+import { showError } from "@/lib/toast";
+import { useMemo, useState } from "react";
 
 interface Props{
     append: (item: OfferItemInput) => void;
@@ -16,6 +17,25 @@ export default function OfferItemDetails({ append }: Props) {
         labor_unit_price: 0,
         material_unit_price: 0,
     });
+
+    const missingInputs = useMemo(() => {
+        const list:string[] = [];
+
+        if(!newItem.name) list.push("Tétel megnevezése");
+        if(newItem.quantity <= 0) list.push("Mennyiség");
+        if(newItem.material_unit_price <= 0 && newItem.labor_unit_price <= 0) list.push("Tétel ára");
+
+        return list;
+    },[newItem]);
+
+    const handleAppend = (newItem: OfferItemInput) => {
+        if(missingInputs.length > 0) {
+            showError(`Kérem töltse ki a következő mezőket: ${missingInputs.join(", ")}`);
+            return;
+        };
+
+        append(newItem);
+    };
 
     // Nettó sorösszeg
     const netLaborTotal = newItem.quantity > 0 && newItem.labor_unit_price > 0
@@ -44,19 +64,20 @@ export default function OfferItemDetails({ append }: Props) {
 
             <div className="relative">
                 <div className="absolute -inset-1.5 bg-green-500 rounded-md blur-sm opacity-25"></div>
-                <div className="rounded-md p-3 flex flex-row bg-slate-900 my-7 relative">
+                <div className="rounded-md p-3 flex flex-col lg:flex-row bg-slate-900 my-7 relative">
                     <div className="mx-1 flex-col">
-                        <label className="block font-semibold mb-1 text-white">Tétel megnevezése</label>
+                        <label htmlFor="name" className="block font-semibold mb-1 text-white">Tétel megnevezése</label>
                         <input
                             value={newItem.name}
                             onChange={(e) =>
                                 setNewItem({ ...newItem, name: e.target.value })
                             }
                             className="w-full border rounded px-3 py-2"
+                            name="name"
                         />
                     </div>
 
-                    <div className="mx-1 flex flex-col w-1/6">
+                    <div className="mx-1 flex flex-col lg:w-1/6">
                         <label className="block font-semibold text-white mb-1">Mennyiség</label> {/* input group? */}
 
                         <div className="flex gap-2">
@@ -66,7 +87,7 @@ export default function OfferItemDetails({ append }: Props) {
                                 onChange={(e) =>
                                     setNewItem({ ...newItem, quantity: Number(e.target.value) })
                                 }
-                                className="w-5/12 border rounded px-3 py-2"
+                                className="w-full lg:w-5/12 border rounded px-3 py-2"
                             />
 
                             <select
@@ -108,7 +129,7 @@ export default function OfferItemDetails({ append }: Props) {
                     </div>
 
                     <div>
-                        <label className="block font-semibold text-white mb-1">Anyag egységár</label>
+                        <label htmlFor="material_unit_price" className="block font-semibold text-white mb-1">Anyag egységár</label>
                         <input
                             type="number"
                             value={newItem.material_unit_price}
@@ -119,6 +140,7 @@ export default function OfferItemDetails({ append }: Props) {
                                 })
                             }
                             className="w-10/12 border rounded px-3 py-2"
+                            name="material_unit_price"
                         />
                         {hasValidMaterialValue && (
                             <p className="opacity-50 text-white">= {netMaterialTotal} Ft</p>
@@ -130,7 +152,7 @@ export default function OfferItemDetails({ append }: Props) {
                         <button
                             type="button"
                             onClick={() => {
-                                append(newItem);
+                                handleAppend(newItem);
                                 setNewItem({
                                     name: "",
                                     quantity: 1,
@@ -139,7 +161,7 @@ export default function OfferItemDetails({ append }: Props) {
                                     material_unit_price: 0,
                                 });
                             }}
-                            className="w-full bg-green-500 text-black p-3 rounded"
+                            className="w-full bg-green-500 text-black mt-3 lg:block p-3 rounded"
                         >
                             Hozzáad
                         </button>

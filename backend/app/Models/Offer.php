@@ -2,17 +2,22 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Offer extends Model
 {
+
+    use HasFactory;
+
     public $table = "offers";
 
     public $timestamps = true;
 
     protected $fillable = [
+        "profile_id",
         "offer_number",
         "offer_name",
         "status",
@@ -22,6 +27,7 @@ class Offer extends Model
         "tax_percent",
         "net_total",
         "gross_total",
+        "send_email",
 
         "client_name",
         "client_email",
@@ -40,8 +46,8 @@ class Offer extends Model
         return $this->hasMany(OfferItem::class);
     }
 
-    public function user():BelongsTo
+    public function profile():BelongsTo
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(UserProfile::class);
     }
 }

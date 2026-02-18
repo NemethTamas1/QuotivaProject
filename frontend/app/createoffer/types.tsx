@@ -24,6 +24,7 @@ export interface OfferItem extends OfferItemInput {
 
 
 export interface CreateOfferForm {
+    user_id: number;
     offer_number: string;
     offer_name: string;
     status: OfferStatus;
@@ -42,4 +43,6 @@ export interface CreateOfferForm {
     client_house_number: string;
 
     items: OfferItemInput[];
+
+    action_type: string;
 };

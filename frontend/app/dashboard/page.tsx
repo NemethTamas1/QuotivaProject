@@ -1,0 +1,63 @@
+'use client';
+
+import { useEffect, useState } from "react";
+import HomePage from "./components/HomePage";
+import MyProfiles from "./components/MyProfiles";
+import NavBar from "../components/NavBar";
+import { useAuth } from "@/context/AuthContext";
+import { useRouter } from "next/navigation";
+import MyOffers from "./components/MyOffers";
+
+
+export default function Dashboard() {
+
+    const [selectedPage, setSelectedPage] = useState<string>('Home');
+    const [loading, setLoading] = useState<boolean>(false);
+    const { user } = useAuth();
+    const router = useRouter();
+
+    useEffect(() => {
+        if (!user) router.push("/");
+        else setLoading(false);
+    }, []);
+
+    if (loading || !user) {
+        return (
+            <div className="min-h-screen bg-black flex items-center justify-center text-white">
+                <p>Betöltés...</p>
+            </div>
+        );
+    }
+
+    return (
+        <>
+            <NavBar />
+            <div className="w-full flex flex-col lg:flex-row lg:min-h-screen">
+                {/* Bal oldali oldalsáv */}
+                <div className="w-full flex flex-row lg:block lg:w-36 bg-[#1a1a1a] relative z-10 shadow-[12px_0_24px_-12px_#18181B]">
+                    <button onClick={() => setSelectedPage('Home')} className={`mx-auto block text-2xl p-2 ${selectedPage === 'Home' ? 'text-green-400' : 'text-gray-200'}`}>Főoldal</button>
+
+                    <button onClick={() => setSelectedPage('myOffers')} className={`mx-auto block text-2xl p-2 ${selectedPage === 'myOffers' ? 'text-green-400' : 'text-gray-200'}`}>Árajánlatok</button>
+
+                    <button onClick={() => setSelectedPage('myProfiles')} className={`mx-auto block text-2xl p-2 ${selectedPage === 'myProfiles' ? 'text-green-400' : 'text-gray-200'}`}>Profiljaim</button>
+                </div>
+
+
+
+                {/* bg-[#27272A] */}
+                {/* Jobb oldali fő tartalom */}
+                <div className="lg:w-11/12 h-screen w-screen bg-[#1a1a1a]">
+                    {selectedPage === 'Home' && (
+                        <HomePage />
+                    )}
+                    {selectedPage === 'myOffers' && (
+                        <MyOffers />
+                    )}
+                    {selectedPage === 'myProfiles' && (
+                        <MyProfiles />
+                    )}
+                </div>
+            </div>
+        </>
+    );
+}

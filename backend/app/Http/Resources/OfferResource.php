@@ -11,9 +11,9 @@ class OfferResource extends JsonResource
     {
         return [
             "id" => $this->id,
+            "profile_id" => $this->profile_id,
             "offer_number" => $this->offer_number,
             "offer_name" => $this->offer_name,
-            "customer_id" => $this->customer_id,
             "status" => $this->status,
             "dated" => $this->dated,
             "valid_until" => $this->valid_until,
@@ -29,6 +29,7 @@ class OfferResource extends JsonResource
             "client_city" => $this->client_city,
             "client_street" => $this->client_street,
             "client_house_number" => $this->client_house_number,
+            "send_email" => $this->send_email,
             "items" => OfferItemResource::collection($this->whenLoaded('items')),
         ];
     }

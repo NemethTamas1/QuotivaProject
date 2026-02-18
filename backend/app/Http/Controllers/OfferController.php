@@ -7,15 +7,28 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreOfferRequest;
 use App\Http\Requests\UpdateOfferRequest;
 use App\Http\Resources\OfferResource;
+use App\Mail\OfferEmailToClient;
 use App\Models\OfferItem;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
-use PhpParser\Node\Stmt\TryCatch;
+use Illuminate\Support\Facades\Mail;
 
 class OfferController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $offers = Offer::with("items")->get();
+        $user = $request->user();
+
+        if ($user->role === 'admin') {
+            $offers = Offer::with(['items', 'profile'])->get();
+            return OfferResource::collection($offers);
+        }
+
+        $offers = $user->offers()
+            ->with(['items', 'profile'])
+            ->latest()
+            ->get();
 
         return OfferResource::collection($offers);
     }
@@ -23,12 +36,21 @@ class OfferController extends Controller
     public function store(StoreOfferRequest $request)
     {
         $data = $request->validated();
+        $userProfileId = $request->input('profile_id');
 
         DB::beginTransaction();
 
         try {
+            $user = Auth::user();
+
+            if (!$user) {
+                return response()->json([
+                    "message" => "Unauthorized"
+                ], 401);
+            }
             // Ajánlat létrehozás
             $offer = Offer::create([
+                "profile_id" => $userProfileId,
                 "offer_number" => $this->generateOfferNumber(),
                 "offer_name" => $data["offer_name"],
                 "status" => $data["status"] ?? "pending",
@@ -75,6 +97,12 @@ class OfferController extends Controller
                 "gross_total" => $grossTotal,
             ]);
 
+            if ($request->send_email) {
+                $acceptUrl = route("offer.accept", ["offer" => $offer->id]);
+                $rejectUrl = route("offer.reject", ["offer" => $offer->id]);
+                Mail::to($offer->client_email)->send(new OfferEmailToClient($offer, $acceptUrl, $rejectUrl));
+            }
+
             DB::commit();
 
             return response()->json([
@@ -83,6 +111,7 @@ class OfferController extends Controller
             ], 201);
         } catch (\Exception $ex) {
             DB::rollback();
+            dd($ex->getMessage());
 
             return response()->json([
                 "message" => "Failed to create offer",
@@ -98,12 +127,40 @@ class OfferController extends Controller
 
     public function update(UpdateOfferRequest $request, Offer $offer)
     {
-        //
+        $data = $request->validated();
+
+        $offer->update([
+            "status" => $data["status"],
+        ]);
+
+        return new OfferResource($offer->load("items"));
     }
 
     public function destroy(Offer $offer)
     {
         //
+    }
+
+    public function accept(Offer $offer)
+    {
+        $offer->update([
+            "status" => "accepted",
+        ]);
+
+        return response()->json([
+            "message" => "Offer accepted successfully"
+        ]);
+    }
+
+    public function reject(Offer $offer)
+    {
+        $offer->update([
+            "status" => "rejected",
+        ]);
+
+        return response()->json([
+            "message" => "Offer rejected successfully"
+        ]);
     }
 
 
