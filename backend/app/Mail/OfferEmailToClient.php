@@ -15,13 +15,17 @@ class OfferEmailToClient extends Mailable
 
 
     public $offer;
+    public $acceptUrl;
+    public $rejectUrl;
 
     /**
      * Create a new message instance.
      */
-    public function __construct($offer)
+    public function __construct($offer, $acceptUrl, $rejectUrl)
     {
         $this->offer = $offer;
+        $this->acceptUrl = $acceptUrl;
+        $this->rejectUrl = $rejectUrl;
     }
 
     /**

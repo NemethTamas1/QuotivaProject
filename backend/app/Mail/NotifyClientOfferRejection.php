@@ -13,12 +13,14 @@ class NotifyClientOfferRejection extends Mailable
 {
     use Queueable, SerializesModels;
 
+    public $offer;
+
     /**
      * Create a new message instance.
      */
-    public function __construct()
+    public function __construct($offer)
     {
-        //
+        $this->offer = $offer;
     }
 
     /**
@@ -27,7 +29,7 @@ class NotifyClientOfferRejection extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Notify Client Offer Rejection',
+            subject: 'Quotiva - Ajánlat visszautasítás',
         );
     }
 
@@ -37,7 +39,7 @@ class NotifyClientOfferRejection extends Mailable
     public function content(): Content
     {
         return new Content(
-            view: 'view.name',
+            view: 'emails.notifyOfferRefusedClient',
         );
     }
 
