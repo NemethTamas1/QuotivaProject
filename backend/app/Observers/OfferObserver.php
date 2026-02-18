@@ -27,18 +27,18 @@ class OfferObserver
      */
     public function updated(Offer $offer): void
     {
-        if($offer->status === "accepted"){
+        if ($offer->wasChanged('status')) {
+            if ($offer->status === "accepted") {
 
-            //Ha el lett fogadva, értesül a user és a kliens is.
-            Mail::to($offer->profile->user->email)->send(new NotifyUserOfOfferAccepted($offer));
-            Mail::to($offer->client_email)->send(new NotifyClientOfferAccept($offer));
+                //Ha el lett fogadva, értesül a user és a kliens is.
+                Mail::to($offer->profile->user->email)->send(new NotifyUserOfOfferAccepted($offer));
+                Mail::to($offer->client_email)->send(new NotifyClientOfferAccept($offer));
+            } else if ($offer->status === "rejected") {
 
-        } else if($offer->status === "rejected"){
-
-            //Ha el lett utasítva, értesül a user és a kliens is.
-            Mail::to($offer->profile->user->email)->send(new NotifyUserOfOfferRejected($offer));
-            Mail::to($offer->client_email)->send(new NotifyClientOfferRejection($offer));
-
+                //Ha el lett utasítva, értesül a user és a kliens is.
+                //Mail::to($offer->profile->user->email)->send(new NotifyUserOfOfferRejected($offer)); ez még nincs, meg kell majd írni!
+                Mail::to($offer->client_email)->send(new NotifyClientOfferRejection($offer));
+            }
         }
     }
 
