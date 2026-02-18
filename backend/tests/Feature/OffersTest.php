@@ -8,12 +8,11 @@ use App\Models\User;
 use App\Models\UserProfile;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 
 class OffersTest extends TestCase
 {
-    use DatabaseTransactions;
+    use DatabaseTransactions, refreshDatabase;
 
     public function test_admin_can_get_all_offers_that_there_is(): void
     {
