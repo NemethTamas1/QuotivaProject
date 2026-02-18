@@ -6,13 +6,12 @@ use App\Models\Offer;
 use App\Models\OfferItem;
 use App\Models\User;
 use App\Models\UserProfile;
-use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
 class OffersTest extends TestCase
 {
-    use DatabaseTransactions, refreshDatabase;
+    use RefreshDatabase;
 
     public function test_admin_can_get_all_offers_that_there_is(): void
     {
