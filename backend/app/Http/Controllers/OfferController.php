@@ -98,7 +98,9 @@ class OfferController extends Controller
             ]);
 
             if ($request->send_email) {
-                Mail::to($offer->client_email)->send(new OfferEmailToClient($offer));
+                $acceptUrl = route("offer.accept", ["offer" => $offer->id]);
+                $rejectUrl = route("offer.reject", ["offer" => $offer->id]);
+                Mail::to($offer->client_email)->send(new OfferEmailToClient($offer, $acceptUrl, $rejectUrl));
             }
 
             DB::commit();
@@ -137,6 +139,28 @@ class OfferController extends Controller
     public function destroy(Offer $offer)
     {
         //
+    }
+
+    public function accept(Offer $offer)
+    {
+        $offer->update([
+            "status" => "accepted",
+        ]);
+
+        return response()->json([
+            "message" => "Offer accepted successfully"
+        ]);
+    }
+
+    public function reject(Offer $offer)
+    {
+        $offer->update([
+            "status" => "rejected",
+        ]);
+
+        return response()->json([
+            "message" => "Offer rejected successfully"
+        ]);
     }
 
 

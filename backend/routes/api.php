@@ -28,3 +28,8 @@ Route::get('/user', function (Request $request) {
 })->middleware('auth:sanctum');
 // ----------------------------------------------------------------------------------------------------
 
+
+// A j á n l a t   e l f o g a d á s
+Route::get("/offer-accept/{offer}", [OfferController::class, "accept"])->name("offer.accept");
+Route::get("/offer-reject/{offer}", [OfferController::class, "reject"])->name("offer.reject");
+// ----------------------------------------------------------------------------------------------------
