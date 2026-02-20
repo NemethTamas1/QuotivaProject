@@ -58,7 +58,6 @@ export default function MyOffers() {
 
     return (
         <>
-            <h1 className="text-center font-semibold text-2xl my-7">{selectedUserProfile?.company_name} kiadott árajánlatai</h1>
 
             {loading ? (
                 <div className="flex justify-center items-center my-20">
@@ -70,22 +69,28 @@ export default function MyOffers() {
                     {selectedUserProfile === null && <HasNoProfile />}
 
                     {selectedUserProfile !== null && userProfileOffers.length === 0 ? (
-                        <div className="bg-gray-800 rounded-md mx-5 my-10 p-5 text-center shadow-inner">
-                            <p className="text-gray-300">
-                                A(z) <span className="font-bold text-white">{selectedUserProfile?.company_name}</span> még egyetlen ajánlatot sem adott ki.
-                            </p>
+                        <div>
+                            <h1 className="text-center text-white font-semibold text-2xl my-7">{selectedUserProfile?.company_name} kiadott árajánlatai</h1>
+                            <div className="bg-gray-800 rounded-md mx-5 my-10 p-5 text-center shadow-inner">
+                                <p className="text-gray-300">
+                                    A(z) <span className="font-bold text-white">{selectedUserProfile?.company_name}</span> még egyetlen ajánlatot sem adott ki.
+                                </p>
+                            </div>
                         </div>
                     ) : (
-                        currentOffers.map((offer) => (
-                            <OfferStatus key={offer.id} offer={offer} onRefresh={getOfferDatas} />
-                        ))
+                        <>
+                            {currentOffers.map((offer) => (
+                                <OfferStatus key={offer.id} offer={offer} onRefresh={getOfferDatas} />
+                            ))}
+                            
+                            <div className="justify-center flex gap-10 mb-10">
+                                <button onClick={prevPage} className="text-4xl"><FontAwesomeIcon icon={faLeftLong} /></button>
+                                <p className="text-3xl">{currentPage + 1}. oldal</p>
+                                <button onClick={nextPage} className="text-4xl"><FontAwesomeIcon icon={faRightLong} /></button>
+                            </div>
+                        </>
                     )}
 
-                    <div className="justify-center flex gap-10 mb-10">
-                        <button onClick={prevPage} className="text-4xl"><FontAwesomeIcon icon={faLeftLong} /></button>
-                        <p className="text-3xl">{currentPage + 1}. oldal</p>
-                        <button onClick={nextPage} className="text-4xl"><FontAwesomeIcon icon={faRightLong} /></button>
-                    </div>
                 </div>
             )}
         </>
