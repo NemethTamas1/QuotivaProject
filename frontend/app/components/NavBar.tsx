@@ -16,11 +16,11 @@ export default function NavBar() {
   return (
     <>
       <nav className="w-full py-4 flex justify-between px-3 items-center backdrop-blur-md bg-[0a0a0a]">
-        <Link href="/" className="text-3xl font-semibold tracking-wide">
+        <Link href="/" className="text-3xl text-white font-semibold tracking-wide">
           Quotiva
         </Link>
 
-        <div className="hidden md:flex gap-6 text-2xl">
+        <div className="hidden text-white md:flex gap-6 text-2xl">
           {user && (
             <Link href="/createoffer">Új árajánlat</Link>
           )}

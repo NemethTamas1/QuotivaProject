@@ -12,8 +12,10 @@ console_command = 'php /var/www/html/artisan tinker'
     NODE_VERSION = '18'
     PHP_VERSION = '8.2'
 
+
+
 [deploy]
-  release_command = "php artisan optimize:clear"
+
 
 [env]
   APP_ENV = 'production'
@@ -31,6 +33,9 @@ console_command = 'php /var/www/html/artisan tinker'
   min_machines_running = 0
   processes = ['app']
 
+[processes]
+  app = "php artisan serve --host=0.0.0.0 --port=8000"
+  
 [[mounts]]
   source="quotiva_data"
   destination="/var/www/html/storage/db"
