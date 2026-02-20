@@ -15,7 +15,7 @@ export default function NavBar() {
 
   return (
     <>
-      <nav className="w-full py-4 flex justify-between px-3 items-center backdrop-blur-md bg-[0a0a0a]">
+      <nav className="w-full py-4 flex justify-between px-3 items-center backdrop-blur-md bg-black">
         <Link href="/" className="text-3xl text-white font-semibold tracking-wide">
           Quotiva
         </Link>
