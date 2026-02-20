@@ -33,7 +33,8 @@ return [
         'http://localhost:3000',
         "http://127.0.0.1:3000",
         "https://quotiva-frontend.fly.dev",
-        "https://quotiva.hu"],
+        "https://quotiva.hu",
+        "https://www.quotiva.hu"],
 
     'allowed_origins_patterns' => [],
 
