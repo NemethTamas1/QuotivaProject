@@ -1,7 +1,8 @@
 'use client';
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, use } from "react";
 import { profileType } from "../types/types";
+import { useAuth } from "@/context/AuthContext";
 
 interface Props {
     profile?: profileType;
@@ -9,9 +10,11 @@ interface Props {
     onClose: () => void;
 }
 
+const {user} = useAuth();
+
 export default function ProfileCompiler({ profile, onSave, onClose }: Props) {
     const [formData, setFormData] = useState<Partial<profileType>>({
-        user_id: 2,
+        user_id: user?.id,
         company_name: '',
         tax_number: '',
         company_phone: '',
