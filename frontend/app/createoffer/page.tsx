@@ -172,6 +172,7 @@ export default function CreateOfferPage() {
     if (hasNoProfile) {
         return (
             <>
+                <NavBar />
                 <HasNoProfile />
             </>
         );
