@@ -20,11 +20,11 @@ export default function RegisterPage() {
         <>
         <NavBar />
             <div>
-                <div className="relative w-3/12 mx-auto lg:my-20">
+                <div className="relative w-8/12 mt-24 lg:w-3/12 mx-auto lg:my-20">
 
                     <div className="absolute -inset-1.5 bg-green-500 rounded-md blur-sm opacity-25 z-0"></div>
                     <div className="relative bg-gray-900 rounded-md mx-auto">
-                        <h1 className="text-center text-3xl text-green-400 my-5 lg:pt-5 font-semibold" style={{
+                        <h1 className="text-center pt-3 text-3xl text-green-400 my-5 lg:pt-5 font-semibold" style={{
                             textShadow: "0px 0px 20px rgba(34, 197, 94, 1"
                         }}>Regisztráció</h1>
 
@@ -37,7 +37,7 @@ export default function RegisterPage() {
                                 <input value={password} onChange={(e) => setPassword(e.target.value)} type="password" name="password" placeholder="Jelszó" className="text-black p-3 rounded-md" />
                             </div>
 
-                            <button onClick={handleRegister} className="bg-green-400 mx-auto py-3 px-6 rounded-md lg:my-5 text-black text-lg font-semibold">Mentés</button>
+                            <button onClick={handleRegister} className="bg-green-400 mx-auto py-3 px-6 rounded-md my-5 text-black text-lg font-semibold">Mentés</button>
                         </div>
 
                     </div>
