@@ -11,7 +11,7 @@ export default function MyProfiles() {
     const [profiles, setProfiles] = useState<profileType[]>([]);
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
-    const { setSelectedUserProfile, selectedUserProfile } = useAuth();
+    const { setSelectedUserProfile, selectedUserProfile, user } = useAuth();
 
     const handleProfileSave = async (data: Partial<profileType>) => {
         try {
@@ -111,6 +111,7 @@ export default function MyProfiles() {
                 <ProfileCompiler
                     onClose={() => setIsCompilerOpen(false)}
                     onSave={handleProfileSave}
+                    userId={user?.id || null}
                 />
             )}
         </div>
