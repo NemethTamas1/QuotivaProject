@@ -50,4 +50,14 @@ class Offer extends Model
     {
         return $this->belongsTo(UserProfile::class);
     }
+
+    protected static function booted()
+    {
+        static::updating(function (Offer $offer) {
+            if($offer->getOriginal("status") === "accepted" && $offer->status === "rejected") {
+                return false;
+            }
+                
+        });
+    }
 }
