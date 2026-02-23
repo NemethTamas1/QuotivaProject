@@ -1,20 +1,17 @@
 'use client';
 
-import { useState, useEffect, use } from "react";
+import { useState } from "react";
 import { profileType } from "../types/types";
-import { useAuth } from "@/context/AuthContext";
 
 interface Props {
     profile?: profileType;
     onSave: (item: Partial<profileType>) => void;
     onClose: () => void;
+    userId: number | null;
 }
-
-const {user} = useAuth();
-
-export default function ProfileCompiler({ profile, onSave, onClose }: Props) {
+export default function ProfileCompiler({ profile, onSave, onClose, userId }: Props) {
     const [formData, setFormData] = useState<Partial<profileType>>({
-        user_id: user?.id,
+        user_id: userId ?? 0,
         company_name: '',
         tax_number: '',
         company_phone: '',
