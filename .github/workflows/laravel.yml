@@ -40,6 +40,16 @@ jobs:
       working-directory: backend
       run: composer install --no-interaction --no-progress --prefer-dist --optimize-autoloader
 
+    - name: Prepare Backend Environment
+      working-directory: backend
+      run: |
+        cp .env.example .env
+        php artisan key:generate
+        mkdir -p storage/framework/{sessions,views,cache}
+        mkdir -p storage/logs
+        touch database/database.sqlite
+        chmod -R 777 storage bootstrap/cache database
+
     - name: Debug Vendor
       working-directory: backend
       run: |
@@ -48,10 +58,16 @@ jobs:
 
     - name: Migrate SQLite
       working-directory: backend
+      env:
+        DB_CONNECTION: sqlite
+        DB_DATABASE: database/database.sqlite
       run: php artisan migrate --force
 
     - name: Run Tests
       working-directory: backend
+      env:
+        DB_CONNECTION: sqlite
+        DB_DATABASE: database/database.sqlite
       run: php artisan test
 
 
