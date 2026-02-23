@@ -64,6 +64,7 @@ export const LineChart = ({ width, height, data }: LineChartProps) => {
                     width={boundsWidth}
                     height={boundsHeight}
                     transform={`translate(${[margin.left, margin.top].join(",")})`}
+
                 >
                     <path
                         d={linePath}
@@ -78,6 +79,8 @@ export const LineChart = ({ width, height, data }: LineChartProps) => {
                     height={boundsHeight}
                     ref={axesRef}
                     transform={`translate(${[margin.left, margin.top].join(",")})`}
+                    className='text-white'
+
                 />
             </svg>
         </div>

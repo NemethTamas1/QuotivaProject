@@ -21,7 +21,6 @@ import { useRouter } from "next/navigation";
 import { profileType } from "../dashboard/types/types";
 import SumCalculations from "./components/SumCalculations";
 import HasNoProfile from "../components/HasNoProfile";
-import { all } from "axios";
 
 export default function CreateOfferPage() {
 
@@ -172,6 +171,7 @@ export default function CreateOfferPage() {
     if (hasNoProfile) {
         return (
             <>
+                <NavBar />
                 <HasNoProfile />
             </>
         );

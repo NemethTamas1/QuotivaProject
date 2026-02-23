@@ -76,8 +76,8 @@ export default function HomePage() {
 
     return (
         <>
-            <h1 className="text-center md:text-left text-3xl p-6">Üdvözöljük, {user?.name}👋</h1>
-            <h2 className="text-xl mb-3 lg:text-2xl font-semibold text-green-400 text-center md:text-left" style={{
+            <h1 className="text-center md:text-left text-3xl p-6 text-white">Üdvözöljük, {user?.name}👋</h1>
+            <h2 className="text-xl mb-3 lg:text-2xl font-semibold text-green-400 text-center md:text-left md:pl-10 lg:pl-6" style={{
                 textShadow: "0px 0px 20px rgba(34, 197, 94, 1"
             }}>
                 {selectedUserProfile?.company_name} éves bevétele

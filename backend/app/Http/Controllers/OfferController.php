@@ -13,6 +13,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\URL;
 
 class OfferController extends Controller
 {
@@ -98,8 +99,8 @@ class OfferController extends Controller
             ]);
 
             if ($request->send_email) {
-                $acceptUrl = route("offer.accept", ["offer" => $offer->id]);
-                $rejectUrl = route("offer.reject", ["offer" => $offer->id]);
+                $acceptUrl = URL::signedRoute("offer.accept", ["offer" => $offer->id]);
+                $rejectUrl = URL::signedRoute("offer.reject", ["offer" => $offer->id]);
                 Mail::to($offer->client_email)->send(new OfferEmailToClient($offer, $acceptUrl, $rejectUrl));
             }
 
@@ -129,6 +130,10 @@ class OfferController extends Controller
     {
         $data = $request->validated();
 
+        if($offer->status === "accepted" || $offer->status === "rejected") {
+            return view("offerStatusAlreadyDecided", ["offer" => $offer]);
+        }
+
         $offer->update([
             "status" => $data["status"],
         ]);
@@ -143,24 +148,28 @@ class OfferController extends Controller
 
     public function accept(Offer $offer)
     {
+        if($offer->status !== "pending"){
+            return view("offerStatusAlreadyDecided", ["offer" => $offer]);
+        };
+
         $offer->update([
             "status" => "accepted",
         ]);
 
-        return response()->json([
-            "message" => "Offer accepted successfully"
-        ]);
+        return view("offerStatusRedirect", ["offer" => $offer]);
     }
 
     public function reject(Offer $offer)
     {
+        if($offer->status !== "pending"){
+            return view("offerStatusAlreadyDecided", ["offer" => $offer]);
+        };
+
         $offer->update([
             "status" => "rejected",
         ]);
 
-        return response()->json([
-            "message" => "Offer rejected successfully"
-        ]);
+        return view("offerStatusRedirect", ["offer" => $offer]);
     }
 
 

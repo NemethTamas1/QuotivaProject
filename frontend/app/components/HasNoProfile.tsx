@@ -9,8 +9,7 @@ export default function HasNoProfile() {
 
     return (
         <>
-            <NavBar />
-            <div className="min-h-[calc(100vh-64px)] bg-black flex flex-col items-center justify-center text-white p-4">
+            <div className="min-h-[calc(100vh-64px)] bg-[#1a1a1a] flex flex-col items-center justify-center text-white p-4">
                 <div className="max-w-md w-full text-center space-y-6 bg-gray-900 p-8 rounded-2xl border border-gray-800 shadow-2xl">
 
                     <div className="mx-auto w-16 h-16 bg-yellow-500/10 rounded-full flex items-center justify-center">
@@ -27,12 +26,12 @@ export default function HasNoProfile() {
                     </div>
 
                     <div className="flex flex-col gap-3">
-                        <Link href="/dashboard" className="w-full py-3 px-4 bg-green-400 text-black font-semibold rounded-lg hover:bg-green-300 transition-all active:scale-95">
+                        {/* <Link href="/dashboard" className="w-full py-3 px-4 bg-green-400 text-black font-semibold rounded-lg hover:bg-green-300 transition-all active:scale-95">
                             Vissza a Dashboardra
-                        </Link>
+                        </Link> */}
 
-                        <p className="text-xs text-gray-500 italic">
-                            A profilokat a beállítások menüpont alatt találja.
+                        <p className="text-lg text-gray-500 italic">
+                            A profilokat a kezelőfelület menüponton belül találja.
                         </p>
                     </div>
                 </div>

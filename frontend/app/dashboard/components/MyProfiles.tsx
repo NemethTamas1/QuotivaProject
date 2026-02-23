@@ -11,7 +11,7 @@ export default function MyProfiles() {
     const [profiles, setProfiles] = useState<profileType[]>([]);
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
-    const { setSelectedUserProfile, selectedUserProfile } = useAuth();
+    const { setSelectedUserProfile, selectedUserProfile, user } = useAuth();
 
     const handleProfileSave = async (data: Partial<profileType>) => {
         try {
@@ -60,7 +60,7 @@ export default function MyProfiles() {
 
     return (
         <div className="p-8">
-            <h1 className="text-3xl text-center p-6 pb-0">Saját felhasználói profiljaim</h1>
+            <h1 className="text-3xl text-center text-white p-6 pb-0">Saját felhasználói profiljaim</h1>
 
             <div className="flex p-5">
                 <button
@@ -80,7 +80,7 @@ export default function MyProfiles() {
 
                 {/* Profilok listázása */}
                 {!isLoading && !error && profiles.length > 0 && (
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-4 grid-flow-row mx-auto">
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-4 text-white grid-flow-row mx-auto">
                         {profiles.map((p) => (
                             <div key={p.id} className={`rounded-md w-full p-4 shadow-lg transition-all ${selectedUserProfile?.id === p.id ? "ring-2 ring-green-400 bg-[#303036]" : "bg-[#27272A]"}`}>
                                 <div className="font-semibold text-lg">{p.company_name}</div>
@@ -111,6 +111,7 @@ export default function MyProfiles() {
                 <ProfileCompiler
                     onClose={() => setIsCompilerOpen(false)}
                     onSave={handleProfileSave}
+                    userId={user?.id || null}
                 />
             )}
         </div>

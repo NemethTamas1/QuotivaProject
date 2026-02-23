@@ -5,7 +5,6 @@ import Link from "next/dist/client/link";
 import { useRouter } from "next/navigation";
 import NavBar from "../components/NavBar";
 import { useAuth } from "@/context/AuthContext";
-import { showSuccess } from "@/lib/toast";
 
 export default function LoginPage() {
 
@@ -31,8 +30,8 @@ export default function LoginPage() {
     return (
         <>
             <NavBar />
-            <div>
-                <div className="relative w-10/12 lg:w-3/12 my-36 mx-auto lg:my-20">
+            <div className="bg-[#1a1a1a] min-h-screen">
+                <div className="bg-[#1a1a1a] relative w-10/12 lg:w-3/12 my-36 mx-auto lg:my-20">
 
                     <div className="absolute -inset-1.5 bg-green-500 rounded-md blur-sm opacity-25 z-0"></div>
                     <div className="relative bg-gray-900 rounded-md mx-auto">
@@ -51,7 +50,7 @@ export default function LoginPage() {
 
                             <button onClick={handleLogin} className="bg-green-400 mx-auto p-4 rounded-md mb-5 text-black text-lg font-semibold">Bejelentkezés</button>
 
-                            <p className="text-center mb-5">Nincs fiókod? <Link href="/register" className="text-green-400">Regisztrálj itt</Link></p>
+                            <p className="text-center text-white mb-5">Nincs fiókod? <Link href="/register" className="text-green-400">Regisztrálj itt</Link></p>
                         </div>
 
                     </div>
