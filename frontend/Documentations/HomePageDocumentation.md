@@ -1,1 +1,0 @@
-# Quotiva - Főoldal dokumentáció
