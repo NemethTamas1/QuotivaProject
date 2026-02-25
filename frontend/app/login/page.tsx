@@ -1,29 +1,28 @@
 'use client';
 
 import { useState } from "react";
-import Link from "next/dist/client/link";
 import { useRouter } from "next/navigation";
 import NavBar from "../components/NavBar";
 import { useAuth } from "@/context/AuthContext";
+import { showError } from "@/lib/toast";
+import Link from "next/link";
 
 export default function LoginPage() {
 
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const [error, setError] = useState<string | null>(null);
 
     const router = useRouter();
     const { login } = useAuth();
 
     const handleLogin = async () => {
-        setError(null);
-
         try {
             const res = await login({ email, password } as any);
             if (res.success) router.push("/dashboard");
+
+            if(!res.success) showError("Hibás email vagy jelszó.");
         } catch (error) {
             console.error('Hiba a bejelentkezés során', error);
-            setError("Hiba a bejelentkezés során");
         }
     };
 
