@@ -65,13 +65,15 @@ export default function HomePage() {
         } else {
             setChartWidth(800);
         }
-        window.addEventListener('resize', handleResize);
     };
 
     useEffect(() => {
         fetchProfiles();
         getOffers();
         handleResize();
+
+        window.addEventListener('resize', handleResize);
+        return () => window.removeEventListener('resize', handleResize);
     }, [])
 
     return (
