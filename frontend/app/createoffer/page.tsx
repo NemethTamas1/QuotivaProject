@@ -18,16 +18,12 @@ import http from "@/lib/http";
 import NavBar from "../components/NavBar";
 import { useAuth } from "@/context/AuthContext";
 import { useRouter } from "next/navigation";
-import { profileType } from "../dashboard/types/types";
 import SumCalculations from "./components/SumCalculations";
 import HasNoProfile from "../components/HasNoProfile";
-import { all } from "axios";
 
 export default function CreateOfferPage() {
 
     const [loading, setLoading] = useState<boolean>(true);
-    const [profiles, setProfiles] = useState<profileType[]>([]);
-    const [hasNoProfile, setHasNoProfile] = useState<boolean>(false);
 
     const methods = useForm<CreateOfferForm>({
         defaultValues: {
@@ -83,31 +79,15 @@ export default function CreateOfferPage() {
         control: control
     });
 
-
-
-    const fetchProfiles = async () => {
-        try {
-            setLoading(true);
-            const res = await http.get('/api/user-profiles');
-            const items: profileType[] = res.data?.data ?? [];
-            setProfiles(items);
-
-            if (items.length == 0) setHasNoProfile(true);
-        } catch (e) {
-            throw new Error("Hiba történt a profilok betöltésekor.");
-        } finally {
-            setLoading(false);
-        }
-    };
-
     const [editingItem, setEditingItem] =
         useState<OfferItem | null>(null);
 
     useEffect(() => {
+        setLoading(true);
         if (!user) {
             router.push("/")
         };
-        fetchProfiles();
+        setLoading(false);
     }, [user]);
 
     const onSubmit: SubmitHandler<CreateOfferForm> = async (data) => {
@@ -169,7 +149,7 @@ export default function CreateOfferPage() {
         );
     }
 
-    if (hasNoProfile) {
+    if (selectedUserProfile == null) {
         return (
             <>
                 <NavBar />
