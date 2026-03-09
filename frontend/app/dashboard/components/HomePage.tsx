@@ -44,19 +44,21 @@ export default function HomePage() {
                 const date = new Date(offer.dated);
                 const monthIndex = date.getMonth();
 
-                const total = offer.items.reduce((sum: number, item: any) =>
+                const netTotal = offer.items.reduce((sum: number, item: any) => 
                     sum + (item.quantity * (item.labor_unit_price + item.material_unit_price)), 0
                 );
 
+                const grossTotal = netTotal * (1+ (offer.tax_percent /100));
+
                 if (monthIndex >= 0 && monthIndex < 12) {
-                    monthlyRevenue[monthIndex].revenue += total;
+                    monthlyRevenue[monthIndex].revenue += grossTotal;
                 }
             }
 
         })
         return monthlyRevenue;
 
-    }, [offers]);
+    }, [offers, selectedUserProfile]);
 
 
     const handleResize = () => {
@@ -66,6 +68,9 @@ export default function HomePage() {
             setChartWidth(800);
         }
     };
+
+    const date = new Date();
+    let year = date.getFullYear();
 
     useEffect(() => {
         fetchProfiles();
@@ -82,7 +87,7 @@ export default function HomePage() {
             <h2 className="text-xl mb-3 lg:text-2xl font-semibold text-green-400 text-center md:text-left md:pl-10 lg:pl-6" style={{
                 textShadow: "0px 0px 20px rgba(34, 197, 94, 1"
             }}>
-                {selectedUserProfile?.company_name} éves bevétele
+                 {selectedUserProfile?.company_name} bruttó éves bevétele {year}. évben:
             </h2>
             <div className="bg-[#1a1a1a] lg:p-4 rounded-xl inline-block">
                 <LineChart
