@@ -143,24 +143,28 @@ class OfferController extends Controller
 
     public function accept(Offer $offer)
     {
+        if($offer->status !== "pending"){
+            return view("offerStatusAlreadyDecided", ["offer" => $offer]);
+        };
+
         $offer->update([
             "status" => "accepted",
         ]);
 
-        return response()->json([
-            "message" => "Offer accepted successfully"
-        ]);
+        return view("offerStatusRedirect", ["offer" => $offer]);
     }
 
     public function reject(Offer $offer)
     {
+        if($offer->status !== "pending"){
+            return view("offerStatusAlreadyDecided", ["offer" => $offer]);
+        };
+
         $offer->update([
             "status" => "rejected",
         ]);
 
-        return response()->json([
-            "message" => "Offer rejected successfully"
-        ]);
+        return view("offerStatusRedirect", ["offer" => $offer]);
     }
 
 

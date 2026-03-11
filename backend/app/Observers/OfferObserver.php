@@ -31,7 +31,7 @@ class OfferObserver
             if ($offer->status === "accepted") {
 
                 //Ha el lett fogadva, értesül a user és a kliens is.
-                Mail::to($offer->profile->user->email)->send(new NotifyUserOfOfferAccepted($offer));
+                //Mail::to($offer->profile->user->email)->send(new NotifyUserOfOfferAccepted($offer));
                 Mail::to($offer->client_email)->send(new NotifyClientOfferAccept($offer));
             } else if ($offer->status === "rejected") {
 
