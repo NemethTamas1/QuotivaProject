@@ -29,8 +29,8 @@ export default function LoginPage() {
     return (
         <>
             <NavBar />
-            <div className="bg-[#1a1a1a] min-h-screen">
-                <div className="bg-[#1a1a1a] relative w-10/12 lg:w-3/12 my-36 mx-auto lg:my-20">
+            <div className="bg-black min-h-screen">
+                <div className="bg-black relative w-10/12 lg:w-3/12 my-36 mx-auto lg:my-20">
 
                     <div className="absolute -inset-1.5 bg-green-500 rounded-md blur-sm opacity-25 z-0"></div>
                     <div className="relative bg-gray-900 rounded-md mx-auto">
