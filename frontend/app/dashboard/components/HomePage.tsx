@@ -44,11 +44,11 @@ export default function HomePage() {
                 const date = new Date(offer.dated);
                 const monthIndex = date.getMonth();
 
-                const netTotal = offer.items.reduce((sum: number, item: any) => 
+                const netTotal = offer.items.reduce((sum: number, item: any) =>
                     sum + (item.quantity * (item.labor_unit_price + item.material_unit_price)), 0
                 );
 
-                const grossTotal = netTotal * (1+ (offer.tax_percent /100));
+                const grossTotal = netTotal * (1 + (offer.tax_percent / 100));
 
                 if (monthIndex >= 0 && monthIndex < 12) {
                     monthlyRevenue[monthIndex].revenue += grossTotal;
@@ -81,13 +81,26 @@ export default function HomePage() {
         return () => window.removeEventListener('resize', handleResize);
     }, [])
 
+    if (selectedUserProfile === null) {
+        return (
+            <div className="text-center my-10 bg-gray-900 p-3 lg:p-5 w-9/12 lg:w-5/12 lg:text-2xl mx-auto rounded-md">
+                <p>
+                    Még nincs egyetlen felhasználói profilja sem!
+                </p>
+                <p>
+                    Hozzon létre egyet a <span className="text-green-400">Profiljaim</span> menüponton belül!
+                </p>
+            </div >
+        )
+    }
+
     return (
         <>
             <h1 className="text-center md:text-left text-3xl p-6 text-white">Üdvözöljük, {user?.name}👋</h1>
             <h2 className="text-xl mb-3 lg:text-2xl font-semibold text-green-400 text-center md:text-left md:pl-10 lg:pl-6" style={{
                 textShadow: "0px 0px 20px rgba(34, 197, 94, 1"
             }}>
-                 {selectedUserProfile?.company_name} bruttó éves bevétele {year}. évben:
+                {selectedUserProfile?.company_name} bruttó éves bevétele {year}. évben:
             </h2>
             <div className="bg-[#1a1a1a] lg:p-4 rounded-xl inline-block">
                 <LineChart
