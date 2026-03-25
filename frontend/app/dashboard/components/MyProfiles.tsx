@@ -64,7 +64,7 @@ export default function MyProfiles() {
     return (
         <div className="p-8">
             <h1 className="text-3xl text-center text-white p-6 pb-0">Felhasználói profiljaim</h1>
-            <p className=" text-center opacity-50 ">A kiválasztott felhasználói profilhoz mérten jelennek meg a grafikonok értékei.</p>
+            <p className=" text-center opacity-50 ">A kiválasztott profilhoz mérten jelennek meg a grafikonok értékei, illetve azokkal hozza létre a kiadott árajánlatot.</p>
 
 
 
@@ -88,16 +88,29 @@ export default function MyProfiles() {
                                     {p.company_email} • {p.company_phone}
                                 </div>
 
-                                {selectedUserProfile?.id === p?.id ? (
-                                    <button className="disabled p-2 bg-green-300 text-black rounded-md hover:bg-green-400 transition-colors">Kiválasztva</button>
-                                ) : (
-                                    <button
-                                        onClick={() => saveProfile(p)}
-                                        className="p-2 bg-green-300 text-black rounded-md hover:bg-green-400 transition-colors"
-                                    >
-                                        Profil kiválasztása
-                                    </button>
-                                )}
+
+                                <div className="grid grid-cols-3 justify-items-center mt-3">
+                                    <div className="flex justify-center">
+                                        {selectedUserProfile?.id === p?.id ? (
+                                            <button className="w-full py-2 px-4 text-sm bg-green-300 text-black rounded-md cursor-default shadow-inner">Aktív</button>
+                                        ) : (
+                                            <button
+                                                onClick={() => saveProfile(p)}
+                                                className="w-full py-2 px-4 text-sm bg-green-300 text-black rounded-md hover:bg-green-400 transition-all duration-200"
+                                            >
+                                                Kiválasztás
+                                            </button>
+                                        )}
+                                    </div>
+
+                                    <div className="flex justify-center">
+                                        <button className="w-full py-2 px-4 text-sm bg-orange-500 text-white rounded-md hover:bg-orange-600 transition-all duration-200">Módosítás</button>
+                                    </div>
+
+                                    <div className="flex justify-center">
+                                        <button className="w-full py-2 px-4 text-sm bg-red-500 text-white rounded-md hover:bg-red-600 transition-all duration-200">Törlés</button>
+                                    </div>
+                                </div>
                             </div>
                         ))}
 
