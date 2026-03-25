@@ -21,6 +21,9 @@ export default function MyProfiles() {
             if (res.status === 201) {
                 showSuccess(data.company_name + "sikeresen mentve.")
                 setIsCompilerOpen(false);
+
+                const newProfile = res.data.data;
+                setProfiles(prev => [...prev, newProfile]);
             } else {
                 console.error("Hiba a profil mentésekor:", error);
                 alert("Hiba történt a profil mentésekor.");
@@ -60,16 +63,10 @@ export default function MyProfiles() {
 
     return (
         <div className="p-8">
-            <h1 className="text-3xl text-center text-white p-6 pb-0">Saját felhasználói profiljaim</h1>
+            <h1 className="text-3xl text-center text-white p-6 pb-0">Felhasználói profiljaim</h1>
+            <p className=" text-center opacity-50 ">A kiválasztott felhasználói profilhoz mérten jelennek meg a grafikonok értékei.</p>
 
-            <div className="flex p-5">
-                <button
-                    onClick={() => setIsCompilerOpen(true)}
-                    className="bg-green-400 text-black px-6 py-2 mx-auto rounded-lg transition-all"
-                >
-                    + Új profil létrehozása
-                </button>
-            </div>
+
 
             <div>
                 {isLoading && (
@@ -80,7 +77,7 @@ export default function MyProfiles() {
 
                 {/* Profilok listázása */}
                 {!isLoading && !error && profiles.length > 0 && (
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-4 text-white grid-flow-row mx-auto">
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 mt-5 gap-4 text-white grid-flow-row mx-auto">
                         {profiles.map((p) => (
                             <div key={p.id} className={`rounded-md w-full p-4 shadow-lg transition-all ${selectedUserProfile?.id === p.id ? "ring-2 ring-green-400 bg-[#303036]" : "bg-[#27272A]"}`}>
                                 <div className="font-semibold text-lg">{p.company_name}</div>
@@ -103,6 +100,15 @@ export default function MyProfiles() {
                                 )}
                             </div>
                         ))}
+
+                        <div className="flex p-5">
+                            <button
+                                onClick={() => setIsCompilerOpen(true)}
+                                className="bg-green-400 text-black px-6 py-2 mx-auto rounded-lg transition-all"
+                            >
+                                + Új profil létrehozása
+                            </button>
+                        </div>
                     </div>
                 )}
             </div>
