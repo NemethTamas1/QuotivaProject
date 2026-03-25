@@ -1,33 +1,37 @@
 import http from "@/lib/http";
 import { profileType } from "../types/types";
-import ProfileCompiler from "./ProfileCompiler";
 import { useEffect, useState } from "react";
 import { useAuth } from "@/context/AuthContext";
 import { showInfo, showSuccess } from "@/lib/toast";
+import ProfileModal from "./ProfileModal";
 
 export default function MyProfiles() {
 
-    const [isCompilerOpen, setIsCompilerOpen] = useState(false);
     const [profiles, setProfiles] = useState<profileType[]>([]);
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
     const { setSelectedUserProfile, selectedUserProfile } = useAuth();
+    const [modalConfig, setModalConfig] = useState<{ mode: 'create' | 'update' | 'delete', profile?: profileType } | null>(null);
 
-    const handleProfileSave = async (data: Partial<profileType>) => {
+    const handleModalConfirm = async (data?: Partial<profileType>) => {
+        if (!modalConfig) return;
+
+        const { mode, profile } = modalConfig;
+
         try {
-
-            const res = await http.post(`/api/user-profiles`, data);
-
-            if (res.status === 201) {
-                showSuccess(data.company_name + "sikeresen mentve.")
-                setIsCompilerOpen(false);
-
-                const newProfile = res.data.data;
-                setProfiles(prev => [...prev, newProfile]);
-            } else {
-                console.error("Hiba a profil mentésekor:", error);
-                alert("Hiba történt a profil mentésekor.");
+            if (mode === 'create') {
+                await http.post('/api/user-profiles', data);
+                showSuccess("Profil létrehozva");
+            } else if (mode === 'update' && profile) {
+                await http.put(`/api/user-profiles/${profile.id}`, data);
+                showSuccess("Profil frissítve");
+            } else if (mode === 'delete' && profile) {
+                await http.delete(`/api/user-profiles/${profile.id}`);
+                showSuccess("Profil törölve");
             }
+
+            setModalConfig(null);
+            fetchProfiles();
         } catch (error) {
             console.error("Hálózati hiba a profil mentésekor:", error);
             alert("Hálózati hiba történt a profil mentésekor.");
@@ -92,8 +96,10 @@ export default function MyProfiles() {
                                 <div className="grid grid-cols-3 justify-items-center mt-3">
                                     <div className="flex justify-center">
                                         {selectedUserProfile?.id === p?.id ? (
+                                            // Aktív
                                             <button className="w-full py-2 px-4 text-sm bg-green-300 text-black rounded-md cursor-default shadow-inner">Aktív</button>
                                         ) : (
+                                            // Kiválaszás
                                             <button
                                                 onClick={() => saveProfile(p)}
                                                 className="w-full py-2 px-4 text-sm bg-green-300 text-black rounded-md hover:bg-green-400 transition-all duration-200"
@@ -104,11 +110,11 @@ export default function MyProfiles() {
                                     </div>
 
                                     <div className="flex justify-center">
-                                        <button className="w-full py-2 px-4 text-sm bg-orange-500 text-white rounded-md hover:bg-orange-600 transition-all duration-200">Módosítás</button>
+                                        <button className="w-full py-2 px-4 text-sm bg-orange-300 text-black rounded-md hover:bg-green-400 transition-all duration-200" onClick={() => setModalConfig({ mode: 'update', profile: p })}>Módosítás</button>
                                     </div>
 
                                     <div className="flex justify-center">
-                                        <button className="w-full py-2 px-4 text-sm bg-red-500 text-white rounded-md hover:bg-red-600 transition-all duration-200">Törlés</button>
+                                        <button className="w-full py-2 px-4 text-sm bg-red-400 text-black rounded-md hover:bg-green-400 transition-all duration-200" onClick={() => setModalConfig({ mode: 'delete', profile: p })}>Törlés</button>
                                     </div>
                                 </div>
                             </div>
@@ -116,7 +122,7 @@ export default function MyProfiles() {
 
                         <div className="flex p-5">
                             <button
-                                onClick={() => setIsCompilerOpen(true)}
+                                onClick={() => setModalConfig({ mode: 'create' })}
                                 className="bg-green-400 text-black px-6 py-2 mx-auto rounded-lg transition-all"
                             >
                                 + Új profil létrehozása
@@ -126,10 +132,13 @@ export default function MyProfiles() {
                 )}
             </div>
 
-            {isCompilerOpen && (
-                <ProfileCompiler
-                    onClose={() => setIsCompilerOpen(false)}
-                    onSave={handleProfileSave}
+
+            {modalConfig && (
+                <ProfileModal
+                    mode={modalConfig.mode}
+                    profile={modalConfig.profile}
+                    onClose={() => setModalConfig(null)}
+                    onConfirm={handleModalConfirm}
                 />
             )}
         </div>
