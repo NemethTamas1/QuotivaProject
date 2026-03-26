@@ -18,11 +18,16 @@ services:
       WATCHPACK_POLLING: "true"
 
   backend:
-    build: ./backend
+    build: 
+      context: ./backend
+      dockerfile: Dockerfile
     ports:
-      - "8000:8000"
+      - "8888:8080"
     volumes:
       - ./backend:/var/www/html
+      - /var/www/html/vendor
+      - /var/www/html/public/build
+      - ./backend/storage/db:/var/www/html/storage/db
     env_file:
       - ./backend/.env.development
     environment:
