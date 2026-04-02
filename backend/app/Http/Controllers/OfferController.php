@@ -7,16 +7,22 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreOfferRequest;
 use App\Http\Requests\UpdateOfferRequest;
 use App\Http\Resources\OfferResource;
-use App\Mail\OfferEmailToClient;
-use App\Models\OfferItem;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Mail;
-use Illuminate\Support\Facades\URL;
+use App\Services\Offer\OfferTotalsCalculator;
+use App\Services\Offer\OfferItemService;
+use App\Services\Offer\OfferMailService;
+use App\Services\Offer\OfferService;
 
 class OfferController extends Controller
 {
+    public function __construct(
+        private OfferMailService $mailService,
+        private OfferService $offerService,
+    ) {}
+
+
     public function index(Request $request)
     {
         $user = $request->user();
@@ -36,89 +42,25 @@ class OfferController extends Controller
 
     public function store(StoreOfferRequest $request)
     {
-        $data = $request->validated();
-        $userProfileId = $request->input('profile_id');
-
-        DB::beginTransaction();
-
-        try {
-            $user = Auth::user();
-
-            if (!$user) {
-                return response()->json([
-                    "message" => "Unauthorized"
-                ], 401);
-            }
-            // Ajánlat létrehozás
-            $offer = Offer::create([
-                "profile_id" => $userProfileId,
-                "offer_number" => $this->generateOfferNumber(),
-                "offer_name" => $data["offer_name"],
-                "status" => $data["status"] ?? "pending",
-                "dated" => $data["dated"],
-                "valid_until" => $data["valid_until"],
-                "currency" => $data["currency"],
-                "tax_percent" => $data["tax_percent"],
-
-                "client_name" => $data["client_name"],
-                "client_email" => $data["client_email"] ?? null,
-                "client_phone" => $data["client_phone"] ?? null,
-                "client_tax_number" => $data["client_tax_number"] ?? null,
-                "client_zip" => $data["client_zip"] ?? null,
-                "client_city" => $data["client_city"] ?? null,
-                "client_street" => $data["client_street"] ?? null,
-                "client_house_number" => $data["client_house_number"] ?? null,
-            ]);
-
-            $netTotal = 0;
-
-            // Tételek
-            foreach ($data["items"] as $item) {
-                $laborTotal = $item["quantity"] * $item["labor_unit_price"];
-                $materialTotal = $item["quantity"] * $item["material_unit_price"];
-
-
-                OfferItem::create([
-                    "offer_id" => $offer->id,
-                    "name" => $item["name"] ?? null,
-                    "quantity" => $item["quantity"],
-                    "quantity_type" => $item["quantity_type"],
-                    "labor_unit_price" => $item["labor_unit_price"],
-                    "material_unit_price" => $item["material_unit_price"],
-                ]);
-
-                $netTotal += ($laborTotal + $materialTotal);
-            }
-
-            // Ajánlat nettó és bruttó összegzése
-            $grossTotal = $netTotal * (1 + $offer->tax_percent / 100);
-
-            $offer->update([
-                "net_total" => $netTotal,
-                "gross_total" => $grossTotal,
-            ]);
-
-            if ($request->send_email) {
-                $acceptUrl = URL::signedRoute("offer.accept", ["offer" => $offer->id]);
-                $rejectUrl = URL::signedRoute("offer.reject", ["offer" => $offer->id]);
-                Mail::to($offer->client_email)->send(new OfferEmailToClient($offer, $acceptUrl, $rejectUrl));
-            }
-
-            DB::commit();
-
-            return response()->json([
-                "message" => "Offer created successfully",
-                "offer" => $offer->load("items"),
-            ], 201);
-        } catch (\Exception $ex) {
-            DB::rollback();
-            dd($ex->getMessage());
-
-            return response()->json([
-                "message" => "Failed to create offer",
-                "error" => $ex->getMessage(),
-            ], 500);
+        $user = Auth::user();
+        if (!$user) {
+            return response()->json(["message" => "Unauthorized"], 401);
         }
+
+        $offer = $this->offerService->createOffer(
+            $request->validated(),
+            $request->input('profile_id'),
+            $this->generateOfferNumber()
+        );
+
+        if ($request->send_email) {
+            $this->mailService->sendOfferToClient($offer);
+        }
+
+        return response()->json([
+            "message" => "Offer created successfully",
+            "offer"   => $offer->load("items"),
+        ], 201);
     }
 
     public function show(Offer $offer)
@@ -148,7 +90,7 @@ class OfferController extends Controller
 
     public function accept(Offer $offer)
     {
-        if($offer->status !== "pending"){
+        if ($offer->status !== "pending") {
             return view("offerStatusAlreadyDecided", ["offer" => $offer]);
         };
 
@@ -157,11 +99,12 @@ class OfferController extends Controller
         ]);
 
         return view("offerStatusRedirect", ["offer" => $offer]);
+        return view("offerStatusRedirect", ["offer" => $offer]);
     }
 
     public function reject(Offer $offer)
     {
-        if($offer->status !== "pending"){
+        if ($offer->status !== "pending") {
             return view("offerStatusAlreadyDecided", ["offer" => $offer]);
         };
 
@@ -169,6 +112,7 @@ class OfferController extends Controller
             "status" => "rejected",
         ]);
 
+        return view("offerStatusRedirect", ["offer" => $offer]);
         return view("offerStatusRedirect", ["offer" => $offer]);
     }
 

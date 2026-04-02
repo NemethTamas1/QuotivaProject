@@ -44,7 +44,18 @@ export const LineChart = ({ width, height, data }: LineChartProps) => {
             .attr("transform", `translate(0, ${boundsHeight})`)
             .call(xAxisGenerator);
 
-        const yAxisGenerator = d3.axisLeft(yScale).tickFormat(d => `${d.valueOf() / 1000000}M`);
+        const yAxisGenerator = d3.axisLeft(yScale).tickFormat((d) => {
+            const val = Number(d);
+
+            if (Math.abs(val) >= 1000000) {
+                return (val / 1000000).toFixed(1).replace('.', ',') + "M";
+            }
+            if (Math.abs(val) >= 1000) {
+                return (val / 1000).toFixed(0) + "K";
+            }
+            return val.toString();
+        });
+
         svgElement.append("g").call(yAxisGenerator);
 
     }, [xScale, yScale, boundsHeight]);

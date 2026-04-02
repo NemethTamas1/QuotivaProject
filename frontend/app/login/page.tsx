@@ -1,37 +1,36 @@
 'use client';
 
 import { useState } from "react";
-import Link from "next/dist/client/link";
 import { useRouter } from "next/navigation";
 import NavBar from "../components/NavBar";
 import { useAuth } from "@/context/AuthContext";
+import { showError } from "@/lib/toast";
+import Link from "next/link";
 
 export default function LoginPage() {
 
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const [error, setError] = useState<string | null>(null);
 
     const router = useRouter();
     const { login } = useAuth();
 
     const handleLogin = async () => {
-        setError(null);
-
         try {
             const res = await login({ email, password } as any);
             if (res.success) router.push("/dashboard");
+
+            if(!res.success) showError("Hibás email vagy jelszó.");
         } catch (error) {
             console.error('Hiba a bejelentkezés során', error);
-            setError("Hiba a bejelentkezés során");
         }
     };
 
     return (
         <>
             <NavBar />
-            <div className="bg-[#1a1a1a] min-h-screen">
-                <div className="bg-[#1a1a1a] relative w-10/12 lg:w-3/12 my-36 mx-auto lg:my-20">
+            <div className="bg-black min-h-screen">
+                <div className="bg-black relative w-10/12 lg:w-3/12 my-36 mx-auto lg:my-20">
 
                     <div className="absolute -inset-1.5 bg-green-500 rounded-md blur-sm opacity-25 z-0"></div>
                     <div className="relative bg-gray-900 rounded-md mx-auto">

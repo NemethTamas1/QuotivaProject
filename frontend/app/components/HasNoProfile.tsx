@@ -1,7 +1,5 @@
 'use client';
 
-import Link from "next/link";
-import NavBar from "./NavBar";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTriangleExclamation } from "@fortawesome/free-solid-svg-icons";
 
@@ -26,10 +24,6 @@ export default function HasNoProfile() {
                     </div>
 
                     <div className="flex flex-col gap-3">
-                        {/* <Link href="/dashboard" className="w-full py-3 px-4 bg-green-400 text-black font-semibold rounded-lg hover:bg-green-300 transition-all active:scale-95">
-                            Vissza a Dashboardra
-                        </Link> */}
-
                         <p className="text-lg text-gray-500 italic">
                             A profilokat a kezelőfelület menüponton belül találja.
                         </p>

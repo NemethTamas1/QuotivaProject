@@ -9,6 +9,7 @@ use App\Http\Requests\UpdateUserProfileRequest;
 use App\Http\Resources\UserProfileResource;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Gate;
 
 class UserProfileController extends Controller
 {
@@ -51,7 +52,13 @@ class UserProfileController extends Controller
      */
     public function update(UpdateUserProfileRequest $request, UserProfile $userProfile)
     {
-        //
+        Gate::authorize("update", $userProfile);
+
+        $data = $request->validated();
+
+        $userProfile->update($data);    
+
+        return new UserProfileResource($userProfile);
     }
 
     /**
@@ -59,6 +66,8 @@ class UserProfileController extends Controller
      */
     public function destroy(UserProfile $userProfile)
     {
-        //
+        Gate::authorize("delete", $userProfile);
+
+        return ($userProfile->delete()) ? response()->noContent() : abort(500);
     }
 }

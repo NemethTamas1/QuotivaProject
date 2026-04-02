@@ -1,30 +1,37 @@
 import http from "@/lib/http";
 import { profileType } from "../types/types";
-import ProfileCompiler from "./ProfileCompiler";
-import { useEffect, useState } from "react";
+import { use, useEffect, useState } from "react";
 import { useAuth } from "@/context/AuthContext";
 import { showInfo, showSuccess } from "@/lib/toast";
+import ProfileModal from "./ProfileModal";
 
 export default function MyProfiles() {
 
-    const [isCompilerOpen, setIsCompilerOpen] = useState(false);
     const [profiles, setProfiles] = useState<profileType[]>([]);
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
-    const { setSelectedUserProfile, selectedUserProfile, user } = useAuth();
+    const { setSelectedUserProfile, selectedUserProfile } = useAuth();
+    const [modalConfig, setModalConfig] = useState<{ mode: 'create' | 'update' | 'delete', profile?: profileType } | null>(null);
 
-    const handleProfileSave = async (data: Partial<profileType>) => {
+    const handleModalConfirm = async (data?: Partial<profileType>) => {
+        if (!modalConfig) return;
+
+        const { mode, profile } = modalConfig;
+
         try {
-
-            const res = await http.post(`/api/user-profiles`, data);
-
-            if (res.status === 201) {
-                showSuccess(data.company_name + "sikeresen mentve.")
-                setIsCompilerOpen(false);
-            } else {
-                console.error("Hiba a profil mentésekor:", error);
-                alert("Hiba történt a profil mentésekor.");
+            if (mode === 'create') {
+                await http.post('/api/user-profiles', data);
+                showSuccess("Profil létrehozva");
+            } else if (mode === 'update' && profile) {
+                await http.put(`/api/user-profiles/${profile.id}`, data);
+                showSuccess("Profil frissítve");
+            } else if (mode === 'delete' && profile) {
+                await http.delete(`/api/user-profiles/${profile.id}`);
+                showSuccess("Profil törölve");
             }
+
+            setModalConfig(null);
+            await fetchProfiles();
         } catch (error) {
             console.error("Hálózati hiba a profil mentésekor:", error);
             alert("Hálózati hiba történt a profil mentésekor.");
@@ -40,14 +47,23 @@ export default function MyProfiles() {
             const res = await http.get('/api/user-profiles');
             const items: profileType[] = res.data?.data ?? [];
             setProfiles(items);
-
-            if (items.length > 0 && !selectedUserProfile) setSelectedUserProfile(items[0]);
         } catch (e) {
             setError("Hiba történt a profilok betöltésekor.");
         } finally {
             setIsLoading(false);
         }
     };
+
+    useEffect(() => {
+        if (profiles.length > 0) {
+            const isSelectedStillValid = profiles.some(p => p.id === selectedUserProfile?.id);
+            if (!selectedUserProfile || !isSelectedStillValid) {
+                setSelectedUserProfile(profiles[0]);
+            }
+        } else {
+            if (selectedUserProfile) setSelectedUserProfile(null);
+        }
+    }, [profiles, selectedUserProfile, setSelectedUserProfile]);
 
     const saveProfile = async (profile: profileType) => {
         setSelectedUserProfile(profile);
@@ -60,16 +76,10 @@ export default function MyProfiles() {
 
     return (
         <div className="p-8">
-            <h1 className="text-3xl text-center text-white p-6 pb-0">Saját felhasználói profiljaim</h1>
+            <h1 className="text-3xl text-center text-white p-6 pb-0">Felhasználói profiljaim</h1>
+            <p className=" text-center opacity-50 ">A kiválasztott profilhoz mérten jelennek meg a grafikonok értékei, illetve azokkal hozza létre a kiadott árajánlatot.</p>
 
-            <div className="flex p-5">
-                <button
-                    onClick={() => setIsCompilerOpen(true)}
-                    className="bg-green-400 text-black px-6 py-2 mx-auto rounded-lg transition-all"
-                >
-                    + Új profil létrehozása
-                </button>
-            </div>
+
 
             <div>
                 {isLoading && (
@@ -80,7 +90,7 @@ export default function MyProfiles() {
 
                 {/* Profilok listázása */}
                 {!isLoading && !error && profiles.length > 0 && (
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-4 text-white grid-flow-row mx-auto">
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 mt-5 gap-5 text-white grid-flow-row mx-auto">
                         {profiles.map((p) => (
                             <div key={p.id} className={`rounded-md w-full p-4 shadow-lg transition-all ${selectedUserProfile?.id === p.id ? "ring-2 ring-green-400 bg-[#303036]" : "bg-[#27272A]"}`}>
                                 <div className="font-semibold text-lg">{p.company_name}</div>
@@ -91,27 +101,53 @@ export default function MyProfiles() {
                                     {p.company_email} • {p.company_phone}
                                 </div>
 
-                                {selectedUserProfile?.id === p?.id ? (
-                                    <button className="disabled p-2 bg-green-300 text-black rounded-md hover:bg-green-400 transition-colors">Kiválasztva</button>
-                                ) : (
-                                    <button
-                                        onClick={() => saveProfile(p)}
-                                        className="p-2 bg-green-300 text-black rounded-md hover:bg-green-400 transition-colors"
-                                    >
-                                        Profil kiválasztása
-                                    </button>
-                                )}
+
+                                <div className="flex flex-wrap gap-2 mt-auto pt-3 border-t border-gray-700/50">
+                                    <div className="flex-1 min-w-[80px]">
+                                        {selectedUserProfile?.id === p?.id ? (
+                                            // Aktív
+                                            <button className="w-full py-2 px-2 text-xs font-medium bg-green-400 text-black rounded-md cursor-default shadow-inner">Aktív</button>
+                                        ) : (
+                                            // Kiválaszás
+                                            <button
+                                                onClick={() => saveProfile(p)}
+                                                className="w-full py-2 px-2 text-xs font-medium bg-green-300 text-black rounded-md hover:bg-green-400 transition-all duration-200"
+                                            >
+                                                Kiválasztás
+                                            </button>
+                                        )}
+                                    </div>
+
+                                    <div className="flex-1 min-w-[80px]">
+                                        <button className="w-full py-2 px-2 text-xs font-medium bg-orange-300 text-black rounded-md hover:bg-orange-400 transition-all duration-200" onClick={() => setModalConfig({ mode: 'update', profile: p })}>Módosítás</button>
+                                    </div>
+
+                                    <div className="flex-1 min-w-[80px]">
+                                        <button className="w-full py-2 px-2 text-xs font-medium bg-red-400 text-black rounded-md hover:bg-red-500 transition-all duration-200" onClick={() => setModalConfig({ mode: 'delete', profile: p })}>Törlés</button>
+                                    </div>
+                                </div>
                             </div>
                         ))}
+
                     </div>
                 )}
+                <div className="flex p-5">
+                    <button
+                        onClick={() => setModalConfig({ mode: 'create' })}
+                        className="bg-green-400 text-black px-6 py-2 mx-auto rounded-lg transition-all"
+                    >
+                        + Új profil létrehozása
+                    </button>
+                </div>
             </div>
 
-            {isCompilerOpen && (
-                <ProfileCompiler
-                    onClose={() => setIsCompilerOpen(false)}
-                    onSave={handleProfileSave}
-                    userId={user?.id || null}
+
+            {modalConfig && (
+                <ProfileModal
+                    mode={modalConfig.mode}
+                    profile={modalConfig.profile}
+                    onClose={() => setModalConfig(null)}
+                    onConfirm={handleModalConfirm}
                 />
             )}
         </div>

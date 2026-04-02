@@ -24,7 +24,7 @@ export default function RootLayout({
   return (
     <html lang="hu">
       <body
-        className={`bg-[#1a1a1a] ${fira.variable} ${fira.variable} antialiased`}
+        className={`bg-black ${fira.variable} ${fira.variable} antialiased`}
       >
         <AuthProvider>
           {children}
