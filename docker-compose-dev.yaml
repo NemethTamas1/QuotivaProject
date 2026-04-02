@@ -20,7 +20,7 @@ services:
   backend:
     build: 
       context: ./backend
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile.dev
     ports:
       - "8888:8080"
     volumes:
