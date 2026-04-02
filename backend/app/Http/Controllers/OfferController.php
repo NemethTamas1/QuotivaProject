@@ -72,6 +72,10 @@ class OfferController extends Controller
     {
         $data = $request->validated();
 
+        if($offer->status === "accepted" || $offer->status === "rejected") {
+            return view("offerStatusAlreadyDecided", ["offer" => $offer]);
+        }
+
         $offer->update([
             "status" => $data["status"],
         ]);
@@ -95,6 +99,7 @@ class OfferController extends Controller
         ]);
 
         return view("offerStatusRedirect", ["offer" => $offer]);
+        return view("offerStatusRedirect", ["offer" => $offer]);
     }
 
     public function reject(Offer $offer)
@@ -107,6 +112,7 @@ class OfferController extends Controller
             "status" => "rejected",
         ]);
 
+        return view("offerStatusRedirect", ["offer" => $offer]);
         return view("offerStatusRedirect", ["offer" => $offer]);
     }
 
