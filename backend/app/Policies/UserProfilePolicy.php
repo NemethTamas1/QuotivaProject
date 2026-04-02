@@ -19,4 +19,5 @@ class UserProfilePolicy
             ? Response::allow()
             : Response::deny();
     }
+    
 }
