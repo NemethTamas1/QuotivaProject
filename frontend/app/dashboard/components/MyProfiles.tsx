@@ -1,6 +1,6 @@
 import http from "@/lib/http";
 import { profileType } from "../types/types";
-import { useEffect, useState } from "react";
+import { use, useEffect, useState } from "react";
 import { useAuth } from "@/context/AuthContext";
 import { showInfo, showSuccess } from "@/lib/toast";
 import ProfileModal from "./ProfileModal";
@@ -31,7 +31,7 @@ export default function MyProfiles() {
             }
 
             setModalConfig(null);
-            fetchProfiles();
+            await fetchProfiles();
         } catch (error) {
             console.error("Hálózati hiba a profil mentésekor:", error);
             alert("Hálózati hiba történt a profil mentésekor.");
@@ -47,14 +47,23 @@ export default function MyProfiles() {
             const res = await http.get('/api/user-profiles');
             const items: profileType[] = res.data?.data ?? [];
             setProfiles(items);
-
-            if (items.length > 0 && !selectedUserProfile) setSelectedUserProfile(items[0]);
         } catch (e) {
             setError("Hiba történt a profilok betöltésekor.");
         } finally {
             setIsLoading(false);
         }
     };
+
+    useEffect(() => {
+        if (profiles.length > 0) {
+            const isSelectedStillValid = profiles.some(p => p.id === selectedUserProfile?.id);
+            if (!selectedUserProfile || !isSelectedStillValid) {
+                setSelectedUserProfile(profiles[0]);
+            }
+        } else {
+            if (selectedUserProfile) setSelectedUserProfile(null);
+        }
+    }, [profiles, selectedUserProfile, setSelectedUserProfile]);
 
     const saveProfile = async (profile: profileType) => {
         setSelectedUserProfile(profile);
@@ -81,7 +90,7 @@ export default function MyProfiles() {
 
                 {/* Profilok listázása */}
                 {!isLoading && !error && profiles.length > 0 && (
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 mt-5 gap-4 text-white grid-flow-row mx-auto">
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 mt-5 gap-5 text-white grid-flow-row mx-auto">
                         {profiles.map((p) => (
                             <div key={p.id} className={`rounded-md w-full p-4 shadow-lg transition-all ${selectedUserProfile?.id === p.id ? "ring-2 ring-green-400 bg-[#303036]" : "bg-[#27272A]"}`}>
                                 <div className="font-semibold text-lg">{p.company_name}</div>
@@ -93,43 +102,43 @@ export default function MyProfiles() {
                                 </div>
 
 
-                                <div className="grid grid-cols-3 justify-items-center mt-3">
-                                    <div className="flex justify-center">
+                                <div className="flex flex-wrap gap-2 mt-auto pt-3 border-t border-gray-700/50">
+                                    <div className="flex-1 min-w-[80px]">
                                         {selectedUserProfile?.id === p?.id ? (
                                             // Aktív
-                                            <button className="w-full py-2 px-4 text-sm bg-green-300 text-black rounded-md cursor-default shadow-inner">Aktív</button>
+                                            <button className="w-full py-2 px-2 text-xs font-medium bg-green-400 text-black rounded-md cursor-default shadow-inner">Aktív</button>
                                         ) : (
                                             // Kiválaszás
                                             <button
                                                 onClick={() => saveProfile(p)}
-                                                className="w-full py-2 px-4 text-sm bg-green-300 text-black rounded-md hover:bg-green-400 transition-all duration-200"
+                                                className="w-full py-2 px-2 text-xs font-medium bg-green-300 text-black rounded-md hover:bg-green-400 transition-all duration-200"
                                             >
                                                 Kiválasztás
                                             </button>
                                         )}
                                     </div>
 
-                                    <div className="flex justify-center">
-                                        <button className="w-full py-2 px-4 text-sm bg-orange-300 text-black rounded-md hover:bg-green-400 transition-all duration-200" onClick={() => setModalConfig({ mode: 'update', profile: p })}>Módosítás</button>
+                                    <div className="flex-1 min-w-[80px]">
+                                        <button className="w-full py-2 px-2 text-xs font-medium bg-orange-300 text-black rounded-md hover:bg-orange-400 transition-all duration-200" onClick={() => setModalConfig({ mode: 'update', profile: p })}>Módosítás</button>
                                     </div>
 
-                                    <div className="flex justify-center">
-                                        <button className="w-full py-2 px-4 text-sm bg-red-400 text-black rounded-md hover:bg-green-400 transition-all duration-200" onClick={() => setModalConfig({ mode: 'delete', profile: p })}>Törlés</button>
+                                    <div className="flex-1 min-w-[80px]">
+                                        <button className="w-full py-2 px-2 text-xs font-medium bg-red-400 text-black rounded-md hover:bg-red-500 transition-all duration-200" onClick={() => setModalConfig({ mode: 'delete', profile: p })}>Törlés</button>
                                     </div>
                                 </div>
                             </div>
                         ))}
 
-                        <div className="flex p-5">
-                            <button
-                                onClick={() => setModalConfig({ mode: 'create' })}
-                                className="bg-green-400 text-black px-6 py-2 mx-auto rounded-lg transition-all"
-                            >
-                                + Új profil létrehozása
-                            </button>
-                        </div>
                     </div>
                 )}
+                <div className="flex p-5">
+                    <button
+                        onClick={() => setModalConfig({ mode: 'create' })}
+                        className="bg-green-400 text-black px-6 py-2 mx-auto rounded-lg transition-all"
+                    >
+                        + Új profil létrehozása
+                    </button>
+                </div>
             </div>
 
 
