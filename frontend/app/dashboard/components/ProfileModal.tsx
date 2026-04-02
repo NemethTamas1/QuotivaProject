@@ -58,11 +58,11 @@ export default function ProfileModal({ mode, profile, onConfirm, onClose }: Prop
                 {mode === 'delete' ?
                     (
                         <div className="mb-8 text-gray-600">
-                            <p>Biztosan törölni szeretnéd a(z) <span className="font-bold text-gray-900">{profile?.company_name}</span> profilját?</p>
+                            <p>Biztosan törölni szeretné a(z) <span className="font-bold text-gray-900">{profile?.company_name}</span> profilját?</p>
                             <p className="text-sm mt-2 text-red-500 underline">Ez a művelet nem vonható vissza.</p>
                         </div>
                     ) : (
-                        <div className="space-y-4">
+                        <div className="space-y-1">
                             <div>
                                 <label className="block text-sm font-medium mb-1">Cégnév</label>
                                 <input
