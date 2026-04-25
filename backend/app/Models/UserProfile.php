@@ -15,7 +15,7 @@ class UserProfile extends Model
     public $table = 'user_profiles';
 
     protected $fillable = [
-        'user_id',
+        "user_id",
         'company_name',
         'tax_number',
         'company_email',
