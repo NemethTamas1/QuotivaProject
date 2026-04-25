@@ -13,3 +13,7 @@ Route::get('/response/{id}/{status}', function ($id, $status) {
 
     return "Köszönjük a válaszát! A rendszert frissítettük.";
 });
+
+Route::get('/debug-sentry', function () {
+    throw new Exception('My first Sentry error!');
+});
