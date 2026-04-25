@@ -99,7 +99,6 @@ class OfferController extends Controller
         ]);
 
         return view("offerStatusRedirect", ["offer" => $offer]);
-        return view("offerStatusRedirect", ["offer" => $offer]);
     }
 
     public function reject(Offer $offer)
@@ -112,7 +111,6 @@ class OfferController extends Controller
             "status" => "rejected",
         ]);
 
-        return view("offerStatusRedirect", ["offer" => $offer]);
         return view("offerStatusRedirect", ["offer" => $offer]);
     }
 
