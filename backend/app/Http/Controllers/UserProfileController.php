@@ -33,7 +33,7 @@ class UserProfileController extends Controller
     public function store(StoreUserProfileRequest $request)
     {
         $data = $request->validated();
-
+        $data["user_id"] = Auth::id();
         $userProfile = UserProfile::create($data);
 
         return new UserProfileResource($userProfile);
