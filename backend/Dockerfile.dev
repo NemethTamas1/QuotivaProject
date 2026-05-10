@@ -28,8 +28,8 @@
     
     RUN composer install --no-interaction --optimize-autoloader
     
-    RUN chmod -R 775 storage bootstrap/cache && \
-        chown -R www-data:www-data storage bootstrap/cache
+    RUN chmod -R 775 storage bootstrap/cache database && \
+        chown -R www-data:www-data storage bootstrap/cache database
     
     COPY docker/nginx.conf /etc/nginx/sites-available/default
     COPY docker/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
